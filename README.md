@@ -1,4 +1,16 @@
-# Spec-Driven Development Starter Kit
+# DigitalStrike Solutions — main page
+
+Bilingual (ES/EN) one-page site for DigitalStrike Solutions: services, showroom, the CEO, and a lead flow (Google Sheets + emails) with Calendly booking for "session 0".
+
+- **Status:** Planning — Sprint 001 (first release, target 2026-10-14) ready pending docs approval and go-ahead. See `PROJECT_CONTEXT.md`.
+- **Start here:** `AGENTS.md` (authoritative workflow) → `PROJECT_CONTEXT.md` (document map).
+- **Project key:** `DS`.
+
+---
+
+The rest of this README is the Spec-Driven Development Starter Kit guide this repository was created from.
+
+## Spec-Driven Development Starter Kit
 
 A reusable starter kit for projects developed with Spec-Driven Development (SDD) and agentic programming.
 

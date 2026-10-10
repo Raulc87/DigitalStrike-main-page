@@ -28,7 +28,7 @@ assets/
 2. Open **cPanel → File Manager → `public_html`**. If GoDaddy placed a default `index.html` or `default.html` there, delete it (or rename it). In File Manager settings, enable "Show hidden files" so `.htaccess` is visible.
 3. **Upload** `holding-page.zip` into `public_html`, right-click → **Extract**, then delete the zip. Check that `index.html` sits directly in `public_html`, not in a subfolder.
 4. Open `http://digitalstrike-solutions.com`. You should see the page; try the ES | EN toggle and the three buttons.
-5. **SSL:** in cPanel → **SSL/TLS Status**, run AutoSSL for the domain (free; can take a few minutes up to a few hours). When `https://digitalstrike-solutions.com` loads without a warning, edit `.htaccess` in File Manager and remove the `# ` in front of the three `Rewrite…` lines to force HTTPS.
+5. **SSL:** in cPanel → **SSL/TLS Status**, run AutoSSL for the domain (free; can take a few minutes up to a few hours). The `.htaccess` in this folder already forces HTTPS (enabled on 2026-10-10, once the certificate was active). On a new host whose certificate isn't active yet, comment out the three `Rewrite…` lines until `https://` loads without a warning.
 
 If GoDaddy offers "Website Builder" or "Coming soon" pages, ignore them; this page replaces them.
 

@@ -2,12 +2,12 @@
 Options -Indexes
 DirectoryIndex index.html
 
-# Force HTTPS: uncomment these three lines once the SSL certificate for the
-# domain is active in cPanel (SSL/TLS Status → AutoSSL). Enabling it earlier
-# would send visitors to a certificate warning.
-# RewriteEngine On
-# RewriteCond %{HTTPS} off
-# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Force HTTPS (enabled 2026-10-10, once the AutoSSL certificate was active).
+# On a new host, comment these three lines out until its certificate works,
+# or visitors get a certificate warning.
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Any unknown path shows the holding page instead of a 404
 ErrorDocument 404 /index.html

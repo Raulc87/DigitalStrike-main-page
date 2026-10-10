@@ -1,7 +1,7 @@
 # USER_STORIES — DigitalStrike Solutions main page
 
 ## Metadata
-- Version: 0.1
+- Version: 0.2 (2026-10-10: contract pre-lock revisions, click-to-load Calendly, Lighthouse check, proposal A, photo)
 - Status: Draft — pending human owner approval
 - Related: `PROJECT_SPEC.md`, `LEAD_ENDPOINT_CONTRACT.md`, `docs/ux/UX_UI_DIRECTION.md`, `docs/ux/CONTENT.md`
 - Story IDs map to branches `DS-<NNN>-<slug>` (AGENTS.md). "Widths" always means 360, 390, 768, 1024 and 1440 px.
@@ -55,7 +55,7 @@ As a visitor, I see the page in my language and can switch it.
 
 ## US-007 — About the CEO
 - AC1: Name, role, three paragraphs and facts chips per CONTENT §8; figures only from the CV (BR-002).
-- AC2: Photo slot shows the provisional monogram until `public/images/raul-casanas.jpg` exists; swapping the photo needs no code change beyond adding the file and flipping one constant.
+- AC2: Photo slot shows `public/images/raul-casanas.jpg` (copied from `docs/assets/photos/raul-casanas-200.jpg`, rendered at most 200 CSS px wide while it is the 200 px version) and falls back to the "RC" monogram if the file is missing; replacing it with a high-resolution photo needs only the new file and one size constant.
 - AC3: LinkedIn button opens `PUBLIC_LINKEDIN_URL` in a new tab.
 - AC-UI.
 
@@ -68,17 +68,17 @@ As a visitor, I see the page in my language and can switch it.
 As a visitor, I can describe my need and send it.
 - AC1: Fields, order, labels, hints and option labels as UX §3 and CONTENT §10 / contract §4.
 - AC2: Client validation implements every rule of contract §3 with the localized messages of CONTENT §10; errors on blur and on submit; on submit with errors, focus moves to the error summary.
-- AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `website` (honeypot) and `form_started_at` (set on first render or first focus).
-- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data is kept on any error.
+- AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `privacy_notice_version` (from `PUBLIC_PRIVACY_NOTICE_VERSION`), `website` (honeypot), `elapsed_ms` (monotonic time since first render) and `submission_id` (UUID v4 kept across retries and renewed only after a success, contract §5.4).
+- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so a retry cannot create a duplicate lead.
 - AC5: Submit disabled with "Enviando…" while pending; double submission impossible.
-- AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name.
+- AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name; the copy confirms receipt only, never that an email was sent.
 - AC7: Consent checkbox unchecked by default and required; the privacy dialog opens without losing typed data and closes with Esc.
 - AC8: Vitest: a valid and an invalid case per rule; the client maps every response type. Playwright (against the mock): happy path ES and EN at 390 px and desktop, validation errors, `storage_unavailable`, `rate_limited`, network failure.
 
 ## US-010 — Lead endpoint (Apps Script): validate and store
 As the owner, every lead lands in my Google Sheet.
-- AC1: `doPost` implements contract §5 in that order; `doGet` returns `{ "ok": true, "service": "ds-lead-endpoint" }` for health checks.
-- AC2: A valid lead appends one row with columns A–Q in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
+- AC1: `doPost` implements contract §5 in that order, including idempotency (§5.4) and the daily cap (§5.3); `doGet` returns `{ "ok": true, "service": "ds-lead-endpoint" }` for health checks.
+- AC2: A valid lead appends one row with columns A–R in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
 - AC3: A `setupSheet()` function creates the `leads` worksheet header and the `status` dropdown (`new`, `contacting`, `accepted`, `rejected`) idempotently.
 - AC4: Sheet write failure → `storage_unavailable`; unexpected exception → `internal_error`; personal data never appears in `console.log`/Stackdriver logs (only `lead_id` and error codes).
 - AC5: Pure logic (validation, normalization, enums, throttle decisions, lead_id, row building, email rendering) is in files testable with Vitest in Node; tests cover every rule and error code.
@@ -86,28 +86,29 @@ As the owner, every lead lands in my Google Sheet.
 ## US-011 — Owner notification email ("cover letter")
 - AC1: After the row is stored, an email is sent to `OWNER_NOTIFICATION_EMAIL` with subject and body of CONTENT §14.1, `Reply-To` = visitor email, HTML + plain-text.
 - AC2: All visitor values are HTML-escaped.
-- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`. The response to the visitor is unaffected.
+- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`; remaining MailApp quota < 1 → `quota_exceeded` without attempting. The response to the visitor is unaffected.
 
 ## US-012 — Visitor confirmation email
 - AC1: After the owner email attempt, the visitor receives CONTENT §14.2 in the submitted `language`, from `SENDER_NAME`, `Reply-To` = `REPLY_TO_EMAIL`, with the Calendly link.
 - AC2: Same escaping and status recording as US-011 (`confirmation_email_status`).
-- AC3: Not sent for honeypot/fill-time decoys or rate-limited requests.
+- AC3: Not sent for honeypot/fill-time decoys, rate-limited requests or idempotent repeats (known `submission_id`).
 
 ## US-013 — Scheduling (Calendly inline)
-- AC1: The `#agenda` section embeds `PUBLIC_CALENDLY_URL` with the official inline widget, loaded lazily (UX §3).
+- AC1: The `#agenda` section shows a preview card with the `schedule.open` button and the `schedule.notice` line; **no request to Calendly is made until** the visitor clicks the button or submits the form successfully. Then the official inline widget for `PUBLIC_CALENDLY_URL` loads in place (UX §3).
 - AC2: After a successful submission the widget is (re)initialized with name and email prefilled.
 - AC3: If `PUBLIC_CALENDLY_URL` is unset, the script fails, or nothing renders within 10 s, the fallback link (new tab) is shown; a `<noscript>` link always exists.
-- AC4: Playwright checks the container and the fallback (Calendly network blocked in tests).
+- AC4: Playwright checks that no request to `*.calendly.com` happens before the click, the container after it, and the fallback (Calendly network blocked in tests).
 
 ## US-014 — Spam protection
-- AC1 (client, Agent 2): honeypot field per UX §3 and `form_started_at` sent.
-- AC2 (server, Agent 3): honeypot, minimum fill time and throttles per contract §5.1–5.3 using `CacheService`; decoys return the normal success body and store nothing.
+- AC1 (client, Agent 2): honeypot field per UX §3 and `elapsed_ms` sent.
+- AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (`CacheService`, `PropertiesService` for the daily counter); decoys return the normal success body and store nothing.
 - AC3: Tests cover each path, including that rate-limited requests are not stored and send no email.
 
 ## US-015 — Local mock, CI
 - AC1: `scripts/mock-lead-endpoint.mjs` per contract §9; `npm run mock:lead` starts it.
 - AC2: GitHub Actions on every PR and push to `main`: `npm ci`, lint, `astro check`, Vitest (frontend + Apps Script logic), build, Playwright e2e against the built site and the mock.
 - AC3: CI never uses real Google endpoints or credentials.
+- AC4 (NFR-003): a CI job runs Lighthouse CI (`@lhci/cli`, mobile preset, 3 runs) against the built `/es/` and `/en/` pages served locally and fails below Performance 0.90 or Accessibility 0.95. Calendly is not loaded (click-to-load), so it does not affect the score.
 
 ## US-016 — Preview and first release on GitHub Pages
 - AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*.
@@ -122,17 +123,18 @@ As the owner, every lead lands in my Google Sheet.
 
 ## US-018 — Privacy notice
 - AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, version and "draft" status line.
-- AC2: The version string equals the Apps Script `PRIVACY_NOTICE_VERSION` documented in the runbook.
+- AC2: The version shown is `PUBLIC_PRIVACY_NOTICE_VERSION`; the runbook states that it must be listed in the Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` before a frontend with a new version is deployed.
 - AC-UI.
 
-## US-019 — Look-and-feel proposals (owner decision)
-- AC1: 2–3 HTML proposals with the identity v1 palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner.
-- AC2: The owner's choice and date are recorded in UX §2.2. *(Docs work; Claude/owner, not an implementation agent.)*
+## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10
+- AC1: 2–3 HTML proposals with the identity v1 palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*
+- AC2: The owner's choice and date are recorded in UX §2.2. *(Proposal A — Dugout, chosen by Raul on 2026-10-10.)*
 
-## US-020 — Apply the chosen look and feel
-- AC1: Tokens, type scale and component treatments of UX §2.2 replace the provisional ones without changing copy or behaviour.
-- AC2: Every section in both languages at every width; contrast AA; all existing tests green.
-- *(Scheduled for Sprint 001 only if the owner picks a proposal by Monday 2026-10-12 12:00; otherwise Sprint 002.)*
+## US-020 — Apply the final palette
+Proposal A's treatment is built directly in Sprint 001 (UX §2.2), so this story only covers the palette change the owner announced as possible.
+- AC1: When the owner approves a new palette in UX §2.1, only the token values in `src/styles/global.css` (and the logo SVGs, if they change) are updated; no component changes.
+- AC2: Every section in both languages at every width; contrast AA re-checked for every pair; all existing tests green.
+- *(Sprint 002, after the palette decision.)*
 
 ## Traceability
 

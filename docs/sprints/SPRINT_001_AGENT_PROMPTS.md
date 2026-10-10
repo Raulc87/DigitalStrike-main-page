@@ -76,8 +76,8 @@ schedule it).
 Order of work:
 1. DS-001-frontend-scaffold (Phase 0 — the other agents wait for it; keep it small, open the PR
    within your first working block):
-   - Astro 5 static output, TypeScript strict, Tailwind CSS v4 with the provisional tokens of
-     UX_UI_DIRECTION.md §2.1 in @theme (no colour or font literals in components), Node 22 LTS
+   - Astro 5 static output, TypeScript strict, Tailwind CSS v4 with the tokens of
+     UX_UI_DIRECTION.md §2.1 and the derived tokens of §2.2 in @theme (no colour or font literals in components), Node 22 LTS
      (.nvmrc), @fontsource/archivo and @fontsource/ibm-plex-mono.
    - ESLint (TS + Astro), Prettier, astro check, Vitest, Playwright config (Chromium desktop +
      390 px project). npm scripts: dev, build, preview, lint, check, test, test:e2e.
@@ -101,9 +101,14 @@ Order of work:
    your PR description.
 5. DS-006-work-about-clients — US-006 + US-007 + US-008. Showroom screenshots: you may clone the
    two public repos, build them locally and capture 1200×750 screenshots with Playwright; if that
-   takes more than ~30 minutes, use the initials placeholder and say so. Photo: monogram until
-   public/images/raul-casanas.jpg exists (single constant to flip). Clients section behind
+   takes more than ~30 minutes, use the initials placeholder and say so. Photo: copy
+   docs/assets/photos/raul-casanas-200.jpg to public/images/raul-casanas.jpg, render it at most
+   200 CSS px wide, monogram fallback (US-007 AC2). Poliart is named in the showroom (CONTENT §7). Clients section behind
    PUBLIC_SHOW_CLIENT_LOGOS. PendingBadge controlled by PUBLIC_SHOW_PENDING_BADGES.
+
+Build every section directly in the approved look and feel, proposal A "Dugout" (UX §2.2; visual
+reference docs/ux/proposals/propuesta-a-dugout.html — the spec wins over the mockup). The palette
+may change later, so never use colour literals outside the token file.
 
 Quality bar for every UI story: AC-UI1–4 in USER_STORIES.md; check 360, 390, 768, 1024 and
 1440 px (no horizontal scroll, touch targets ≥ 44 px), keyboard navigation and visible focus, and
@@ -130,7 +135,9 @@ Order of work:
      network errors, timeouts and malformed bodies.
    - LeadForm: fields, order, labels, hints and option labels from CONTENT.md §10 and contract §4;
      honeypot `website` (visually hidden, tabindex -1, autocomplete off, aria-hidden);
-     form_started_at set on first render; validation on blur and submit, error summary focus,
+     elapsed_ms from performance.now() since first render; submission_id (crypto.randomUUID)
+     kept across retries and renewed only after success (contract §5.4); privacy_notice_version
+     from PUBLIC_PRIVACY_NOTICE_VERSION; validation on blur and submit, error summary focus,
      aria-describedby; disabled submit with "Enviando…"; data kept on every error; success state
      replaces the form with the thank-you block (focus it) using the first name.
    - Listen for Agent 1's project_type preselection mechanism (see their DS-004 PR) and `?tipo=`.
@@ -140,14 +147,17 @@ Order of work:
 2. DS-018-privacy-notice — US-018: dialog from the consent label link (keeps form data, Esc
    closes, focus returns) and the content for /es/privacidad/ and /en/privacy/ (Agent 1's pages
    render your PrivacyNotice component). Version string 2026-10-14-v1.
-3. DS-013-calendly — US-013: lazy inline widget for PUBLIC_CALENDLY_URL, re-init with name/email
-   prefill after success, 10 s fallback link, noscript link.
+3. DS-013-calendly — US-013: click-to-load — a preview card with "Ver horarios disponibles" and the
+   Calendly notice; no request to Calendly before the click or a successful submission; then the
+   inline widget for PUBLIC_CALENDLY_URL with name/email prefill after success, 10 s fallback link,
+   noscript link.
 4. DS-009-integration-e2e (integration PR owner; after Agent 3's mock is merged): Playwright
    against the built site (`astro preview`, built with the GitHub Pages base path) and
    scripts/mock-lead-endpoint.mjs: es-CR and en-US detection, toggle, happy path ES and EN at
    desktop and 390 px (row visible via GET /__leads), validation errors, MOCK_FAIL=storage,
-   rate_limited, network failure (route abort), Calendly container and fallback (block
-   assets.calendly.com), and @axe-core/playwright with no serious/critical violations on /es/ and
+   rate_limited, network failure (route abort) followed by a retry that reuses the same
+   submission_id (only one row in /__leads), no Calendly request before the click, Calendly
+   container and fallback (block assets.calendly.com), and @axe-core/playwright with no serious/critical violations on /es/ and
    /en/. Ask Agent 3 (through me) to make the e2e job required once your suite is green.
 ```
 
@@ -167,8 +177,9 @@ Order of work:
      USER_DEPLOYING and access ANYONE_ANONYMOUS, minimal oauthScopes (spreadsheets, send_mail).
    - apps-script/Code.js: doPost, doGet (health) and setupSheet() as thin wrappers.
    - apps-script/lib/*.js: pure logic — normalization and validation (contract §3), enums (§4),
-     processing order (§5), honeypot, minimum fill time, throttles (CacheService behind a small
-     interface so tests can fake it), lead_id, row building with formula-injection guard (§6),
+     processing order (§5), honeypot, minimum fill time (elapsed_ms), idempotency by
+     submission_id (§5.4), hourly/daily throttles (CacheService / PropertiesService behind small
+     interfaces so tests can fake them), MailApp quota check, lead_id, row building with formula-injection guard (§6),
      response bodies (§7). Use LockService around the append. Never log personal data.
    - Tests with Vitest in Node for lib/ (load the files into a vm context or via a tiny shim —
      document the choice in apps-script/README.md), covering every rule, error code and decoy path.
@@ -185,7 +196,8 @@ Order of work:
 3. DS-015-mock-and-ci — US-015 AC1: scripts/mock-lead-endpoint.mjs (contract §9, reusing
    apps-script/lib validation so client, mock and server agree) and `npm run mock:lead`. Then
    DS-015-ci-workflows (after the scaffold is merged): .github/workflows/ci.yml — npm ci, lint,
-   check, unit, build with the Pages base path, e2e (Playwright, mock). Mark the e2e job
+   check, unit, build with the Pages base path, e2e (Playwright, mock), Lighthouse CI on /es/ and
+   /en/ (US-015 AC4: Performance ≥ 0.90, Accessibility ≥ 0.95, mobile). Mark the e2e job
    allowed-to-fail with a comment until Agent 2's integration PR lands. CI never calls Google.
    .env.example with every PUBLIC_* variable of contract §8 (no real values except the public
    Calendly and LinkedIn URLs).

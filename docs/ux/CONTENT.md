@@ -1,11 +1,11 @@
 # CONTENT — DigitalStrike Solutions main page (ES source → EN)
 
 ## Metadata
-- Version: 0.1
-- Status: **Draft for owner approval.** Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
+- Version: 0.2
+- Status: **Draft for owner approval.** v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
-- Markers: **[CONFIRMAR]** = needs the owner's confirmation before or right after the first release. **[PROVISIONAL]** = shown with a pending badge in preview builds.
+- Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.
 
 Implementation: every visitor-facing string lives in `src/i18n/{es,en}/*.ts`, copied verbatim from this file. Changing copy = change this file first (change management), then the dictionaries.
 
@@ -81,7 +81,7 @@ Cards (the `card_cta` scrolls to `#contacto` and preselects `project_type`):
 | `process.title` | Cómo trabajamos | How we work |
 | `process.intro` | Un proceso claro, con tu participación en cada paso. | A clear process, with you involved at every step. |
 | `process.1.title` | Sesión 0 | Session 0 |
-| `process.1.body` | Conversamos una hora sobre tu problema o tu idea, sin compromiso. **[CONFIRMAR: gratuita]** | We spend one hour on your problem or idea, with no commitment. **[CONFIRM: free]** |
+| `process.1.body` | Conversamos una hora sobre tu problema o tu idea. Es gratuita y sin compromiso. | We spend one hour on your problem or idea. It's free, with no commitment. |
 | `process.2.title` | Propuesta y alcance | Proposal and scope |
 | `process.2.body` | Te enviamos una propuesta con el alcance por escrito, las entregas y cómo vamos a validar cada una. | You receive a proposal with the written scope, the deliveries and how each one will be validated. |
 | `process.3.title` | Construimos por entregas | We build in deliveries |
@@ -104,7 +104,7 @@ Cards (the `card_cta` scrolls to `#contacto` and preselects `project_type`):
 |---|---|---|---|---|
 | 1 | `https://github.com/Raulc87/gaby-main-page` | Página de captación para un programa de salud financiera / Lead-generation page for a financial-health programme | Página bilingüe que presenta la oferta, filtra a las personas interesadas con una pregunta y guarda cada contacto en Google Sheets antes de abrir la agenda. / A bilingual page that presents the offer, screens interested people with one question and saves every lead to Google Sheets before opening the booking calendar. | Astro · TypeScript · Python · Google Sheets · Calendly · Playwright |
 | 2 | `https://github.com/Raulc87/cami-main-page` | Sitio de marca personal para una conferencista y coach / Personal-brand site for a speaker and coach | Sitio de una página, bilingüe, con secciones animadas y cambio de idioma al instante. / A bilingual one-page site with animated sections and instant language switching. | React · Vite · JavaScript · CSS |
-| 3 | private — no link **[CONFIRMAR: permiso para nombrar a la empresa]** | Plataforma de reportes con IA para una imprenta / AI reporting platform for a printing company | La gerencia pide reportes en lenguaje natural y los recibe en segundos, en lugar de esperar de 5 a 10 días. Unifica 3 bases de datos y limita la IA a un catálogo de reportes aprobados y auditables. / Management asks for reports in plain language and gets them in seconds instead of waiting 5 to 10 days. It unifies 3 databases and limits the AI to a catalogue of approved, auditable reports. | Python · React · Claude · Docker |
+| 3 | private — no link (Poliart agreed to be named, 2026-10-10) | Plataforma de reportes con IA para Poliart Impresores / AI reporting platform for Poliart Impresores | La gerencia pide reportes en lenguaje natural y los recibe en segundos, en lugar de esperar de 5 a 10 días. Unifica 3 bases de datos y limita la IA a un catálogo de reportes aprobados y auditables. / Management asks for reports in plain language and gets them in seconds instead of waiting 5 to 10 days. It unifies 3 databases and limits the AI to a catalogue of approved, auditable reports. | Python · React · Claude · Docker |
 
 Images: a screenshot per project if available (Agent 1 may build the public repos locally and capture a 1200×750 screenshot); otherwise a neutral card header with the project's initials. **[PROVISIONAL]**
 
@@ -122,7 +122,7 @@ Images: a screenshot per project if available (Agent 1 may build the public repo
 | `about.linkedin` | Ver perfil en LinkedIn | View LinkedIn profile |
 | `about.photo_alt` | Raul Casañas, CEO de DigitalStrike Solutions | Raul Casañas, CEO of DigitalStrike Solutions |
 
-Photo: **[PROVISIONAL]** a monogram "RC" on the night-blue token until the real photo (≥ 800×800 px) arrives.
+Photo: **[PROVISIONAL]** `docs/assets/photos/raul-casanas-200.jpg` (200×200 px, supplied by Raul 2026-10-10). Display it at most 200 CSS px wide until a ≥ 800×800 px version replaces it; the monogram "RC" is the fallback if the file is missing.
 
 ## 9. Clients (`#clientes`, behind `PUBLIC_SHOW_CLIENT_LOGOS`)
 
@@ -138,7 +138,7 @@ Four dashed placeholder slots, each with `clients.slot` as text. No real names o
 | Key | ES | EN |
 |---|---|---|
 | `form.title` | Cuéntanos tu idea | Tell us your idea |
-| `form.intro` | Responde unas preguntas rápidas. Te escribimos en un máximo de 2 días hábiles. **[CONFIRMAR plazo]** | Answer a few quick questions. We'll reply within 2 business days. **[CONFIRM timeframe]** |
+| `form.intro` | Responde unas preguntas rápidas. Te escribimos en un máximo de 2 días hábiles. | Answer a few quick questions. We'll reply within 2 business days. |
 | `form.required_note` | Los campos con * son obligatorios. | Fields marked * are required. |
 | `form.name.label` | Nombre * | Name * |
 | `form.email.label` | Correo electrónico * | Email * |
@@ -157,7 +157,7 @@ Four dashed placeholder slots, each with `clients.slot` as text. No real names o
 | `form.submit` | Enviar mi idea | Send my idea |
 | `form.submitting` | Enviando… | Sending… |
 | `form.success.title` | ¡Recibido, {first_name}! | Got it, {first_name}! |
-| `form.success.body` | Te enviamos un correo de confirmación. Si quieres adelantar, agenda tu sesión 0 aquí abajo. | We've sent you a confirmation email. If you'd like to move faster, book your session 0 below. |
+| `form.success.body` | Ya tenemos tu idea. Te escribiremos en un máximo de 2 días hábiles. Si quieres adelantar, agenda tu sesión 0 aquí abajo. | We have your idea. We'll write to you within 2 business days. If you'd like to move faster, book your session 0 below. |
 | `form.success.cta` | Agendar mi sesión 0 | Book my session 0 |
 
 Option labels: exactly as `docs/specs/LEAD_ENDPOINT_CONTRACT.md` §4.
@@ -187,6 +187,8 @@ Errors:
 | `schedule.body` | Una conversación de una hora para entender tu problema y ver si somos el equipo indicado para resolverlo. | A one-hour conversation to understand your problem and see if we're the right team to solve it. |
 | `schedule.fallback` | ¿No ves el calendario? Ábrelo en una pestaña nueva. | Can't see the calendar? Open it in a new tab. |
 | `schedule.loading` | Cargando el calendario… | Loading the calendar… |
+| `schedule.open` | Ver horarios disponibles | See available times |
+| `schedule.notice` | Al abrir el calendario se carga Calendly, un servicio externo. Más detalles en el aviso de privacidad. | Opening the calendar loads Calendly, an external service. More details in the privacy notice. |
 
 ## 12. Footer
 
@@ -209,13 +211,13 @@ Versión 2026-10-14-v1
 
 **Quién es responsable de tus datos.** Raul Casañas, quien opera bajo la marca DigitalStrike Solutions en San José, Costa Rica. Contacto: {contact_email}.
 
-**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. No guardamos tu dirección IP ni usamos cookies de seguimiento.
+**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. Este sitio no guarda tu dirección IP ni usa cookies de seguimiento.
 
 **Para qué los usamos.** Solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad.
 
-**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. Si agendas una sesión, Calendly procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
+**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador, puede usar sus propias cookies y, si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
 
-**Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos. **[CONFIRMAR]**
+**Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos.
 
 **Tus derechos.** Conforme a la Ley 8968 puedes pedir acceso, corrección o eliminación de tus datos escribiendo a {contact_email}. Respondemos en un plazo máximo de 5 días hábiles.
 
@@ -227,13 +229,13 @@ Version 2026-10-14-v1
 
 **Who is responsible for your data.** Raul Casañas, operating under the brand DigitalStrike Solutions in San José, Costa Rica. Contact: {contact_email}.
 
-**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. We don't store your IP address or use tracking cookies.
+**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. This site doesn't store your IP address or use tracking cookies.
 
 **What we use it for.** Only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising.
 
-**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. If you book a session, Calendly processes the booking data. These services may store data outside Costa Rica.
+**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser, may set its own cookies and, if you book, processes the booking data. These services may store data outside Costa Rica.
 
-**How long.** Up to 24 months from our last contact, or until you ask us to delete it. **[CONFIRM]**
+**How long.** Up to 24 months from our last contact, or until you ask us to delete it.
 
 **Your rights.** Under Costa Rica's Law 8968 you can request access to, correction or deletion of your data by writing to {contact_email}. We reply within 5 business days.
 

@@ -16,7 +16,7 @@ Apps Script cannot see the client IP, so the pilot's per-IP rate limit is not po
 - B — Add Cloudflare Turnstile / reCAPTCHA now. Stronger, but adds a third-party script, a privacy-notice processor and a server-side verification call; overkill before any abuse is seen.
 
 ## Decision
-Option A, as specified in the contract: honeypot `website`; `form_started_at` with a 3-second minimum (decoy success); at most 3 leads per email per hour and 30 leads per hour overall (`CacheService`), configurable via Script Properties.
+Option A, as specified in the contract §5: honeypot `website`; client-measured `elapsed_ms` with a 3-second minimum (decoy success); at most 3 leads per email per hour, 20 per hour and 40 per day overall (`CacheService` / `PropertiesService`), configurable via Script Properties; emails sent only while MailApp quota remains; `submission_id` idempotency so retries never duplicate leads or emails.
 
 ## Consequences
 - Positive: zero friction for visitors; protects the quota.

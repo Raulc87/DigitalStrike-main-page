@@ -10,7 +10,7 @@
 | Sprint | Window | Goal |
 |---|---|---|
 | **001 — First release** (short sprint, exception to the 7-day rule, see §6) | Go-ahead (target Sat 2026-10-10) → release cut **Tue 2026-10-13 18:00 (CR)** → demo Wed 2026-10-14 | Public bilingual page on GitHub Pages with services, showroom, CEO, working lead flow (sheet + 2 emails) and Calendly |
-| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | Apply the chosen look and feel (if not done), real photo, approved final copy, GoDaddy production release on `digitalstrike-solutions.com`, carry-overs |
+| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | Final palette (US-020), high-resolution photo, Poliart screenshot, GoDaddy production release on `digitalstrike-solutions.com`, carry-overs |
 
 ## 2. Repository layout (target)
 
@@ -60,13 +60,13 @@ docs/runbooks/LOCAL_DEVELOPMENT.md  APPS_SCRIPT_SETUP.md  RELEASE.md  DEPLOYMENT
 - Accessibility: Playwright + `@axe-core/playwright` on `/es/` and `/en/` (no serious/critical violations).
 
 ## 6. Process exception — short Sprint 001
-The kit's sprint length is 7 business days. Sprint 001 is shortened to meet the 2026-10-14 meet-up; scope is cut to what the release needs (US-017 and US-020 are stretch). The exception is approved when the owner approves this plan. Sprint 002 returns to 7 business days.
+The kit's sprint length is 7 business days. Sprint 001 is shortened to meet the 2026-10-14 meet-up; scope is cut to what the release needs (US-017 is stretch; US-020 moves to Sprint 002). The exception is approved when the owner approves this plan. Sprint 002 returns to 7 business days.
 
 ## 7. Risks and mitigations
 | Risk | Mitigation |
 |---|---|
 | Too little time for reviews and merges | Small PRs; review-only agent reviews as PRs open; owner merges in the order of SPRINT_001 |
 | Apps Script not deployed in time | Mock keeps all tests green; the form shows the generic error with the `mailto` fallback if the endpoint is unset — the page is still demoable |
-| Copy not approved by Tuesday | Ship the draft copy (already sober and factual) with [CONFIRMAR] items resolved or removed; refine in Sprint 002 |
+| Copy changes requested late | Copy lives only in CONTENT.md and the dictionaries; late edits are a dictionary change, not a layout change |
 | No photo by Tuesday | Monogram placeholder (US-007 AC2) |
 | Base-path bugs on Pages | CI builds with the Pages base path; e2e runs against that build |

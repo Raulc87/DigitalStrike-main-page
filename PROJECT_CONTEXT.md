@@ -50,10 +50,9 @@
 - Where the sprint deliverable runs: public (GitHub Pages), endpoint on Apps Script
 
 ## Open questions
-- Is session 0 free? (CONTENT [CONFIRMAR])
-- Reply time promise "2 business days"? (CONTENT [CONFIRMAR])
-- Lead retention period (24 months proposed)
-- Raul's photo (≥ 800×800 px) — due 2026-10-12
-- Permission to name Poliart in the showroom; is `Poliart-CR/ai-reporting-platform` private?
+- Palette may change (look and feel A approved 2026-10-10) — US-020, Sprint 002
+- Raul's photo ≥ 800×800 px (provisional 200 px in use)
+- Sanitized screenshot of the Poliart platform for the showroom
 - GoDaddy hosting plan bought? cPanel Linux?
 - Cami's approval of visual identity v1
+- Legal review of privacy notice v1 (Cinthia)

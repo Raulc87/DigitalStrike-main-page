@@ -36,14 +36,14 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 2. Documentation consistency | Spec, stories, contract, UX, content, stack, plan and sprint agree on scope, field names (`snake_case`), statuses and behaviour; languages and selection rule stated (ADR-003); every FR maps to a story. **OK.** |
 | 3. User stories | Every sprint story has testable ACs ("widths" defined); every story has an owner below. **OK.** |
 | 4. Contracts and integrations | Contract v1.0 complete (endpoint, CORS, body, enums, processing order, sheet columns, responses, config, mock); failure behaviour defined for Sheets, email and Calendly; credentials rule stated (TECH_STACK §11). **OK — locks on merge.** |
-| 5. Data, legal, security | Jurisdiction Costa Rica (Ley 8968), consent checkbox, privacy notice draft v1 (pending Cinthia's review, published as a dated draft); spam protection in scope (US-014). **OK.** Retention period marked [CONFIRMAR]. |
-| 5.1 UI | Identity v1 explicitly **provisional**; tokens mandatory. Go-live assets: logo SVG ✅, **photo ❌ — dated owner: Raul, by Mon 2026-10-12** (monogram fallback), final copy — **owner approval in this PR** (draft ships otherwise). |
+| 5. Data, legal, security | Jurisdiction Costa Rica (Ley 8968); consent checkbox; privacy notice v1 `2026-10-14-v1` decided by the owner (retention 24 months confirmed; Calendly loading disclosed; Cinthia's review to follow); the version the visitor saw is stored per lead; spam protection and idempotency in scope (US-014). **OK.** |
+| 5.1 UI | Look and feel approved (proposal A, UX §2.2); palette explicitly **provisional** (tokens mandatory). Go-live assets: logo SVG ✅; photo ✅ provisional 200 px (≥ 800 px version: Raul, Sprint 002); final copy — all [CONFIRMAR] items answered 2026-10-10, **approved by merging this PR**. |
 | 6. Stack and environment | GitHub Pages capability confirmed (public repo); GoDaddy runtime not needed (ADR-001/002); local run defined (dev + mock); test/lint/CI named. **OK.** |
 | 7. Parallelization | 3 agents assigned; ownership map, scaffold-first order, integration PR owner (Agent 2), conflict rule below. **OK.** |
 | 7.1 Merge control | Every prompt in `SPRINT_001_AGENT_PROMPTS.md` states "never merge/approve"; review-only agent runs in its own session with the independence rule. **OK.** `main` protection: owner. |
 | 8. Go-ahead | **Open.** |
 
-**Blocking items remaining:** gate 2 (merge this PR = approve specs/contract), gate 6 (go-ahead). Not blocking but needed for the deliverable: Apps Script deployed + repository variables set by Mon 2026-10-12 EOD (owner), Pages enabled (owner).
+**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 6 (go-ahead). Not blocking but needed for the deliverable: Apps Script deployed + repository variables set by Mon 2026-10-12 EOD (owner), Pages enabled (owner).
 
 ## Planned Stories
 
@@ -62,9 +62,9 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | US-011 + US-012 Emails | Agent 3 | US-010 | `DS-011-lead-emails` | Must |
 | US-015 Mock and CI | Agent 3 | US-001 (CI), contract (mock) | `DS-015-mock-and-ci` | Must |
 | US-016 Pages deploy + RELEASE runbook | Agent 3 | US-001 | `DS-016-pages-deploy` | Must |
-| US-017 cPanel release workflow | Agent 3 | US-016 | `DS-017-cpanel-release` | Stretch |
-| US-019 Look-and-feel proposals | Claude (docs) + owner | UX/CONTENT | `DS-DOCS-ux-proposals` | Must (decision by Mon 12:00) |
-| US-020 Apply chosen look and feel | Agent 1 | US-019 decision, sections merged | `DS-020-visual-identity` | Stretch |
+| US-017 cPanel release workflow | Agent 3 | US-016 | `DS-017-cpanel-release` | Stretch (Must in Sprint 002, PROJECT_SPEC §3) |
+| US-019 Look-and-feel proposals | Claude (docs) + owner | UX/CONTENT | `DS-DOCS-ux-proposals` | Done — proposal A chosen 2026-10-10 |
+| US-020 Apply final palette | Agent 1 | Palette decision | `DS-020-palette` | Sprint 002 |
 
 Agent 3 may branch `DS-015-mock-and-ci` in two PRs (mock first, CI after the scaffold merges); name the second `DS-015-ci-workflows`.
 
@@ -106,11 +106,11 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - No known critical regression; owner approves; `v0.1.0` released.
 
 ## Owner checklist (outside the agents)
-- [ ] Review/approve this PR (copy in CONTENT.md, [CONFIRMAR] items) and merge.
+- [ ] Review/approve this PR (copy in CONTENT.md, privacy notice v1, contract) and merge.
 - [ ] Protect `main`; Settings → Pages → Source: GitHub Actions.
-- [ ] Pick a look-and-feel proposal by Mon 2026-10-12 12:00.
+- [x] Pick a look-and-feel proposal — A "Dugout" (2026-10-10).
 - [ ] Create the leads sheet + Apps Script project, deploy, set Script Properties, put the `/exec` URL in repository variable `PUBLIC_LEAD_ENDPOINT_URL` (runbook from DS-010/DS-016).
-- [ ] Send the photo (≥ 800×800 px) by Mon 2026-10-12.
+- [x] Provisional photo supplied (200 px). A ≥ 800×800 px version later.
 - [ ] Tuesday: smoke test, publish release `v0.1.0`.
 
 Agent kickoff prompts and model recommendations: `docs/sprints/SPRINT_001_AGENT_PROMPTS.md`.

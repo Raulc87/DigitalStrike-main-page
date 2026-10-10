@@ -1,7 +1,7 @@
 # PROJECT_SPEC — DigitalStrike Solutions main page
 
 ## Metadata
-- Version: 0.1
+- Version: 0.2 (2026-10-10: owner answers, review fixes)
 - Status: Draft — pending human owner approval (PR `DS-DOCS-discovery-specs`)
 - Owner / final reviewer: Raul Casañas (CEO, DigitalStrike Solutions)
 - Last updated: 2026-10-09
@@ -44,7 +44,8 @@ The page must:
 - Lead capture to Google Sheets through a Google Apps Script web app (ADR-002), contract `docs/specs/LEAD_ENDPOINT_CONTRACT.md`.
 - Owner notification email ("cover letter") and visitor confirmation email (ADR-005).
 - Spam protection (ADR-004).
-- CI on GitHub Actions; public preview on GitHub Pages; release deployment workflow to GoDaddy cPanel (ADR-001).
+- CI on GitHub Actions; public preview and first release on GitHub Pages (ADR-001).
+- Stretch for Sprint 001 (Must in Sprint 002): release deployment workflow to GoDaddy cPanel (US-017).
 
 ### Out of scope (now)
 - Prices on the page; refunds/devolution policy (pending legal review).
@@ -53,6 +54,7 @@ The page must:
 - Real client logos (none available yet), testimonials.
 - Blog, accounts/login, payments, CMS.
 - Python/Java backend (future path recorded in ADR-002).
+- A reply bot/assistant for leads (owner idea for the future; would follow ADR-002's roadmap).
 
 ## 4. Functional requirements
 
@@ -73,7 +75,7 @@ The page must:
 | FR-013 | After a lead is stored, the visitor receives a confirmation email in the language they used, with the baseball-flavoured tone defined in CONTENT.md and the Calendly link. |
 | FR-014 | Email failures never lose a lead: the row is stored first; email outcome is recorded in the row. |
 | FR-015 | After a successful submission the form is replaced by a thank-you message and an invitation to book session 0 (the scheduling section, pre-filled with name and email). |
-| FR-016 | A Calendly inline widget (`https://calendly.com/rcasanas/1hr`) is embedded in the scheduling section. If it fails to load within 10 s, a link to open Calendly in a new tab is shown. |
+| FR-016 | The scheduling section embeds the Calendly inline widget (`https://calendly.com/rcasanas/1hr`) **on demand**: nothing is requested from Calendly until the visitor clicks "Ver horarios disponibles" or submits the form successfully. If it fails to load within 10 s, a link to open Calendly in a new tab is shown. |
 | FR-017 | The privacy notice is reachable from the form and the footer in both languages; consent is required to submit. |
 | FR-018 | Spam protection: honeypot field, minimum fill time and submission throttles (ADR-004). |
 | FR-019 | The footer shows the slogan, LinkedIn link, contact email, privacy notice link and copyright "© 2026 DigitalStrike Solutions". |
@@ -91,7 +93,8 @@ The page must:
 | BR-007 | Identifiers, codes and data fields are English `snake_case`. |
 | BR-008 | Lead status values: `new` (on creation), then manually `contacting`, `accepted`, `rejected`. |
 | BR-009 | Contact and notification email is `rcasanas@gmail.com` until the corporate mailbox exists (planned sender `pitcher@digitalstrike-solutions.com`); it is configuration, never hard-coded in components. |
-| BR-010 | Session 0 is offered as a free first conversation (Calendly 1 h). *(Owner to confirm "free" — see Open questions.)* |
+| BR-010 | Session 0 is a free, no-commitment first conversation of one hour (Calendly). Confirmed by the owner 2026-10-10. |
+| BR-011 | Reply promise: every lead gets an answer within 2 business days. Confirmed by the owner 2026-10-10. |
 
 ## 6. Non-functional requirements
 
@@ -101,7 +104,7 @@ The page must:
 | NFR-002 | Accessibility: WCAG 2.1 AA contrast for all text, keyboard-operable navigation, form and dialog, visible focus, labelled fields, `lang` attribute per page. |
 | NFR-003 | Performance: static HTML; Lighthouse Performance ≥ 90 and Accessibility ≥ 95 on mobile for `/es/` (Calendly excluded: loaded lazily when the section approaches the viewport). |
 | NFR-004 | SEO: unique title and description per language, `hreflang` alternates (`es`, `en`, `x-default`), canonical URLs, Open Graph image, `sitemap.xml`, `robots.txt`. |
-| NFR-005 | Privacy: no analytics, no third-party cookies from the site itself; fonts self-hosted; Calendly is loaded only in the scheduling section. |
+| NFR-005 | Privacy: no analytics, no third-party cookies from the site itself; fonts self-hosted; Calendly is loaded only after an explicit visitor action (FR-016) and disclosed in the privacy notice. |
 | NFR-006 | Security: no secrets in the repository or the client bundle; the Apps Script endpoint validates everything server-side; personal data is never logged. |
 | NFR-007 | Theming: all colours and fonts are theme tokens (provisional identity v1) so the approved identity can be applied in one story. |
 
@@ -113,8 +116,8 @@ The page must:
 - Storage and processors: Google (Sheets, Apps Script, Gmail) and Calendly (only if the visitor books). Both may process data outside Costa Rica; the privacy notice says so.
 - Consent: an explicit, unchecked checkbox linked to the privacy notice; version `privacy_notice_version` stored with each lead.
 - Rights: access, rectification, deletion by email to the contact address.
-- Retention: 24 months from the last contact, or until deletion is requested. *(Proposed; owner to confirm.)*
-- The privacy notice text in CONTENT.md is a **draft** pending Cinthia Hernández's review; it is shown publicly marked with its version and date.
+- Retention: 24 months from the last contact, or until deletion is requested (confirmed by the owner 2026-10-10).
+- The privacy notice v1 (`2026-10-14-v1`) in CONTENT.md is approved by the owner for publication (merging this spec) and is still to be reviewed by Cinthia Hernández; it is shown publicly with its version and date. Each lead stores the version the visitor saw.
 
 ## 8. Success criteria
 
@@ -132,11 +135,13 @@ The page must:
 - Timeline: first release by 2026-10-14.
 - Budget: free tiers only for now (GitHub, Google, Calendly free plan).
 
-## 10. Open questions (non-blocking for Sprint 001 unless noted)
+## 10. Open questions
 
-1. Is session 0 free? (BR-010; the CTA copy says "gratuita / free" — remove if not.)
-2. Raul's professional photo (≥ 800×800 px). **Blocking for go-live quality**; a provisional monogram is used until it arrives.
-3. Showroom: `Poliart-CR/ai-reporting-platform` is not publicly reachable (404). Shown as a case study without a link unless the repo becomes public and Poliart agrees to be named.
-4. Years of experience: the CV says 17+ years, the origin story says "more than twenty". The page uses **17+** (CV) unless the owner says otherwise.
-5. Has the GoDaddy hosting plan been bought, and is it cPanel (Linux)? Needed only for the GoDaddy deployment (US-017).
-6. Retention period for leads (§7).
+Resolved 2026-10-10: session 0 is free (BR-010); 2-business-day reply (BR-011); 24-month retention (§7); 17+ years (CV and LinkedIn are in sync); Poliart agrees to be named in the showroom (private repo, no link); a provisional 200×200 photo was supplied; look and feel = proposal A.
+
+Still open (non-blocking for Sprint 001):
+1. The color palette may change (owner, 2026-10-10). Tokens make it a token-only change (US-020, Sprint 002).
+2. A ≥ 800×800 px photo to replace the provisional 200 px one.
+3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
+4. Has the GoDaddy hosting plan been bought, and is it cPanel (Linux)? Needed only for US-017.
+5. Cami's approval of visual identity v1.

@@ -1,10 +1,10 @@
 # UX_UI_DIRECTION — DigitalStrike Solutions main page
 
 ## Metadata
-- Version: 0.1
+- Version: 0.2 (2026-10-10: proposal A approved; section treatments, focus rule and click-to-load Calendly updated)
 - Status: Draft — pending human owner approval
 - Copy: `docs/ux/CONTENT.md` (all visitor-facing text; this file defines structure, behaviour and look)
-- Visual identity status: **PROVISIONAL** — identity v1 (`identidad-visual-digitalstrike.md`, Drive, 2026-10-09) chosen by Raul, pending Cami's approval. Look-and-feel proposals with the `ux-proposals` skill follow in a separate PR; the chosen one is recorded in §2.2 and applied as its own story.
+- Visual identity status: **Treatment approved, palette provisional.** Look and feel = proposal A "Dugout" (§2.2), chosen by Raul on 2026-10-10. The palette (identity v1) may still change and is pending Cami's approval; it lives only in tokens (§2.1), so a change is a token-only story (US-020).
 
 ## 1. Page structure
 
@@ -39,6 +39,7 @@ Privacy notice: a dialog opened from the form (keeps form data) and a standalone
 | `--color-bone` | `#F2EFE9` | Text on dark; light section background |
 | `--color-muted` | `#9AA3B2` | Secondary text on carbon (7.0:1) |
 | `--color-error` | `#F28B82` on dark / `#B3372B` on bone | Form errors (check contrast in the scaffold) |
+| `--color-focus` | `#C8872A` on dark surfaces / `#92631F` on light surfaces | Focus ring; must reach 3:1 against the surface it sits on (leather on bone is only 2.63:1) |
 
 Verified pairs (`.claude/skills/ux-proposals/scripts/contrast.py`): bone/carbon 15.5:1 · bone/night 12.4:1 · leather/carbon 5.9:1 · leather/night 4.7:1 · carbon/leather 5.9:1 (button text) · carbon/bone 15.5:1 · stitch/bone 5.2:1.
 
@@ -53,28 +54,44 @@ Motifs (subtle, per the tone rule): the `>_` cursor as a bullet/eyebrow marker; 
 
 Corner radius: 12 px cards, 999 px buttons. Shadows: none on dark; soft on bone sections.
 
-### 2.2 Approved visual identity
-_Not yet approved._ Filled in after the owner picks a proposal (process: `docs/process/VISUAL_IDENTITY_PROCESS.md`).
+### 2.2 Approved look and feel — Proposal A "Dugout"
+- Status: **approved by Raul Casañas on 2026-10-10** (treatment). Palette: provisional, may change (§2.1).
+- Reference (visual only; the spec wins): `docs/ux/proposals/propuesta-a-dugout.html` (PR #2).
+- Character: dark, technical, product-like; sober, with the `>_` cursor as the only recurring motif. No baseball illustrations.
+- Surfaces: carbon page; night bands alternate to separate sections; cards `#1A1F28` (derived from carbon) with a 1 px `#2A3140` border, 12 px radius, no shadows; card hover: border in leather.
+- Text: bone for headings/body on dark, secondary text `#C9CED8` (derived, 10.5:1 on cards, 11.3:1 on carbon, 9.0:1 on night); leather for eyebrows, kickers, step numbers, tier labels, links and the slogan.
+- Type: Archivo 800 headings (h1 2.25→3.6 rem), body 400/500; IBM Plex Mono for eyebrows/kickers (uppercase, letter-spaced), tier labels, chips and step numbers.
+- Buttons: primary = leather fill + carbon text; secondary = transparent + bone 2 px border; card CTA = transparent + `#3A4458` border. Pill radius, min height 48 px (44 px in the header).
+- Hero: split layout ≥ 900 px — copy left, a square panel right with a 32 px grid (`#232A36` lines) and the large mark centred; on mobile the panel shrinks to ~160 px tall with a 120 px mark.
+- Value strip: night band, 3 columns ≥ 768 px, each with a 2 px leather left rule and a mono number.
+- Process: night band, steps with a 2 px `#3A4A68` top rule; warranty card on carbon with a 1 px leather border and the leather shield icon.
+- Showroom: 3 cards; image area on night with leather initials (until screenshots exist); chips `#232A36` bg / `#C9CED8` text.
+- About: night band; photo in a carbon square with a `#3A4A68` border.
+- Clients: carbon; dashed `#3A4458` slots with muted text.
+- Form: carbon section; form card on night with a `#2F3F5E` border; inputs carbon with bone text and `#4A5874` border; placeholder muted.
+- Scheduling: night band; Calendly preview card (dashed `#4A5874` border) until opened.
+- Footer: carbon with a 1 px `#2A3140` top border.
+- Derived colours above are shades of the identity palette and become tokens (`--color-surface-card`, `--color-border`, `--color-border-strong`, `--color-text-secondary`, `--color-grid`).
 
 ## 3. Section details
 
 **Header.** Sticky, carbon with 90% opacity and blur. Mobile: logo + toggle + hamburger (menu as a full-width sheet, focus-trapped, closes on Esc and link click). Desktop ≥ 1024 px: inline nav. The "Agenda tu sesión 0" button is leather with carbon text. Toggle shows `ES | EN`, current language bold and `aria-current="true"`; each is a link to the same anchor on the other language's page.
 
-**Hero.** Carbon background. Eyebrow in Plex Mono with `>_`. H1, subtitle, slogan (italic Archivo, leather). Primary button (leather) → `#contacto`; secondary (outline bone) → `#agenda`. Large logo mark on the right on desktop, hidden or small on mobile. Value strip: 3 columns desktop / stacked mobile, on night background.
+**Hero.** As §2.2. Eyebrow in Plex Mono with `>_`. H1 ("tu negocio" in italic), subtitle, slogan (italic Archivo, leather). Primary button (leather) → `#contacto`; secondary (outline bone) → `#agenda`. Value strip on night.
 
-**Services.** Bone background (light section for rhythm). 2-column grid ≥ 768 px, 3 columns ≥ 1280 px (5 cards: A, B, C, D, customisations). Each card: tier letter in Plex Mono, title, "for whom", 3–5 bullet "includes", button "Quiero algo así" that scrolls to `#contacto` and preselects `project_type` (via `?tipo=<code>#contacto` or a client-side event; must work without JS by just jumping to the form). Note under the grid.
+**Services.** Carbon background (§2.2). 2-column grid ≥ 768 px, 3 columns ≥ 1280 px (5 cards: A, B, C, D, customisations). Each card: tier letter in Plex Mono, title, "for whom", 3–5 bullet "includes", button "Quiero algo así" that scrolls to `#contacto` and preselects `project_type` (via `?tipo=<code>#contacto` or a client-side event; must work without JS by just jumping to the form). Note under the grid.
 
-**How we work.** Carbon. 4 numbered steps (`01`–`04` in Plex Mono) in a horizontal timeline ≥ 1024 px, vertical below. Warranty highlight as a full-width night card with a shield-like icon outline (simple SVG, no stock icon packs required).
+**How we work.** Night band. 4 numbered steps (`01`–`04` in Plex Mono) in a horizontal timeline ≥ 1024 px, vertical below. Warranty highlight as a full-width carbon card with a leather border and a shield-like icon outline (simple SVG, no stock icon packs required).
 
-**Showroom.** Night background. 3 cards: image area (screenshot or initials placeholder, 16:10), title, description, tags as Plex Mono chips, link "Ver código en GitHub" (opens in new tab, `rel="noopener"`) or the "private" label.
+**Showroom.** Carbon background. 3 cards: image area (screenshot or initials placeholder, 16:10), title, description, tags as Plex Mono chips, link "Ver código en GitHub" (opens in new tab, `rel="noopener"`) or the "private" label.
 
-**About the CEO.** Bone background. Photo (square, rounded 12 px; provisional monogram "RC") left, text right (stacked on mobile). Facts as chips. LinkedIn button (outline, new tab).
+**About the CEO.** Night band. Photo (square, rounded 12 px; provisional 200 px photo, monogram fallback) left, text right (stacked on mobile). Facts as chips. LinkedIn button (outline, new tab).
 
 **Clients.** Carbon. Title + 4 dashed bone-outline slots with the slot text, 2×2 mobile / 4 in a row desktop.
 
-**Lead form.** Night background, form on a carbon card, max width 720 px. Field order: name, email, phone, company, project type (select), budget range (select), timeline (select), message (textarea), consent checkbox with privacy link, honeypot (visually hidden, `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`), submit. Validation on blur and on submit; on submit errors, focus the error summary and link each error to its field (`aria-describedby`). Submit disabled + "Enviando…" while pending. On success: replace the form with the thank-you block (focus its heading), set the Calendly prefill (name, email) and offer the "Agendar mi sesión 0" button → `#agenda`. On error: keep data, show the localized message (`role="alert"`), re-enable submit.
+**Lead form.** Carbon background, form on a night card, max width 720 px. Field order: name, email, phone, company, project type (select), budget range (select), timeline (select), message (textarea), consent checkbox with privacy link, honeypot (visually hidden, `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`), submit. Validation on blur and on submit; on submit errors, focus the error summary and link each error to its field (`aria-describedby`). Submit disabled + "Enviando…" while pending. On success: replace the form with the thank-you block (focus its heading), set the Calendly prefill (name, email) and offer the "Agendar mi sesión 0" button → `#agenda`. On error: keep data, show the localized message (`role="alert"`), re-enable submit.
 
-**Scheduling.** Bone background. Title, body, Calendly inline widget (min-height 700 px desktop, 1000 px mobile), loaded lazily with `IntersectionObserver` (rootMargin 400 px) or immediately after a successful submission. If the script fails or nothing renders in 10 s: show the fallback link (always present in `<noscript>`).
+**Scheduling.** Night band. Title, body, then a preview card the size of the widget with the button "Ver horarios disponibles" and the one-line Calendly notice (CONTENT §11). **Nothing is requested from Calendly until** the visitor clicks the button or submits the form successfully; then the official inline widget (min-height 700 px desktop, 1000 px mobile) replaces the card, prefilled with name and email after a submission. If the script fails or nothing renders in 10 s: show the fallback link (always present in `<noscript>`).
 
 **Footer.** Carbon. Logo + slogan; email (`mailto:`), LinkedIn, privacy link; location line; copyright.
 
@@ -85,7 +102,7 @@ _Not yet approved._ Filled in after the owner picks a proposal (process: `docs/p
 
 ## 5. Responsive and accessibility (acceptance thresholds)
 - Widths checked: 360, 390, 768, 1024, 1440 px — no horizontal scroll, no overlapping text.
-- Touch targets ≥ 44×44 px; visible focus (2 px leather outline + 2 px offset).
+- Touch targets ≥ 44×44 px; visible focus: 2 px `--color-focus` outline + 2 px offset (leather on dark, leather-text-on-light on light surfaces).
 - All text pairs from §2.1 only; any new pair must pass 4.5:1 (3:1 for ≥ 24 px text).
 - `prefers-reduced-motion`: no scroll animations.
 - Images have meaningful `alt` (CONTENT.md) or `alt=""` when decorative.

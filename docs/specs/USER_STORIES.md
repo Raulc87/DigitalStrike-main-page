@@ -92,7 +92,7 @@ As the owner, every lead lands in my Google Sheet.
 ## US-012 — Visitor confirmation email
 - AC1: After the owner email attempt, the visitor receives CONTENT §14.2 in the submitted `language`, from `SENDER_NAME`, `Reply-To` = `REPLY_TO_EMAIL`, with the Calendly link.
 - AC2: Same escaping and status recording as US-011 (`confirmation_email_status`).
-- AC3: Not sent for honeypot/fill-time decoys, rate-limited requests or idempotent repeats (known `submission_id`).
+- AC3: Not sent for honeypot/fill-time decoys, rate-limited requests or idempotent repeats (known `submission_id`), except the contract §5.4 recovery: a repeat sends it once if its status is still `pending`.
 
 ## US-013 — Scheduling (Calendly inline)
 - AC1: The `#agenda` section shows a preview card with the `schedule.open` button and the `schedule.notice` line; **no request to Calendly is made until** the visitor clicks the button or submits the form successfully. Then the official inline widget for `PUBLIC_CALENDLY_URL` loads in place (UX §3).

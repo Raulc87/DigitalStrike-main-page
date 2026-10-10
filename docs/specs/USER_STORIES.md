@@ -69,7 +69,7 @@ As a visitor, I can describe my need and send it.
 - AC1: Fields, order, labels, hints and option labels as UX §3 and CONTENT §10 / contract §4.
 - AC2: Client validation implements every rule of contract §3 with the localized messages of CONTENT §10; errors on blur and on submit; on submit with errors, focus moves to the error summary.
 - AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `privacy_notice_version` (from `PUBLIC_PRIVACY_NOTICE_VERSION`), `website` (honeypot), `elapsed_ms` (monotonic time since first render) and `submission_id` (UUID v4 kept across retries and renewed only after a success, contract §5.4).
-- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so a retry cannot create a duplicate lead.
+- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so an unchanged retry cannot create a duplicate lead; editing any field after an error renews `submission_id` (contract §5.4).
 - AC5: Submit disabled with "Enviando…" while pending; double submission impossible.
 - AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name; the copy confirms receipt only, never that an email was sent.
 - AC7: Consent checkbox unchecked by default and required; the privacy dialog opens without losing typed data and closes with Esc.

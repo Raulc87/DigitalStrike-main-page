@@ -175,7 +175,7 @@ Errors:
 | `invalid_format` (phone) | Revisa el número, por ejemplo +506 8888 0000. | Check the number, e.g. +1 555 123 4567. |
 | `invalid_option` | Elige una de las opciones. | Choose one of the options. |
 | `must_be_true` | Necesitamos tu consentimiento para responderte. | We need your consent to reply. |
-| `rate_limited` | Recibimos varios envíos seguidos. Espera unos minutos e inténtalo de nuevo. | We received several submissions in a row. Please wait a few minutes and try again. |
+| `rate_limited` | En este momento no podemos recibir más mensajes por aquí. Inténtalo más tarde o escríbenos directamente a {email}. | We can't take more messages here right now. Please try again later or email us directly at {email}. |
 | `generic` (storage_unavailable, internal_error, invalid_json, payload_too_large, network) | No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a {email}. | We couldn't send your message. Please try again or email us at {email}. |
 | `form.error_summary` | Revisa los campos marcados. | Please check the highlighted fields. |
 

@@ -1,6 +1,6 @@
 # SPRINT 001 — Agent Kickoff Prompts
 
-One Claude Code session per agent, each on `Raulc87/DigitalStrike-main-page`. **Do not start any agent until this docs PR is merged and you have given the go-ahead** (SPRINT_001 entry gates).
+One Claude Code session per agent, each on `Raulc87/DigitalStrike-main-page`. **Do not start any agent until this docs PR (#1) and then the proposals PR (#2, gate 3b) are merged and you have given the go-ahead** (SPRINT_001 entry gates 2, 3b and 6).
 
 ## Models
 
@@ -18,7 +18,7 @@ If budget matters more than time, run Agent 3 on Sonnet 5.5 and switch to Opus 5
 
 ## Launch order
 
-1. **Now (after go-ahead):** Agent 1 (`DS-001-frontend-scaffold` first) and Agent 3 (`DS-010-apps-script-endpoint` + mock).
+1. **After PRs #1 and #2 are merged and the go-ahead:** Agent 1 (`DS-001-frontend-scaffold` first) and Agent 3 (`DS-010-apps-script-endpoint` + mock).
 2. **When `DS-001-frontend-scaffold` is merged:** Agent 2.
 3. **Review-only agent:** start once; send it each PR link as PRs open.
 
@@ -140,7 +140,8 @@ Order of work:
    - LeadForm: fields, order, labels, hints and option labels from CONTENT.md §10 and contract §4;
      honeypot `website` (visually hidden, tabindex -1, autocomplete off, aria-hidden);
      elapsed_ms from performance.now() since first render; submission_id (crypto.randomUUID)
-     kept across retries and renewed only after success (contract §5.4); privacy_notice_version
+     kept across retries of an unchanged payload, renewed after success and whenever a field
+     changes after a failed attempt (contract §5.4); privacy_notice_version
      from PUBLIC_PRIVACY_NOTICE_VERSION; validation on blur and submit, error summary focus,
      aria-describedby; disabled submit with "Enviando…"; data kept on every error; success state
      replaces the form with the thank-you block (focus it) using the first name.
@@ -160,7 +161,8 @@ Order of work:
    scripts/mock-lead-endpoint.mjs: es-CR and en-US detection, toggle, happy path ES and EN at
    desktop and 390 px (row visible via GET /__leads), validation errors, MOCK_FAIL=storage,
    rate_limited, network failure (route abort) followed by a retry that reuses the same
-   submission_id (only one row in /__leads), no Calendly request before the click, Calendly
+   submission_id (only one row in /__leads), an edit after a failure that sends a new
+   submission_id, no Calendly request before the click, Calendly
    container and fallback (block assets.calendly.com), and @axe-core/playwright with no serious/critical violations on /es/ and
    /en/. Ask Agent 3 (through me) to make the e2e job required once your suite is green.
 ```

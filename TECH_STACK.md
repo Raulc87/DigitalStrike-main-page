@@ -77,10 +77,10 @@ See ADR-001 and `docs/runbooks/RELEASE.md`, `docs/runbooks/DEPLOYMENT.md`.
 - Optional later: a daily Apps Script trigger that emails the owner if any row has a `failed` email status.
 
 ## 13. Risks
-- Apps Script quotas (consumer Gmail: ~100 email recipients/day, 6 min/execution): far above the 20–40 leads/90 days target; global throttle protects it.
+- Apps Script quotas (Google Workspace account: ~1,500 email recipients/day; 6 min/execution): far above the 20–40 leads/90 days target; global throttle protects it.
 - Apps Script cold start can take 1–3 s: the form shows "Enviando…"; 20 s client timeout.
 - Response always HTTP 200: clients must read `ok` (contract §1).
-- The owner's personal Gmail is the sender until the corporate mailbox exists (ADR-005).
+- Emails are sent as `manager@digitalstrike-solutions.com` (Google Workspace; SPF, DKIM and DMARC published): the Apps Script project and the sheet must be created under that account (ADR-005). A Workspace sharing restriction could block the web app's "Anyone" access — checked in the runbook.
 - GoDaddy injects a monitoring script into served HTML; it must be disabled by GoDaddy support before the first release (NFR-005, ADR-001 release gate).
 
 ## 14. Upgrade / Scaling Path

@@ -111,7 +111,8 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - [ ] Review/approve this PR (copy in CONTENT.md, privacy notice v1, contract) and merge.
 - [ ] Protect `main`; Settings → Pages → Source: GitHub Actions.
 - [x] Approve the visual identity — proposal A v3, Palette 1, ball logo and tagline (2026-10-10).
-- [ ] Create the leads sheet + Apps Script project, deploy, set Script Properties, put the `/exec` URL in repository variable `PUBLIC_LEAD_ENDPOINT_URL` (runbook from DS-010/DS-016).
+- [x] Google Workspace with `manager@digitalstrike-solutions.com` configured; SPF, DKIM and DMARC published (2026-10-10).
+- [ ] Signed in as `manager@digitalstrike-solutions.com`: create the leads sheet + Apps Script project, deploy, set Script Properties, put the `/exec` URL in repository variable `PUBLIC_LEAD_ENDPOINT_URL` (runbook from DS-010/DS-016).
 - [x] Provisional photo supplied (200 px). A ≥ 800×800 px version later.
 - [x] Buy the GoDaddy Deluxe plan and `digitalstrike-solutions.com`; SSL active, HTTPS forced, holding page live (2026-10-10).
 - [ ] Create a dedicated cPanel FTP account limited to `public_html`; set repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (runbook from DS-017) — by Mon.

@@ -9,7 +9,7 @@
 How do we keep bots from filling the sheet and burning the email quota, without hurting real visitors?
 
 ## Context
-Apps Script cannot see the client IP, so the pilot's per-IP rate limit is not possible. Every stored lead triggers two emails (quota ~100 recipients/day on a consumer Gmail).
+Apps Script cannot see the client IP, so the pilot's per-IP rate limit is not possible. Every stored lead triggers two emails (quota ~1,500 recipients/day on the Google Workspace sending account, ADR-005).
 
 ## Options Considered
 - **A — Honeypot + minimum fill time + throttles per email and global (chosen).** Invisible to people, no third party, no cookies.

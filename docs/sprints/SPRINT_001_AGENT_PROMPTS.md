@@ -193,7 +193,8 @@ Order of work:
    - The scaffold's Vitest config already includes apps-script/tests/**; ask me (for Agent 1) for any
      other devDependency. Until the scaffold is merged you may keep a temporary local config
      inside apps-script/.
-   - docs/runbooks/APPS_SCRIPT_SETUP.md for me: create the sheet, run setupSheet(), create the
+   - docs/runbooks/APPS_SCRIPT_SETUP.md for me (US-010 AC6–AC7): signed in as manager@digitalstrike-solutions.com,
+     check the Workspace setting that allows "Anyone" web-app access, create the sheet, run setupSheet(), create the
      Apps Script project (manual copy or clasp), set every Script Property of contract §8, deploy
      as web app, copy the /exec URL, redeploy procedure (new version on the same deployment so the
      URL stays stable), and a curl smoke test that uses Content-Type text/plain.

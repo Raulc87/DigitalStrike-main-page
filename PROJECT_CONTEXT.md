@@ -6,7 +6,7 @@
 - Repository: https://github.com/Raulc87/DigitalStrike-main-page
 - Starter Kit: https://github.com/Raulc87/sdd_starter_kit
 - Status: **Planning — Sprint 001 ready pending docs approval and go-ahead**
-- Product owner / final reviewer: Raul Casañas (CEO, rcasanas@gmail.com)
+- Product owner / final reviewer: Raul Casañas (CEO, manager@digitalstrike-solutions.com)
 
 ## Active documentation
 - Project spec: `docs/specs/PROJECT_SPEC.md`

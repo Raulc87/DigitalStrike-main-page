@@ -10,7 +10,7 @@
 | Sprint | Window | Goal |
 |---|---|---|
 | **001 — First release** (short sprint, exception to the 7-day rule, see §6) | Go-ahead (target Sat 2026-10-10) → release cut **Tue 2026-10-13 18:00 (CR)** → demo Wed 2026-10-14 | Public bilingual page on `https://digitalstrike-solutions.com` (GoDaddy cPanel, deployed by CI/CD on release; previews on GitHub Pages) with services, showroom, CEO, working lead flow (sheet + 2 emails) and Calendly |
-| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | High-resolution photo, logo text converted to outlines, Poliart screenshot, corporate mailbox, carry-overs |
+| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | High-resolution photo, logo text converted to outlines, Poliart screenshot, carry-overs |
 
 ## 2. Repository layout (target)
 
@@ -49,7 +49,7 @@ docs/runbooks/LOCAL_DEVELOPMENT.md  APPS_SCRIPT_SETUP.md  RELEASE.md  DEPLOYMENT
 
 1. **Phase 0 (foundation, merged first):** `DS-001-frontend-scaffold` (Agent 1). Agent 3 starts at the same time on `apps-script/` and the mock, which do not depend on the scaffold.
 2. **Phase 1 (parallel):** Agent 1 sections; Agent 2 form → privacy → Calendly (after the scaffold merges); Agent 3 endpoint → emails → CI → Pages preview → cPanel production release.
-3. **Human owner (in parallel, by Mon 2026-10-12 EOD):** create the sheet and the Apps Script project from `apps-script/`, deploy, set Script Properties, set repository variables, enable Pages (source: GitHub Actions), protect `main` (runbook `APPS_SCRIPT_SETUP.md`); create the dedicated cPanel FTP account and set the `CPANEL_*` repository secrets; ask GoDaddy support to disable their injected monitoring script (runbook `DEPLOYMENT.md`).
+3. **Human owner (in parallel, by Mon 2026-10-12 EOD):** signed in as `manager@digitalstrike-solutions.com`, create the sheet and the Apps Script project from `apps-script/`, deploy, set Script Properties, set repository variables, enable Pages (source: GitHub Actions), protect `main` (runbook `APPS_SCRIPT_SETUP.md`); create the dedicated cPanel FTP account and set the `CPANEL_*` repository secrets; ask GoDaddy support to disable their injected monitoring script (runbook `DEPLOYMENT.md`).
 4. **Integration (Tue 2026-10-13):** Agent 2 `DS-009-integration-e2e` against the mock; owner checks the Pages preview with the real endpoint; review fixes.
 5. **Release:** owner tags `v0.1.0` and publishes the GitHub Release; `release-cpanel.yml` deploys it to `https://digitalstrike-solutions.com` (replacing the holding page), then the owner runs the release smoke test there (`RELEASE.md`).
 

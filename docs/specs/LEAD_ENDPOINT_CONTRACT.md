@@ -126,7 +126,7 @@ A valid `elapsed_ms` below 3000 → treated as a bot (decoy success, nothing sto
 Counted under the script lock from the stored rows themselves (columns A and E of the most recent rows, at most `MAX_LEADS_PER_DAY` + 1 rows read), so they cannot be bypassed by cache eviction and need no extra storage. CacheService may be used only as a read optimisation, never as the source of truth.
 - Per email: at most `MAX_LEADS_PER_EMAIL_PER_HOUR` (default 3) stored leads with the same normalized email in the last 60 minutes.
 - Global hourly: at most `MAX_LEADS_PER_HOUR` (default 20) stored leads in the last 60 minutes.
-- Global daily: at most `MAX_LEADS_PER_DAY` (default 40, i.e. 80 email recipients, below the ~100/day consumer Gmail quota) stored leads on the current calendar day in America/Costa_Rica.
+- Global daily: at most `MAX_LEADS_PER_DAY` (default 40, i.e. 80 email recipients, far below the ~1,500/day Google Workspace quota of the sending account, ADR-005) stored leads on the current calendar day in America/Costa_Rica.
 - Independently, emails are sent only while `MailApp.getRemainingDailyQuota()` ≥ 1 (step 10); a lead is never rejected because of email quota.
 - Exceeded → `rate_limited` with `retry_after_seconds` (seconds until the window or the day resets). Apps Script cannot see the client IP; no IP is ever stored.
 
@@ -140,7 +140,7 @@ Counted under the script lock from the stored rows themselves (columns A and E o
 
 ## 6. Google Sheet
 
-Spreadsheet: owned by the owner's Google account; worksheet name `leads`. Row 1 is the header with **exactly** these columns, in order:
+Spreadsheet: owned by the Google Workspace account `manager@digitalstrike-solutions.com` (the same account that owns and runs the Apps Script, ADR-005); worksheet name `leads`. Row 1 is the header with **exactly** these columns, in order:
 
 | # | Column | Value |
 |---|---|---|
@@ -204,8 +204,8 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 | Property | Example / default | Notes |
 |---|---|---|
 | `SHEET_ID` | `1AbC…` | Spreadsheet ID of the leads sheet |
-| `OWNER_NOTIFICATION_EMAIL` | `rcasanas@gmail.com` | Recipient of the "cover letter" (BR-009) |
-| `REPLY_TO_EMAIL` | `rcasanas@gmail.com` | Reply-To for the visitor confirmation |
+| `OWNER_NOTIFICATION_EMAIL` | `manager@digitalstrike-solutions.com` | Recipient of the "cover letter" (BR-009) |
+| `REPLY_TO_EMAIL` | `manager@digitalstrike-solutions.com` | Reply-To for the visitor confirmation |
 | `SENDER_NAME` | `DigitalStrike Solutions` | Display name of emails |
 | `CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` | Used in the confirmation email |
 | `SITE_URL` | `https://digitalstrike-solutions.com` | Used in emails |
@@ -220,7 +220,7 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 |---|---|
 | `PUBLIC_LEAD_ENDPOINT_URL` | Apps Script `/exec` URL; locally `http://127.0.0.1:8787/exec` (mock, §9) |
 | `PUBLIC_CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` |
-| `PUBLIC_CONTACT_EMAIL` | `rcasanas@gmail.com` |
+| `PUBLIC_CONTACT_EMAIL` | `manager@digitalstrike-solutions.com` |
 | `PUBLIC_LINKEDIN_URL` | `https://www.linkedin.com/in/raul-casanas/` |
 | `PUBLIC_SITE_URL` | `https://digitalstrike-solutions.com` (production and canonical); the Pages preview build uses `https://raulc87.github.io` |
 | `PUBLIC_BASE_PATH` | `/DigitalStrike-main-page` (Pages) / `/` (own domain) |

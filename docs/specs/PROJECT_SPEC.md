@@ -91,7 +91,7 @@ The page must:
 | BR-006 | Inclusive, gender-neutral language in both languages (e.g. "personas emprendedoras", "te", avoid "los clientes" when a neutral form exists). |
 | BR-007 | Identifiers, codes and data fields are English `snake_case`. |
 | BR-008 | Lead status values: `new` (on creation), then manually `contacting`, `accepted`, `rejected`. |
-| BR-009 | Contact and notification email is `rcasanas@gmail.com` until the corporate mailbox exists (planned sender `pitcher@digitalstrike-solutions.com`); it is configuration, never hard-coded in components. |
+| BR-009 | Contact, notification and sender email is `manager@digitalstrike-solutions.com` (Google Workspace, configured 2026-10-10, ADR-005); it is configuration, never hard-coded in components. |
 | BR-010 | Session 0 is a free, no-commitment first conversation of one hour (Calendly). Confirmed by the owner 2026-10-10. |
 | BR-011 | Reply promise: every lead gets an answer within 2 business days. Confirmed by the owner 2026-10-10. |
 

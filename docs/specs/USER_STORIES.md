@@ -83,6 +83,7 @@ As the owner, every lead lands in my Google Sheet.
 - AC4: Sheet write failure → `storage_unavailable`; unexpected exception → `internal_error`; personal data never appears in `console.log`/Stackdriver logs (only `lead_id` and error codes).
 - AC5: Pure logic (validation, normalization, enums, throttle decisions, lead_id, row building, email rendering) is in files testable with Vitest in Node; tests cover every rule and error code.
 - AC6: `docs/runbooks/APPS_SCRIPT_SETUP.md` includes the owner's data procedures: updating `last_contact_at`, the monthly retention review (delete rows older than 24 months from `last_contact_at`, or `submitted_at` when empty) and handling access/correction/deletion requests within 5 business days, matching the privacy notice. Deletion steps cover the sheet row and the Gmail copies (owner notification by `lead_id`, visitor confirmation in Sent by address, then Trash), per PROJECT_SPEC §7.
+- AC7: `docs/runbooks/APPS_SCRIPT_SETUP.md` has the owner create the sheet and the Apps Script project while signed in as `manager@digitalstrike-solutions.com` (ADR-005), and check that the Workspace admin settings allow a web app with "Anyone" access before deploying.
 
 ## US-011 — Owner notification email ("cover letter")
 - AC1: After the row is stored, an email is sent to `OWNER_NOTIFICATION_EMAIL` with subject and body of CONTENT §14.1, `Reply-To` = visitor email, HTML + plain-text.

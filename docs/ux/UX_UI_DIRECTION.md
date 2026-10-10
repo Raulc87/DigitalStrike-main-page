@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.3 (2026-10-10: visual identity approved — proposal A v3, Palette 1, ball logo)
-- Status: Draft — pending human owner approval (merge of this PR)
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged
 - Copy: `docs/ux/CONTENT.md` (all visitor-facing text; this file defines structure, behaviour and look)
 - Visual identity status: **APPROVED** by Raul Casañas on 2026-10-10 — proposal A v3 "Dugout" with Palette 1 (Masculine Tech Balance) and the ball logo (§2). Identity v1 (carbon/leather) is superseded. Cami's sign-off on the brand is still recorded as pending in the Origo governance docs; it does not block the build.
 

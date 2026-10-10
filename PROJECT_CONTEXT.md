@@ -6,7 +6,7 @@
 - Repository: https://github.com/Raulc87/DigitalStrike-main-page
 - Starter Kit: https://github.com/Raulc87/sdd_starter_kit
 - Status: **Planning — Sprint 001 ready pending docs approval and go-ahead**
-- Product owner / final reviewer: Raul Casañas (CEO, rcasanas@gmail.com)
+- Product owner / final reviewer: Raul Casañas (CEO, manager@digitalstrike-solutions.com)
 
 ## Active documentation
 - Project spec: `docs/specs/PROJECT_SPEC.md`
@@ -31,7 +31,7 @@
 - Start: on go-ahead (target 2026-10-10)
 - End: release cut 2026-10-13 18:00 (CR); demo 2026-10-14
 - Duration: short release sprint — approved exception to the 7-business-day rule (IMPLEMENTATION_PLAN §6)
-- Deliverable: GitHub Pages site + release `v0.1.0`
+- Deliverable: release `v0.1.0` live on `https://digitalstrike-solutions.com` (GoDaddy cPanel), previews on GitHub Pages
 - Status: Planned
 
 ## Agent allocation
@@ -42,17 +42,17 @@
 - Conflict resolution: human owner with the agent owning the conflicting file
 
 ## Important constraints
-- Hosting: GitHub Pages (preview + first release); GoDaddy cPanel on release once hosting and `digitalstrike-solutions.com` exist (ADR-001)
+- Hosting: GoDaddy cPanel (Deluxe, `digitalstrike-solutions.com`, bought 2026-10-10) for production, deployed on GitHub Release; GitHub Pages for previews of `main` (ADR-001)
 - Backend: Google Apps Script + Google Sheets + Gmail (ADR-002, ADR-005); Python/Java roadmap in ADR-002
 - Languages / locales: Spanish (source) and English; `/es/`, `/en/`; browser detection + saved toggle (ADR-003)
 - Naming conventions: data/API fields English `snake_case`; TS `camelCase`; components `PascalCase`
 - Personal data / legal jurisdiction: Costa Rica, Ley 8968; consent checkbox; privacy notice draft v1 pending legal review
-- Where the sprint deliverable runs: public (GitHub Pages), endpoint on Apps Script
+- Where the sprint deliverable runs: public on `https://digitalstrike-solutions.com`, endpoint on Apps Script
 
 ## Open questions
 - Logo lockups: convert the wordmark text to outlines before printing / trademark filing (owner)
 - Raul's photo ≥ 800×800 px (provisional 200 px in use)
 - Sanitized screenshot of the Poliart platform for the showroom
-- GoDaddy hosting plan bought? cPanel Linux?
+- GoDaddy support to disable their injected monitoring script before `v0.1.0` (release gate)
 - Cami's sign-off on the approved identity (Origo governance; does not block the build)
 - Legal review of privacy notice v1 (Cinthia)

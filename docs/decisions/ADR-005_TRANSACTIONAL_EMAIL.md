@@ -1,32 +1,53 @@
 # ADR-005 — Transactional email (owner notification and visitor confirmation)
 
-- Status: Proposed
-- Date: 2026-10-09
+- Status: **Accepted** — effective when PR #1 is merged (revised 2026-10-10: corporate mailbox in place)
+- Date: 2026-10-09 · revised 2026-10-10
 - Decision owner: Raul Casañas
-- Related specs: PROJECT_SPEC FR-012–FR-014, BR-009; CONTENT §14; US-011, US-012
+- Related specs: PROJECT_SPEC FR-012–FR-014, BR-009; CONTENT §14; US-010, US-011, US-012
 
 ## Decision Request
-How are the two emails sent now, and how do we move to the corporate sender later?
+How are the two emails sent: the owner's "cover letter" for each lead and the visitor confirmation?
 
 ## Context
-The owner wants a "cover letter" email for each lead and a confirmation to the visitor. For now the sender is `rcasanas@gmail.com`; later `pitcher@digitalstrike-solutions.com`.
+- The owner wants a "cover letter" email for each lead and a confirmation to the visitor.
+- **2026-10-10:** Google Workspace is configured on `digitalstrike-solutions.com`, and the corporate mailbox is **`manager@digitalstrike-solutions.com`**. DNS was checked the same day:
+  - MX records point to Google;
+  - SPF includes `_spf.google.com`;
+  - DKIM (`google._domainkey`) is published;
+  - DMARC is published with `p=quarantine`.
+- This replaces the earlier plan: `rcasanas@gmail.com` for now, a future `pitcher@` address later.
+- Apps Script `MailApp` always sends as the account that runs the script. On a Workspace account the daily quota is about 1,500 recipients, against about 100 on consumer Gmail.
 
 ## Options Considered
-- **A — `MailApp.sendEmail` from the Apps Script owner's account (chosen now).** Free, native; sender is the account running the script.
-- B — Transactional provider (Resend, Postmark, SES). Better deliverability and custom domain, but needs an API key and DNS records; not possible before the domain exists.
-- C — `GmailApp` with a `from` alias. Requires the alias to be verified in Gmail ("Send mail as").
+- **A — `MailApp.sendEmail` from an Apps Script project owned by and deployed as `manager@digitalstrike-solutions.com` (chosen).** Free and native. The sender is the corporate address, and the mail is signed by the domain's DKIM and aligned with SPF and DMARC.
+- B — Transactional provider (Resend, Postmark, SES): needs an API key and extra DNS records; not justified at this volume.
+- C — The Apps Script under a personal Gmail with a "Send mail as" alias and `GmailApp`: more moving parts, and the mail is not DKIM-aligned with the domain.
 
 ## Decision
-A now. Sender display name = `SENDER_NAME` ("DigitalStrike Solutions"); owner email has `Reply-To` = visitor; visitor email has `Reply-To` = `REPLY_TO_EMAIL`.
-
-**Later (when the domain and Google Workspace or another mailbox exist):** either run the Apps Script under the `pitcher@digitalstrike-solutions.com` account (simplest), or verify it as a Gmail "Send mail as" alias and switch to `GmailApp` with `from`; set SPF, DKIM and DMARC on the domain. If volume or deliverability demands it, move to a transactional provider (new ADR, aligned with ADR-002 stage 1).
+Option A.
+- The leads sheet and the Apps Script project are created **while signed in as `manager@digitalstrike-solutions.com`**. The web app is deployed with "Execute as: Me" and "Who has access: Anyone".
+- Sender: `manager@digitalstrike-solutions.com`, display name `SENDER_NAME` ("DigitalStrike Solutions").
+- Owner notification: to `OWNER_NOTIFICATION_EMAIL` = `manager@digitalstrike-solutions.com`, with `Reply-To` = the visitor's email.
+- Visitor confirmation: `Reply-To` = `REPLY_TO_EMAIL` = `manager@digitalstrike-solutions.com`.
+- All addresses stay configuration (Script Properties and `PUBLIC_CONTACT_EMAIL`), never hard-coded (BR-009).
+- A role address such as `pitcher@` can be added later as a Workspace alias: a configuration change only, no new ADR.
 
 ## Consequences
-- Positive: works on day one; all addresses are configuration (Script Properties).
-- Negative: confirmations come from a personal Gmail until the switch; consumer Gmail quota ~100 recipients/day.
+- Positive:
+  - From day one, emails come from the company domain.
+  - Better deliverability: DKIM, SPF and DMARC are aligned.
+  - The quota is far above the throttles of contract §5.3 (40 leads/day = 80 recipients).
+- Negative:
+  - The sheet and the script live in the Workspace account; access depends on that account and its admin settings.
+  - If the Workspace admin restricts sharing outside the domain, deploying a web app with "Anyone" access can be blocked. The runbook (`APPS_SCRIPT_SETUP.md`) includes checking this setting.
 
 ## Validation
-Smoke test: both emails received, Reply-To correct, ES and EN versions, HTML escaped.
+Release smoke test:
+- both emails received, from `manager@digitalstrike-solutions.com`;
+- `Reply-To` correct on both;
+- ES and EN versions;
+- HTML escaped;
+- message headers show `dkim=pass` and `spf=pass`.
 
 ## Review Trigger
-Corporate mailbox created; deliverability problems; quota warnings.
+Deliverability problems; quota warnings; the backend moves (ADR-002 stage 1); a need for a dedicated sending address.

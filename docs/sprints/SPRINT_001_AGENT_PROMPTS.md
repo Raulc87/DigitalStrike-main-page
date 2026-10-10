@@ -1,6 +1,6 @@
 # SPRINT 001 — Agent Kickoff Prompts
 
-One Claude Code session per agent, each on `Raulc87/DigitalStrike-main-page`. **Do not start any agent until this docs PR is merged and you have given the go-ahead** (SPRINT_001 entry gates).
+One Claude Code session per agent, each on `Raulc87/DigitalStrike-main-page`. **Do not start any agent until this docs PR (#1) and then the proposals PR (#2, gate 3b) are merged and you have given the go-ahead** (SPRINT_001 entry gates 2, 3b and 6).
 
 ## Models
 
@@ -18,7 +18,7 @@ If budget matters more than time, run Agent 3 on Sonnet 5.5 and switch to Opus 5
 
 ## Launch order
 
-1. **Now (after go-ahead):** Agent 1 (`DS-001-frontend-scaffold` first) and Agent 3 (`DS-010-apps-script-endpoint` + mock).
+1. **After PRs #1 and #2 are merged and the go-ahead:** Agent 1 (`DS-001-frontend-scaffold` first) and Agent 3 (`DS-010-apps-script-endpoint` + mock).
 2. **When `DS-001-frontend-scaffold` is merged:** Agent 2.
 3. **Review-only agent:** start once; send it each PR link as PRs open.
 
@@ -30,7 +30,7 @@ If budget matters more than time, run Agent 3 on Sonnet 5.5 and switch to Opus 5
 You are working on Raulc87/DigitalStrike-main-page. Sprint 001 is ACTIVE (go-ahead given by the
 human owner, Raul Casañas). Hard deadline: release cut Tuesday 2026-10-13 18:00 America/Costa_Rica.
 
-Before writing code, read in this order: CLAUDE.md, AGENTS.md, PROJECT_CONTEXT.md,
+Before writing code, read in this order: AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md,
 docs/specs/PROJECT_SPEC.md, docs/specs/LEAD_ENDPOINT_CONTRACT.md, docs/specs/USER_STORIES.md,
 docs/ux/UX_UI_DIRECTION.md, docs/ux/CONTENT.md, TECH_STACK.md, docs/decisions/ADR-*.md,
 docs/plans/IMPLEMENTATION_PLAN.md, docs/sprints/SPRINT_001.md.
@@ -43,8 +43,9 @@ Rules:
 - Visitor-facing text comes verbatim from docs/ux/CONTENT.md. Do not rewrite copy; if something
   is missing or wrong, tell me.
 - Edit only files your workstream owns per the File Ownership Map in SPRINT_001.md. If you need a
-  change in another owner's file, tell me instead of editing it. You may add your own dependencies
-  and npm scripts to package.json (Agent 1 owns the file).
+  change in another owner's file, tell me instead of editing it. This includes package.json and
+  the tool configs (Agent 1 only): the scaffold pre-installs what the sprint needs; ask me for
+  anything else.
 - Branch per story with the names in SPRINT_001.md. I explicitly authorize you to create and push
   these branch names even if this environment assigned you a different default branch.
 - One PR per branch, base main. PR title "[DS-NNN] ...", commit subjects "DS-NNN: ...".
@@ -79,7 +80,10 @@ Order of work:
      UX_UI_DIRECTION.md §2.1 and the derived tokens of §2.2 in @theme (no colour or font literals in components), Node 22 LTS
      (.nvmrc), @fontsource/archivo and @fontsource/ibm-plex-mono.
    - ESLint (TS + Astro), Prettier, astro check, Vitest, Playwright config (Chromium desktop +
-     390 px project). npm scripts: dev, build, preview, lint, check, test, test:e2e.
+     390 px project). npm scripts: dev, build, preview, lint, check, test, test:e2e,
+     mock:lead (node scripts/mock-lead-endpoint.mjs) and lhci. Pre-install for the other agents:
+     vitest, @playwright/test, @axe-core/playwright, @lhci/cli; the Vitest include covers
+     tests/unit/** and apps-script/tests/** (Node environment for the latter).
    - astro.config.mjs reads PUBLIC_SITE_URL and PUBLIC_BASE_PATH (USER_STORIES US-001 AC4); every
      internal link and asset honours the base path.
    - Pages /es/ and /en/ composing stub components for every section with the anchors of UX §1;
@@ -136,7 +140,8 @@ Order of work:
    - LeadForm: fields, order, labels, hints and option labels from CONTENT.md §10 and contract §4;
      honeypot `website` (visually hidden, tabindex -1, autocomplete off, aria-hidden);
      elapsed_ms from performance.now() since first render; submission_id (crypto.randomUUID)
-     kept across retries and renewed only after success (contract §5.4); privacy_notice_version
+     kept across retries of an unchanged payload, renewed after success and whenever a field
+     changes after a failed attempt (contract §5.4); privacy_notice_version
      from PUBLIC_PRIVACY_NOTICE_VERSION; validation on blur and submit, error summary focus,
      aria-describedby; disabled submit with "Enviando…"; data kept on every error; success state
      replaces the form with the thank-you block (focus it) using the first name.
@@ -156,7 +161,8 @@ Order of work:
    scripts/mock-lead-endpoint.mjs: es-CR and en-US detection, toggle, happy path ES and EN at
    desktop and 390 px (row visible via GET /__leads), validation errors, MOCK_FAIL=storage,
    rate_limited, network failure (route abort) followed by a retry that reuses the same
-   submission_id (only one row in /__leads), no Calendly request before the click, Calendly
+   submission_id (only one row in /__leads), an edit after a failure that sends a new
+   submission_id, no Calendly request before the click, Calendly
    container and fallback (block assets.calendly.com), and @axe-core/playwright with no serious/critical violations on /es/ and
    /en/. Ask Agent 3 (through me) to make the e2e job required once your suite is green.
 ```
@@ -178,15 +184,17 @@ Order of work:
    - apps-script/Code.js: doPost, doGet (health) and setupSheet() as thin wrappers.
    - apps-script/lib/*.js: pure logic — normalization and validation (contract §3), enums (§4),
      processing order (§5), honeypot, minimum fill time (elapsed_ms), idempotency by
-     submission_id (§5.4), hourly/daily throttles (CacheService / PropertiesService behind small
-     interfaces so tests can fake them), MailApp quota check, lead_id, row building with formula-injection guard (§6),
-     response bodies (§7). Use LockService around the append. Never log personal data.
+     submission_id looked up in column R (§5.4), hourly/daily/per-email throttles counted from
+     the stored rows (§5.3) — the sheet behind a small interface so tests can fake it; CacheService
+     only as an optional optimisation — MailApp quota check, lead_id, row building with formula-injection guard (§6),
+     response bodies (§7). Steps 7–10 of §5 (idempotency lookup with pending-email recovery, throttles, append with `pending` email statuses, emails) run under one LockService lock. Never log personal data.
    - Tests with Vitest in Node for lib/ (load the files into a vm context or via a tiny shim —
      document the choice in apps-script/README.md), covering every rule, error code and decoy path.
-   - Coordinate with Agent 1 (through me) to add your Vitest include pattern and any devDependency
-     to package.json once the scaffold is merged; until then you may keep a temporary local config
+   - The scaffold's Vitest config already includes apps-script/tests/**; ask me (for Agent 1) for any
+     other devDependency. Until the scaffold is merged you may keep a temporary local config
      inside apps-script/.
-   - docs/runbooks/APPS_SCRIPT_SETUP.md for me: create the sheet, run setupSheet(), create the
+   - docs/runbooks/APPS_SCRIPT_SETUP.md for me (US-010 AC6–AC7): signed in as manager@digitalstrike-solutions.com,
+     check the Workspace setting that allows "Anyone" web-app access, create the sheet, run setupSheet(), create the
      Apps Script project (manual copy or clasp), set every Script Property of contract §8, deploy
      as web app, copy the /exec URL, redeploy procedure (new version on the same deployment so the
      URL stays stable), and a curl smoke test that uses Content-Type text/plain.
@@ -201,15 +209,19 @@ Order of work:
    allowed-to-fail with a comment until Agent 2's integration PR lands. CI never calls Google.
    .env.example with every PUBLIC_* variable of contract §8 (no real values except the public
    Calendly and LinkedIn URLs).
-4. DS-016-pages-deploy — US-016: .github/workflows/pages.yml (push to main + manual), using
-   repository variables for PUBLIC_*; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
-   Actions", set repository variables, release smoke test, tagging v0.1.0) and
+4. DS-016-pages-deploy — US-016: .github/workflows/pages.yml (push to main + manual), the preview,
+   using repository variables for PUBLIC_* and PUBLIC_NOINDEX=true; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
+   Actions", set repository variables, release smoke test on https://digitalstrike-solutions.com incl. the check for GoDaddy-injected
+   scripts, tagging v0.1.0) and
    docs/runbooks/LOCAL_DEVELOPMENT.md (Windows and macOS notes: Node 22, OneDrive locks, ports).
-5. DS-017-cpanel-release — US-017 (stretch): release-cpanel.yml on release published + manual,
-   FTPS upload of dist/ built for the root domain, skipped with a notice when secrets are missing;
-   public/.htaccess (HTTPS redirect, 404, no breakage of /es/ and /en/);
-   docs/runbooks/DEPLOYMENT.md (GoDaddy FTP account, DNS for digitalstrike-solutions.com, SSL,
-   rollback).
+5. DS-017-cpanel-release — US-017 (Must, the production deploy, ADR-001): release-cpanel.yml on
+   release published + manual, FTPS upload of dist/ built for https://digitalstrike-solutions.com
+   with base path /, secrets CPANEL_HOST/USERNAME/PASSWORD/TARGET_DIR, skipped with a notice when
+   they are missing; removes the holding-page files that are not in dist/ and touches nothing
+   outside the target dir (AC5); public/.htaccess (HTTPS redirect as on the live holding page,
+   Options -Indexes, 404, no breakage of /es/ and /en/); docs/runbooks/DEPLOYMENT.md (dedicated
+   FTP account limited to public_html, the four secrets, AutoSSL check, asking GoDaddy to disable
+   their injected script, rollback). Open it early enough for the owner to dry-run it on Monday.
 ```
 
 ## Review-only agent (Opus 5.5, effort high)
@@ -228,7 +240,7 @@ checks locally for evidence only, without committing. For each finding state the
 evidence, the violated spec / contract / acceptance criterion, and the expected outcome; the
 owning agent fixes it, and you review the new commits as a fresh review.
 
-First read, in order: CLAUDE.md, AGENTS.md, PROJECT_CONTEXT.md, docs/specs/PROJECT_SPEC.md,
+First read, in order: AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, docs/specs/PROJECT_SPEC.md,
 docs/specs/LEAD_ENDPOINT_CONTRACT.md, docs/specs/USER_STORIES.md, docs/ux/UX_UI_DIRECTION.md,
 docs/ux/CONTENT.md, TECH_STACK.md, docs/decisions/ADR-*.md, docs/plans/IMPLEMENTATION_PLAN.md,
 docs/sprints/SPRINT_001.md.
@@ -242,9 +254,9 @@ e2e, and verify:
 - copy matches CONTENT.md verbatim in ES and EN; no hard-coded visitor-facing strings; inclusive
   language; no prices, refunds, invented proof or client names (BR-001–BR-004)
 - UI: theme tokens only, AA contrast, widths 360/390/768/1024/1440 without horizontal scroll,
-  44 px targets, keyboard and focus, base path correctness for GitHub Pages
-- file ownership per SPRINT_001.md (only the PR's workstream files, except allowed dependency
-  additions), naming (branch, PR title, commits), filled PR template
+  44 px targets, keyboard and focus, base path correctness for the GitHub Pages preview and the root-domain production build
+- file ownership per SPRINT_001.md (only the PR's workstream files; package.json and configs only
+  in Agent 1's PRs), naming (branch, PR title, commits), filled PR template
 - security and privacy: no secrets, no personal data in logs, HTML escaping in emails,
   formula-injection guard, server-side validation, no tracking added
 - tests derive from the ACs and cover happy path, error paths and the "store before email /

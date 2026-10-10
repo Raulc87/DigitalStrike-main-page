@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2 (2026-10-10: contract pre-lock revisions, click-to-load Calendly, Lighthouse check, proposal A, photo)
-- Status: Draft — pending human owner approval
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged
 - Related: `PROJECT_SPEC.md`, `LEAD_ENDPOINT_CONTRACT.md`, `docs/ux/UX_UI_DIRECTION.md`, `docs/ux/CONTENT.md`
 - Story IDs map to branches `DS-<NNN>-<slug>` (AGENTS.md). "Widths" always means 360, 390, 768, 1024 and 1440 px.
 
@@ -27,7 +27,7 @@ As a visitor, I see the page in my language and can switch it.
 - AC1: `/` redirects to the saved `ds_lang` if present; otherwise `/es/` when the first preferred browser language starts with `es`, otherwise `/en/`. Without JS, `/` shows links to both.
 - AC2: The `ES | EN` toggle is visible at every width, goes to the same section on the other page and saves `ds_lang`; a later visit to `/` honours it.
 - AC3: Each page has `lang`, unique title/description (CONTENT §1), canonical URL, `hreflang` alternates `es`, `en`, `x-default` (→ `/`), Open Graph tags with a 1200×630 PNG built from `logo-horizontal-dark.svg` on the navy token.
-- AC4: `sitemap.xml` and `robots.txt` are generated with the correct site URL and base path.
+- AC4: `sitemap.xml` and `robots.txt` are generated with the correct site URL and base path. When `PUBLIC_NOINDEX=true` (Pages preview), every page has `<meta name="robots" content="noindex">` and `robots.txt` disallows all.
 - AC5: Vitest covers the detection function (es-CR, es, es-419, en-US, fr-FR, empty list, saved preference wins, storage throws).
 
 ## US-003 — Header, hero, value strip, footer
@@ -68,8 +68,8 @@ As a visitor, I see the page in my language and can switch it.
 As a visitor, I can describe my need and send it.
 - AC1: Fields, order, labels, hints and option labels as UX §3 and CONTENT §10 / contract §4.
 - AC2: Client validation implements every rule of contract §3 with the localized messages of CONTENT §10; errors on blur and on submit; on submit with errors, focus moves to the error summary.
-- AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `privacy_notice_version` (from `PUBLIC_PRIVACY_NOTICE_VERSION`), `website` (honeypot), `elapsed_ms` (monotonic time since first render) and `submission_id` (UUID v4 kept across retries and renewed only after a success, contract §5.4).
-- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so a retry cannot create a duplicate lead.
+- AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `privacy_notice_version` (from `PUBLIC_PRIVACY_NOTICE_VERSION`), `website` (honeypot), `elapsed_ms` (monotonic time since first render) and `submission_id` (UUID v4 kept across retries of an unchanged payload, renewed after a success or when a field changes after a failed attempt, contract §5.4).
+- AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so an unchanged retry cannot create a duplicate lead; editing any field after an error renews `submission_id` (contract §5.4).
 - AC5: Submit disabled with "Enviando…" while pending; double submission impossible.
 - AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name; the copy confirms receipt only, never that an email was sent.
 - AC7: Consent checkbox unchecked by default and required; the privacy dialog opens without losing typed data and closes with Esc.
@@ -78,30 +78,32 @@ As a visitor, I can describe my need and send it.
 ## US-010 — Lead endpoint (Apps Script): validate and store
 As the owner, every lead lands in my Google Sheet.
 - AC1: `doPost` implements contract §5 in that order, including idempotency (§5.4) and the daily cap (§5.3); `doGet` returns `{ "ok": true, "service": "ds-lead-endpoint" }` for health checks.
-- AC2: A valid lead appends one row with columns A–R in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
+- AC2: A valid lead appends one row with columns A–S in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
 - AC3: A `setupSheet()` function creates the `leads` worksheet header and the `status` dropdown (`new`, `contacting`, `accepted`, `rejected`) idempotently.
 - AC4: Sheet write failure → `storage_unavailable`; unexpected exception → `internal_error`; personal data never appears in `console.log`/Stackdriver logs (only `lead_id` and error codes).
 - AC5: Pure logic (validation, normalization, enums, throttle decisions, lead_id, row building, email rendering) is in files testable with Vitest in Node; tests cover every rule and error code.
+- AC6: `docs/runbooks/APPS_SCRIPT_SETUP.md` includes the owner's data procedures: updating `last_contact_at`, the monthly retention review (delete rows older than 24 months from `last_contact_at`, or `submitted_at` when empty) and handling access/correction/deletion requests within 5 business days, matching the privacy notice. Deletion steps cover the sheet row and the Gmail copies (owner notification by `lead_id`, visitor confirmation in Sent by address, then Trash), per PROJECT_SPEC §7.
+- AC7: `docs/runbooks/APPS_SCRIPT_SETUP.md` has the owner create the sheet and the Apps Script project while signed in as `manager@digitalstrike-solutions.com` (ADR-005), and check that the Workspace admin settings allow a web app with "Anyone" access before deploying.
 
 ## US-011 — Owner notification email ("cover letter")
 - AC1: After the row is stored, an email is sent to `OWNER_NOTIFICATION_EMAIL` with subject and body of CONTENT §14.1, `Reply-To` = visitor email, HTML + plain-text.
 - AC2: All visitor values are HTML-escaped.
-- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`; remaining MailApp quota < 1 → `quota_exceeded` without attempting. The response to the visitor is unaffected.
+- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`; remaining MailApp quota < 1 → `quota_exceeded` without attempting. The response to the visitor is unaffected. The row is appended with the status `pending`; a retry with the same `submission_id` sends the email only while it is still `pending` (contract §5.4 recovery).
 
 ## US-012 — Visitor confirmation email
 - AC1: After the owner email attempt, the visitor receives CONTENT §14.2 in the submitted `language`, from `SENDER_NAME`, `Reply-To` = `REPLY_TO_EMAIL`, with the Calendly link.
 - AC2: Same escaping and status recording as US-011 (`confirmation_email_status`).
-- AC3: Not sent for honeypot/fill-time decoys, rate-limited requests or idempotent repeats (known `submission_id`).
+- AC3: Not sent for honeypot/fill-time decoys, rate-limited requests or idempotent repeats (known `submission_id`), except the contract §5.4 recovery: a repeat sends it once if its status is still `pending`.
 
 ## US-013 — Scheduling (Calendly inline)
 - AC1: The `#agenda` section shows a preview card with the `schedule.open` button and the `schedule.notice` line; **no request to Calendly is made until** the visitor clicks the button or submits the form successfully. Then the official inline widget for `PUBLIC_CALENDLY_URL` loads in place (UX §3).
 - AC2: After a successful submission the widget is (re)initialized with name and email prefilled.
-- AC3: If `PUBLIC_CALENDLY_URL` is unset, the script fails, or nothing renders within 10 s, the fallback link (new tab) is shown; a `<noscript>` link always exists.
+- AC3: `PUBLIC_CALENDLY_URL` defaults to `https://calendly.com/rcasanas/1hr` (contract §8) when unset, so a valid URL always exists. If the Calendly script fails or nothing renders within 10 s, the fallback link to that URL (new tab) is shown; a `<noscript>` link always exists.
 - AC4: Playwright checks that no request to `*.calendly.com` happens before the click, the container after it, and the fallback (Calendly network blocked in tests).
 
 ## US-014 — Spam protection
 - AC1 (client, Agent 2): honeypot field per UX §3 and `elapsed_ms` sent.
-- AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (`CacheService`, `PropertiesService` for the daily counter); decoys return the normal success body and store nothing.
+- AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (counted from the stored rows under the script lock, contract §5.3–5.4; CacheService only as an optional optimisation); decoys return the normal success body and store nothing.
 - AC3: Tests cover each path, including that rate-limited requests are not stored and send no email.
 
 ## US-015 — Local mock, CI
@@ -110,19 +112,28 @@ As the owner, every lead lands in my Google Sheet.
 - AC3: CI never uses real Google endpoints or credentials.
 - AC4 (NFR-003): a CI job runs Lighthouse CI (`@lhci/cli`, mobile preset, 3 runs) against the built `/es/` and `/en/` pages served locally and fails below Performance 0.90 or Accessibility 0.95. Calendly is not loaded (click-to-load), so it does not affect the score.
 
-## US-016 — Preview and first release on GitHub Pages
-- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*.
+## US-016 — Preview on GitHub Pages and release runbook
+- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*. The preview build sets `PUBLIC_NOINDEX=true` (US-002 AC4), so the preview never competes with `digitalstrike-solutions.com` in search (ADR-001).
 - AC2: `https://raulc87.github.io/DigitalStrike-main-page/` serves the site; `/es/` and `/en/` work, assets load, and the form submits to the real Apps Script endpoint once `PUBLIC_LEAD_ENDPOINT_URL` is set.
-- AC3: `docs/runbooks/RELEASE.md` explains how to cut a release (tag `vX.Y.Z` + GitHub Release) and the smoke test (both languages, submit a test lead, check the row and both emails, Calendly visible, then mark the test row `rejected`).
+- AC3: `docs/runbooks/RELEASE.md` explains how to cut a release (tag `vX.Y.Z` + GitHub Release, which triggers US-017) and the smoke test on `https://digitalstrike-solutions.com`:
+  - both languages, over HTTPS;
+  - submit a test lead, check the row and both emails, then mark the test row `rejected`;
+  - Calendly visible;
+  - the served HTML contains no GoDaddy-injected script (`wsimg.com`, `secureserver.net`).
 
-## US-017 — Release deployment to GoDaddy cPanel
+## US-017 — Release deployment to GoDaddy cPanel (production)
 - AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR`.
-- AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing.
-- AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS, sets a 404 page, and does not break `/es/` and `/en/`.
-- AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps (FTP account, DNS for `digitalstrike-solutions.com`, SSL) and how to roll back (re-run the workflow on the previous release).
+- AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing. (For `v0.1.0` the owner sets them by Mon 2026-10-12, so the release does deploy.)
+- AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS (as the live holding page already does), disables directory listing, sets a 404 page, and does not break `/es/` and `/en/`.
+- AC5: The upload replaces the holding page: files that are no longer in `dist/` (the holding page's `index.html` and `assets/`) are removed from the target directory, and nothing outside it is touched (e.g. a state file or an explicit clean of the holding-page paths).
+- AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps and how to roll back (re-run the workflow on the previous release). Steps:
+  - create a dedicated FTP account limited to `public_html`;
+  - set the four secrets;
+  - check that AutoSSL is active (already done 2026-10-10);
+  - ask GoDaddy support to disable their injected monitoring script.
 
 ## US-018 — Privacy notice
-- AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, version and "draft" status line.
+- AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, including its version line (no other status text).
 - AC2: The version shown is `PUBLIC_PRIVACY_NOTICE_VERSION`; the runbook states that it must be listed in the Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` before a frontend with a new version is deployed.
 - AC-UI.
 

@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2
-- Status: **Draft for owner approval.** v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
 - Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.
@@ -175,7 +175,7 @@ Errors:
 | `invalid_format` (phone) | Revisa el número, por ejemplo +506 8888 0000. | Check the number, e.g. +1 555 123 4567. |
 | `invalid_option` | Elige una de las opciones. | Choose one of the options. |
 | `must_be_true` | Necesitamos tu consentimiento para responderte. | We need your consent to reply. |
-| `rate_limited` | Recibimos varios envíos seguidos. Espera unos minutos e inténtalo de nuevo. | We received several submissions in a row. Please wait a few minutes and try again. |
+| `rate_limited` | En este momento no podemos recibir más mensajes por aquí. Inténtalo más tarde o escríbenos directamente a {email}. | We can't take more messages here right now. Please try again later or email us directly at {email}. |
 | `generic` (storage_unavailable, internal_error, invalid_json, payload_too_large, network) | No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a {email}. | We couldn't send your message. Please try again or email us at {email}. |
 | `form.error_summary` | Revisa los campos marcados. | Please check the highlighted fields. |
 
@@ -211,11 +211,11 @@ Versión 2026-10-14-v1
 
 **Quién es responsable de tus datos.** Raul Casañas, quien opera bajo la marca DigitalStrike Solutions en San José, Costa Rica. Contacto: {contact_email}.
 
-**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. Este sitio no guarda tu dirección IP ni usa cookies de seguimiento.
+**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. El formulario no guarda tu dirección IP y el sitio no usa cookies de seguimiento. Como en cualquier sitio web, nuestro proveedor de alojamiento (GoDaddy) registra datos técnicos de cada visita, como la dirección IP, por seguridad y funcionamiento del servidor.
 
 **Para qué los usamos.** Solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad.
 
-**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador, puede usar sus propias cookies y, si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
+**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador y puede usar sus propias cookies. Si se carga después de enviar el formulario, le pasamos tu nombre y correo para prellenar la cita. Si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
 
 **Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos.
 
@@ -229,11 +229,11 @@ Version 2026-10-14-v1
 
 **Who is responsible for your data.** Raul Casañas, operating under the brand DigitalStrike Solutions in San José, Costa Rica. Contact: {contact_email}.
 
-**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. This site doesn't store your IP address or use tracking cookies.
+**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. The form doesn't store your IP address and the site doesn't use tracking cookies. As with any website, our hosting provider (GoDaddy) logs technical data about each visit, such as the IP address, for security and server operation.
 
 **What we use it for.** Only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising.
 
-**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser, may set its own cookies and, if you book, processes the booking data. These services may store data outside Costa Rica.
+**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser and may set its own cookies. If it loads after you submit the form, we pass it your name and email to prefill the booking. If you book, it processes the booking data. These services may store data outside Costa Rica.
 
 **How long.** Up to 24 months from our last contact, or until you ask us to delete it.
 

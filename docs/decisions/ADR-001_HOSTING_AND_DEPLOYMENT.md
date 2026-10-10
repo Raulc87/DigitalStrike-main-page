@@ -1,58 +1,78 @@
 # ADR-001 — Hosting and deployment
 
-- Status: Proposed
-- Date: 2026-10-09
+- Status: **Accepted** — effective when PR #1 is merged (revised 2026-10-10 after the hosting purchase)
+- Date: 2026-10-09 · revised 2026-10-10
 - Decision owner: Raul Casañas
-- Related specs: PROJECT_SPEC §9, TECH_STACK §2, §9; US-016, US-017
+- Related specs: PROJECT_SPEC §3, §9; TECH_STACK §2, §9; US-016, US-017
 
 ## Decision Request
 Where does the site run for the first release on 2026-10-14, and how do releases reach production on GoDaddy?
 
 ## Context
-- Production target is GoDaddy cPanel with `digitalstrike-solutions.com`. As of 2026-10-09 the domain is decided but not yet bought (legal-fase0 §1.3), and the hosting plan status is unconfirmed.
-- The owner needs a public, working page by Wednesday 2026-10-14 for an entrepreneur meet-up.
+- **Bought on 2026-10-10:** the domain `digitalstrike-solutions.com` and the GoDaddy **Deluxe** cPanel (Linux) hosting plan, with the domain attached as the primary domain.
+- **Verified on 2026-10-10:**
+  - AutoSSL certificate active; HTTP → HTTPS forced in `.htaccess` (301 checked for `www.` and the bare domain).
+  - The holding page (`holding-page/`) is live at `https://digitalstrike-solutions.com`.
+  - GoDaddy support confirmed the plan offers cPanel "Setup Python App", so the Python roadmap of ADR-002 can run on this host.
+- GoDaddy's server injects its own monitoring script (`img1.wsimg.com/.../tccl.min.js`, beacons to `csp.secureserver.net`) into every HTML page. Its comment says to contact hosting support to opt out. This conflicts with NFR-005 (no third-party requests or analytics from the site) and with the privacy notice.
+- The owner needs the public site by Wednesday 2026-10-14 (entrepreneur meet-up), and asked for releases to deploy automatically.
 - The repository is public, so GitHub Pages is free.
-- The site is static (ADR-002 moves the backend to Apps Script), so any static host works.
+- The site is static (ADR-002 keeps the backend on Apps Script), so it deploys as plain files.
 
 ## Decision Drivers
-- A public URL by 2026-10-14 without depending on the domain or the hosting purchase.
-- "Deploy on release" automation requested by the owner.
-- Zero cost now; easy move to the final domain.
+- Production on the company's own domain from the first release (cards and QR codes point to `digitalstrike-solutions.com`).
+- "Deploy on release" automation (CI/CD) requested by the owner.
+- A preview of every merge for review, without touching production.
+- Room for the future Python backend on the same host (ADR-002).
 
 ## Options Considered
 
-### Option A — GitHub Pages now, GoDaddy cPanel on release (chosen)
-Pros: public in minutes; preview of every merge to `main`; the GoDaddy workflow is ready the day the plan exists.
-Cons: two build targets (base path `/DigitalStrike-main-page/` vs `/`).
-Risks: base-path bugs — mitigated by building both in CI and testing links.
+### Option A — GitHub Pages for the first release, GoDaddy later (original choice, 2026-10-09)
+Pros: no dependency on buying hosting. Cons: the meet-up URL would be `raulc87.github.io/...`. **Superseded:** the hosting and the domain now exist.
 
-### Option B — GoDaddy only
-Pros: one target. Cons: blocked on buying hosting + domain + DNS + SSL before Wednesday. Risk: miss the meet-up.
+### Option B — GoDaddy cPanel for production from the first release; GitHub Pages as preview only (chosen, 2026-10-10)
+Pros: the company domain from day one; production changes only through a published release; every merge still visible on Pages.
+Cons: two build targets (base path `/DigitalStrike-main-page/` on Pages, `/` on cPanel); FTP credentials stored as repository secrets.
+Risks:
+- Base-path bugs: mitigated by building both in CI and testing links.
+- FTP secrets not set before the release cut: owner checklist item with a Monday deadline.
 
-### Option C — Point the domain at GitHub Pages permanently (no GoDaddy hosting)
-Pros: free hosting forever with HTTPS; the domain can still be bought at GoDaddy. Cons: no server-side runtime if a Python backend is later wanted on the same host (not needed while ADR-002 holds).
-Note: a valid option to reconsider before paying for cPanel hosting renewal (~10–14 USD/month per costos-y-tarifas).
+### Option C — Point the domain at GitHub Pages (no GoDaddy hosting)
+Pros: free hosting with HTTPS. Cons: no server-side runtime for the Python roadmap; the cPanel plan is already paid. Not chosen.
 
 ## Decision
-Option A. `main` deploys to GitHub Pages (`https://raulc87.github.io/DigitalStrike-main-page/`). Publishing a GitHub Release deploys the same commit to GoDaddy cPanel over FTPS; the job is skipped with a notice until the cPanel secrets exist.
+Option B.
+- **Production:** publishing a GitHub Release (CI green on that commit) runs `release-cpanel.yml`. It builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL=https://digitalstrike-solutions.com`, then uploads `dist/` to `public_html` over FTPS with a dedicated FTP account restricted to that folder. The first release replaces the holding page.
+- **Preview:** every push to `main` runs `pages.yml` and deploys to `https://raulc87.github.io/DigitalStrike-main-page/`. It is never linked publicly and has `noindex`, so it cannot compete with production in search.
+- **Rollback:** re-run the release workflow on the previous release tag.
+- **Release gate:** GoDaddy's injected monitoring script must be switched off by GoDaddy support before `v0.1.0` (NFR-005). The release smoke test checks that the served HTML contains no `wsimg.com` / `secureserver.net` script.
 
 ## Rationale
-Meets the date with no purchases, gives the owner the release-driven deployment, and keeps production on GoDaddy as requested.
+It meets the meet-up on the real domain, gives the owner release-driven deployment, keeps a safe preview of every merge, and leaves the Python runtime available for ADR-002 stage 1.
 
 ## Consequences
 ### Positive
-- Every merge is visible publicly for review; production releases are deliberate.
+- Cards and QR codes for the meet-up can point to `https://digitalstrike-solutions.com` permanently.
+- Production changes only through deliberate releases; every merge is reviewable on Pages first.
 ### Negative / Trade-offs
-- The first release URL is the GitHub Pages one; QR codes/cards printed for the meet-up should point to it or to a short link that can be changed later.
+- The FTP account is a credential to protect: repository secrets only, an account limited to `public_html`, and rotation if leaked.
+- US-017 becomes Must for Sprint 001 (it was stretch).
 
 ## Architecture Impact
-Static `dist/` only. `PUBLIC_SITE_URL` and `PUBLIC_BASE_PATH` drive canonical URLs, sitemap and links.
+Static `dist/` only. `PUBLIC_SITE_URL` and `PUBLIC_BASE_PATH` drive canonical URLs, sitemap and links. `public/.htaccess` (cPanel only) forces HTTPS, disables directory listing and sets cache headers; Pages ignores it.
 
 ## Implementation Impact
-Workflows `pages.yml` and `release-cpanel.yml` (Agent 3); `.htaccess` in `public/` for cPanel (ignored by Pages).
+- Workflows `pages.yml` and `release-cpanel.yml` (Agent 3).
+- Repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (US-017 AC1; owner, by Mon 2026-10-12).
+- Runbook `docs/runbooks/DEPLOYMENT.md` (US-017 AC4).
+- Preview builds add `noindex`.
 
 ## Validation
-Release smoke test (runbook) on Pages on 2026-10-13; the same on cPanel at the first GoDaddy release.
+Release smoke test (`RELEASE.md`) on `https://digitalstrike-solutions.com` after `v0.1.0` is published:
+- both languages and HTTPS;
+- form → sheet row + two emails;
+- Calendly;
+- no GoDaddy-injected script.
 
 ## Review Trigger
-Domain and hosting bought; a server-side backend is needed (ADR-002); Pages limits become a problem.
+A server-side backend moves to the cPanel Python app (ADR-002 stage 1); GoDaddy cannot remove the injected script; hosting renewal (compare the renewal price with Option C).

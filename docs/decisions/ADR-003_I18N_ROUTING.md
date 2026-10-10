@@ -1,6 +1,6 @@
 # ADR-003 — Language routing: `/es/` and `/en/` with browser detection
 
-- Status: Proposed
+- Status: **Accepted** — effective when PR #1 is merged
 - Date: 2026-10-09
 - Decision owner: Raul Casañas
 - Related specs: PROJECT_SPEC FR-001–FR-003, NFR-004; US-002

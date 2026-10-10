@@ -42,9 +42,9 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 6. Stack and environment | GitHub Pages capability confirmed (public repo); GoDaddy runtime not needed (ADR-001/002); local run defined (dev + mock); test/lint/CI named. **OK.** |
 | 7. Parallelization | 3 agents assigned; ownership map, scaffold-first order, integration PR owner (Agent 2), conflict rule below. **OK.** |
 | 7.1 Merge control | Every prompt in `SPRINT_001_AGENT_PROMPTS.md` states "never merge/approve"; review-only agent runs in its own session with the independence rule. **OK.** `main` protection: owner. |
-| 8. Go-ahead | **Open.** |
+| 8. Go-ahead | **Open** (after gates 2 and 3b). |
 
-**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 6 (go-ahead). Not blocking but needed for the deliverable: Apps Script deployed + repository variables set by Mon 2026-10-12 EOD (owner), Pages enabled (owner).
+**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 3b (merge PR #2 after this one, so the approved visual reference is on `main` before Agent 1 starts), gate 6 (go-ahead). Not blocking but needed for the deliverable: Apps Script deployed + repository variables set by Mon 2026-10-12 EOD (owner), Pages enabled (owner).
 
 ## Planned Stories
 

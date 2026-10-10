@@ -1,6 +1,6 @@
 # Look-and-feel proposals (US-019)
 
-- Status: **Decided — Proposal A "Dugout", chosen by Raul Casañas on 2026-10-10.** Recorded in `docs/ux/UX_UI_DIRECTION.md` §2.2. The palette may still change (token-only, US-020). B and C are kept as references only.
+- Status: **Decided — Proposal A v3 "Dugout" with Palette 1 and the ball logo, approved by Raul Casañas on 2026-10-10** (tagline "We strike out your software needs" approved too). Recorded in `docs/ux/UX_UI_DIRECTION.md` §2; the logo kit lives in `docs/assets/brand/`. A, A v2, B and C are kept as history only.
 - Built with the kit's `ux-proposals` skill on 2026-10-09 from `docs/ux/UX_UI_DIRECTION.md` §2.1 (identity v1: palette, logo, Archivo + IBM Plex Mono) and the Spanish copy in `docs/ux/CONTENT.md` (verbatim).
 - These are **visual references, not production code.** Open the HTML files in a browser (fonts load from Google Fonts in the mockups only; production self-hosts them).
 
@@ -24,7 +24,7 @@ Provisional in all three: Raul's photo (monogram), project screenshots, client l
 
 After the decision: the Visual Identity section (UX §2.2) and story US-020 are filled in a follow-up docs PR.
 
-## Proposal A v2 — Dugout with Palette 1 (2026-10-10, awaiting approval)
+## Proposal A v2 — Dugout with Palette 1 (2026-10-10, superseded by v3)
 
 File: `propuesta-a-v2-dugout-paleta1.html`. Same layout and copy as A, plus the owner's answers (session 0 free, receipt-only success copy, click-to-load Calendly, Poliart named, provisional photo). New palette "Masculine Tech Balance":
 
@@ -52,7 +52,7 @@ The marks are drawn from scratch for DigitalStrike. The reference images the own
 
 Checks: `contrast.py` on every pair above; layout check at 360/390/768/1024/1280/1440 px with no overflow and all targets ≥ 44 px.
 
-## Proposal A v3 — Dugout · Palette 1 · owner's logo (2026-10-10, awaiting approval)
+## Proposal A v3 — Dugout · Palette 1 · owner's logo (2026-10-10, APPROVED)
 
 File: `propuesta-a-v3-dugout-logo.html`. Same as v2, with the logo the owner supplied (a refinement of the "Costura" concept: white ball, navy outline, teal herringbone stitches, navy `>_` cursor). The owner's reference was a raster image without watermarks; it is redrawn here as vectors so it scales and can be used in production:
 

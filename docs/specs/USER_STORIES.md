@@ -31,7 +31,7 @@ As a visitor, I see the page in my language and can switch it.
 - AC5: Vitest covers the detection function (es-CR, es, es-419, en-US, fr-FR, empty list, saved preference wins, storage throws).
 
 ## US-003 — Header, hero, value strip, footer
-- AC1: Header as UX §3 (sticky; mobile menu focus-trapped, closes on Esc and on link click; desktop inline nav ≥ 1024 px).
+- AC1: Header as UX §3 (sticky; mobile menu focus-trapped, closes on Esc and on link click; inline nav ≥ 1200 px, menu button below).
 - AC2: Hero shows eyebrow, title, subtitle, slogan and two CTAs to `#contacto` and `#agenda`.
 - AC3: Value strip shows the three items of CONTENT §4.
 - AC4: Footer shows CONTENT §12 with `mailto:` from `PUBLIC_CONTACT_EMAIL`, LinkedIn from `PUBLIC_LINKEDIN_URL` (new tab, `rel="noopener"`) and the privacy page link.

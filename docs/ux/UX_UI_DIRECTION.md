@@ -75,7 +75,7 @@ Corner radius: 12 px cards, 999 px buttons. Shadows: none on dark; soft on bone 
 
 ## 3. Section details
 
-**Header.** Sticky, carbon with 90% opacity and blur. Mobile: logo + toggle + hamburger (menu as a full-width sheet, focus-trapped, closes on Esc and link click). Desktop ≥ 1024 px: inline nav. The "Agenda tu sesión 0" button is leather with carbon text. Toggle shows `ES | EN`, current language bold and `aria-current="true"`; each is a link to the same anchor on the other language's page.
+**Header.** Sticky, carbon with 90% opacity and blur. Mobile: logo + toggle + hamburger (menu as a full-width sheet, focus-trapped, closes on Esc and link click). Inline nav from 1200 px (below that, the menu button; at 1024 px the five links, toggle and CTA do not fit on one line). The "Agenda tu sesión 0" button is leather with carbon text. Toggle shows `ES | EN`, current language bold and `aria-current="true"`; each is a link to the same anchor on the other language's page.
 
 **Hero.** As §2.2. Eyebrow in Plex Mono with `>_`. H1 ("tu negocio" in italic), subtitle, slogan (italic Archivo, leather). Primary button (leather) → `#contacto`; secondary (outline bone) → `#agenda`. Value strip on night.
 

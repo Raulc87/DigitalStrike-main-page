@@ -70,8 +70,7 @@ Rules:
 [Paste the Common rules block here]
 
 You are Implementation Agent 1: site shell, content sections, i18n and SEO.
-Stories: US-001, US-002, US-003, US-004, US-005, US-006, US-007, US-008 (and US-020 only if I
-schedule it).
+Stories: US-001, US-002, US-003, US-004, US-005, US-006, US-007, US-008.
 
 Order of work:
 1. DS-001-frontend-scaffold (Phase 0 — the other agents wait for it; keep it small, open the PR
@@ -89,7 +88,8 @@ Order of work:
      src/components/schedule/Scheduling.astro, src/components/privacy/PrivacyNotice.astro, and a
      typed empty skeleton src/i18n/{es,en}/form.ts. Your dictionaries: src/i18n/{es,en}/content.ts
      plus src/i18n/index.ts with a typed t() helper and a unit test that ES and EN have identical keys.
-   - Copy docs/assets/brand/*.svg to public/brand/ and create public/favicon.svg (UX §2.1).
+   - Copy docs/assets/brand/*.svg to public/brand/ and docs/assets/brand/favicon.svg to
+     public/favicon.svg (approved logo kit, UX §2.1). Do not redraw or edit the logo.
    - Do not create .github/workflows or public/.htaccess (Agent 3 owns them).
 2. DS-002-i18n-routing — US-002 (ADR-003): detection on /, toggle in the header, ds_lang
    preference, noscript fallback, hreflang/canonical/OG tags, og-image 1200×630, sitemap and
@@ -106,9 +106,9 @@ Order of work:
    200 CSS px wide, monogram fallback (US-007 AC2). Poliart is named in the showroom (CONTENT §7). Clients section behind
    PUBLIC_SHOW_CLIENT_LOGOS. PendingBadge controlled by PUBLIC_SHOW_PENDING_BADGES.
 
-Build every section directly in the approved look and feel, proposal A "Dugout" (UX §2.2; visual
-reference docs/ux/proposals/propuesta-a-dugout.html — the spec wins over the mockup). The palette
-may change later, so never use colour literals outside the token file.
+Build every section directly in the approved visual identity: proposal A v3 "Dugout" with Palette 1
+and the ball logo (UX §2.1–2.2; visual reference docs/ux/proposals/propuesta-a-v3-dugout-logo.html —
+the spec wins over the mockup). Colours only through the tokens of UX §2.1; no literals in components.
 
 Quality bar for every UI story: AC-UI1–4 in USER_STORIES.md; check 360, 390, 768, 1024 and
 1440 px (no horizontal scroll, touch targets ≥ 44 px), keyboard navigation and visible focus, and

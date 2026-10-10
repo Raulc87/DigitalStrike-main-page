@@ -6,7 +6,7 @@
 - Owner / final reviewer: Raul Casañas (CEO, DigitalStrike Solutions)
 - Last updated: 2026-10-09
 - Sources: discovery conversation (2026-10-09); Drive folder `Documentacion/07-DigitalStrike`:
-  `identidad-digitalstrike.md` (approved 2026-09-18), `identidad-visual-digitalstrike.md` (v1, pending Cami's approval),
+  `identidad-digitalstrike.md` (approved 2026-09-18), `identidad-visual-digitalstrike.md` (v1, superseded on 2026-10-10 by proposal A v3, Palette 1 and the ball logo),
   `costos-y-tarifas.md` (v3), `legal-fase0-digitalstrike.md`, `Fundamentos-Marca-DigitalStrike.docx`;
   Raul's CV `Full_Stack___US_LATAM.pdf` (2026)
 
@@ -106,7 +106,7 @@ The page must:
 | NFR-004 | SEO: unique title and description per language, `hreflang` alternates (`es`, `en`, `x-default`), canonical URLs, Open Graph image, `sitemap.xml`, `robots.txt`. |
 | NFR-005 | Privacy: no analytics, no third-party cookies from the site itself; fonts self-hosted; Calendly is loaded only after an explicit visitor action (FR-016) and disclosed in the privacy notice. |
 | NFR-006 | Security: no secrets in the repository or the client bundle; the Apps Script endpoint validates everything server-side; personal data is never logged. |
-| NFR-007 | Theming: all colours and fonts are theme tokens (provisional identity v1) so the approved identity can be applied in one story. |
+| NFR-007 | Theming: all colours and fonts are theme tokens (UX §2.1, approved identity) — no literals in components. |
 
 ## 7. Data and legal
 
@@ -137,11 +137,11 @@ The page must:
 
 ## 10. Open questions
 
-Resolved 2026-10-10: session 0 is free (BR-010); 2-business-day reply (BR-011); 24-month retention (§7); 17+ years (CV and LinkedIn are in sync); Poliart agrees to be named in the showroom (private repo, no link); a provisional 200×200 photo was supplied; look and feel = proposal A.
+Resolved 2026-10-10: session 0 is free (BR-010); 2-business-day reply (BR-011); 24-month retention (§7); 17+ years (CV and LinkedIn are in sync); Poliart agrees to be named in the showroom (private repo, no link); a provisional 200×200 photo was supplied; visual identity = proposal A v3 with Palette 1, the ball logo and the tagline "We strike out your software needs" (approved 2026-10-10).
 
 Still open (non-blocking for Sprint 001):
-1. The color palette may change (owner, 2026-10-10). Tokens make it a token-only change (US-020, Sprint 002).
+1. Convert the logo lockups' wordmark text to outlines before printing or the trademark filing (owner).
 2. A ≥ 800×800 px photo to replace the provisional 200 px one.
 3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
 4. Has the GoDaddy hosting plan been bought, and is it cPanel (Linux)? Needed only for US-017.
-5. Cami's approval of visual identity v1.
+5. Cami's sign-off on the approved identity (Origo governance; does not block the build).

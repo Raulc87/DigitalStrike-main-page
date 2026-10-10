@@ -10,7 +10,7 @@
 | Sprint | Window | Goal |
 |---|---|---|
 | **001 — First release** (short sprint, exception to the 7-day rule, see §6) | Go-ahead (target Sat 2026-10-10) → release cut **Tue 2026-10-13 18:00 (CR)** → demo Wed 2026-10-14 | Public bilingual page on GitHub Pages with services, showroom, CEO, working lead flow (sheet + 2 emails) and Calendly |
-| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | Final palette (US-020), high-resolution photo, Poliart screenshot, GoDaddy production release on `digitalstrike-solutions.com`, carry-overs |
+| 002 — Production and polish | Thu 2026-10-15 → Fri 2026-10-23 (7 business days) | High-resolution photo, logo text converted to outlines, Poliart screenshot, GoDaddy production release on `digitalstrike-solutions.com`, carry-overs |
 
 ## 2. Repository layout (target)
 
@@ -40,7 +40,7 @@ docs/runbooks/LOCAL_DEVELOPMENT.md  APPS_SCRIPT_SETUP.md  RELEASE.md  DEPLOYMENT
 
 | Agent | Workstream | Stories |
 |---|---|---|
-| Agent 1 | Site shell, content sections, i18n, SEO | US-001, US-002, US-003, US-004, US-005, US-006, US-007, US-008 (+ US-020 if scheduled) |
+| Agent 1 | Site shell, content sections, i18n, SEO | US-001, US-002, US-003, US-004, US-005, US-006, US-007, US-008 |
 | Agent 2 | Lead form, privacy notice, Calendly, e2e integration | US-009, US-013, US-014 (client), US-018 |
 | Agent 3 | Apps Script endpoint and emails, mock, CI/CD, runbooks | US-010, US-011, US-012, US-014 (server), US-015, US-016, US-017 |
 | Review-only | Comment-only reviews of every PR | — |
@@ -60,7 +60,7 @@ docs/runbooks/LOCAL_DEVELOPMENT.md  APPS_SCRIPT_SETUP.md  RELEASE.md  DEPLOYMENT
 - Accessibility: Playwright + `@axe-core/playwright` on `/es/` and `/en/` (no serious/critical violations).
 
 ## 6. Process exception — short Sprint 001
-The kit's sprint length is 7 business days. Sprint 001 is shortened to meet the 2026-10-14 meet-up; scope is cut to what the release needs (US-017 is stretch; US-020 moves to Sprint 002). The exception is approved when the owner approves this plan. Sprint 002 returns to 7 business days.
+The kit's sprint length is 7 business days. Sprint 001 is shortened to meet the 2026-10-14 meet-up; scope is cut to what the release needs (US-017 is stretch). The exception is approved when the owner approves this plan. Sprint 002 returns to 7 business days.
 
 ## 7. Risks and mitigations
 | Risk | Mitigation |

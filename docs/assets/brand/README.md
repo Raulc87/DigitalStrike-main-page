@@ -1,11 +1,17 @@
-# Brand assets (provisional identity v1)
+# Brand assets — approved logo (2026-10-10)
 
-Source: Drive `Documentacion/07-DigitalStrike/marca/` (identity v1, chosen by Raul 2026-10-09, pending Cami's approval).
+Approved by Raul Casañas on 2026-10-10 together with proposal A v3 and Palette 1 (`docs/ux/UX_UI_DIRECTION.md` §2). Vector redraw of the owner-supplied ball logo: white ball, navy outline (`#0B1F44`), teal herringbone stitches (`#0E8A9B`), navy `>_` cursor. Tagline: "We strike out your software needs".
 
-| File here | Original | Use |
-|---|---|---|
-| `logo-mark-dark-bg.svg` | `logo-digitalstrike-marca-oscuro.svg` | Main mark, on carbon/night backgrounds |
-| `logo-mark-light-bg.svg` | `logo-digitalstrike-marca-claro.svg` | On bone/white backgrounds |
-| `logo-mark-mono.svg` | `logo-digitalstrike-marca-monocromo.svg` | Single colour |
+| File | Use |
+|---|---|
+| `logo-mark-on-dark.svg` | The site (header, hero, footer) — off-white outline for dark surfaces |
+| `logo-mark.svg` | Light backgrounds, documents |
+| `logo-horizontal-dark.svg`, `logo-horizontal-light.svg` | Mark + stacked wordmark + tagline (OG image, social, documents) |
+| `logo-header-dark.svg` | Compact one-line lockup |
+| `logo-mark-mono.svg` | One colour |
+| `favicon.svg` | Favicon / app icon |
 
-Palette and type: `docs/ux/UX_UI_DIRECTION.md` §2.1. Do not edit these files; new versions come from the owner.
+Notes:
+- The lockups contain live Archivo text. Convert it to outlines before printing or filing the trademark.
+- The previous identity v1 marks (carbon/leather) are superseded and were removed.
+- Do not edit these files in implementation PRs; new versions come from the owner via a `DS-DOCS-*` PR.

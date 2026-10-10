@@ -75,7 +75,7 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 
 | Path | Owner |
 |---|---|
-| `package.json`, lockfile, `astro.config.mjs`, `tsconfig.json`, ESLint/Prettier/Vitest/Playwright config | Agent 1 (others may add their own dependencies and npm scripts; lockfile conflicts resolved per rules below) |
+| `package.json`, lockfile, `astro.config.mjs`, `tsconfig.json`, ESLint/Prettier/Vitest/Playwright config | Agent 1 only. The scaffold pre-installs every dependency and npm script the sprint needs (Agent 1 prompt); anything else another agent needs is requested from Agent 1 through the owner (AGENTS.md) |
 | `src/layouts/**`, `src/pages/**`, `src/components/sections/**`, `src/styles/**`, `src/i18n/index.ts`, `src/i18n/{es,en}/content.ts`, `src/lib/i18n/**`, `public/**` except `public/.htaccess` | Agent 1 |
 | `src/components/lead/**`, `src/components/schedule/**`, `src/components/privacy/**`, `src/lib/lead/**`, `src/lib/schedule/**`, `src/i18n/{es,en}/form.ts`, `tests/e2e/**` | Agent 2 (stubs created by Agent 1 in Phase 0 are handed over on merge; Agent 1 renders `PrivacyNotice` inside the privacy pages) |
 | `apps-script/**`, `scripts/**`, `.github/workflows/**`, `.env.example`, `public/.htaccess`, `docs/runbooks/**` | Agent 3 |

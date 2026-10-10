@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2
-- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
 - Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.
@@ -215,7 +215,7 @@ Versión 2026-10-14-v1
 
 **Para qué los usamos.** Solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad.
 
-**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador, puede usar sus propias cookies y, si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
+**Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador y puede usar sus propias cookies. Si se carga después de enviar el formulario, le pasamos tu nombre y correo para prellenar la cita. Si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
 
 **Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos.
 
@@ -233,7 +233,7 @@ Version 2026-10-14-v1
 
 **What we use it for.** Only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising.
 
-**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser, may set its own cookies and, if you book, processes the booking data. These services may store data outside Costa Rica.
+**Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser and may set its own cookies. If it loads after you submit the form, we pass it your name and email to prefill the booking. If you book, it processes the booking data. These services may store data outside Costa Rica.
 
 **How long.** Up to 24 months from our last contact, or until you ask us to delete it.
 

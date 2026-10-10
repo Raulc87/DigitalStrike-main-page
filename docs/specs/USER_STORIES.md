@@ -82,12 +82,12 @@ As the owner, every lead lands in my Google Sheet.
 - AC3: A `setupSheet()` function creates the `leads` worksheet header and the `status` dropdown (`new`, `contacting`, `accepted`, `rejected`) idempotently.
 - AC4: Sheet write failure → `storage_unavailable`; unexpected exception → `internal_error`; personal data never appears in `console.log`/Stackdriver logs (only `lead_id` and error codes).
 - AC5: Pure logic (validation, normalization, enums, throttle decisions, lead_id, row building, email rendering) is in files testable with Vitest in Node; tests cover every rule and error code.
-- AC6: `docs/runbooks/APPS_SCRIPT_SETUP.md` includes the owner's data procedures: updating `last_contact_at`, the monthly retention review (delete rows older than 24 months from `last_contact_at`, or `submitted_at` when empty) and handling access/correction/deletion requests within 5 business days, matching the privacy notice.
+- AC6: `docs/runbooks/APPS_SCRIPT_SETUP.md` includes the owner's data procedures: updating `last_contact_at`, the monthly retention review (delete rows older than 24 months from `last_contact_at`, or `submitted_at` when empty) and handling access/correction/deletion requests within 5 business days, matching the privacy notice. Deletion steps cover the sheet row and the Gmail copies (owner notification by `lead_id`, visitor confirmation in Sent by address, then Trash), per PROJECT_SPEC §7.
 
 ## US-011 — Owner notification email ("cover letter")
 - AC1: After the row is stored, an email is sent to `OWNER_NOTIFICATION_EMAIL` with subject and body of CONTENT §14.1, `Reply-To` = visitor email, HTML + plain-text.
 - AC2: All visitor values are HTML-escaped.
-- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`; remaining MailApp quota < 1 → `quota_exceeded` without attempting. The response to the visitor is unaffected.
+- AC3: Failure is caught and recorded as `owner_email_status = failed`; success `sent`; `SEND_EMAILS=false` → `skipped`; remaining MailApp quota < 1 → `quota_exceeded` without attempting. The response to the visitor is unaffected. The row is appended with the status `pending`; a retry with the same `submission_id` sends the email only while it is still `pending` (contract §5.4 recovery).
 
 ## US-012 — Visitor confirmation email
 - AC1: After the owner email attempt, the visitor receives CONTENT §14.2 in the submitted `language`, from `SENDER_NAME`, `Reply-To` = `REPLY_TO_EMAIL`, with the Calendly link.
@@ -97,7 +97,7 @@ As the owner, every lead lands in my Google Sheet.
 ## US-013 — Scheduling (Calendly inline)
 - AC1: The `#agenda` section shows a preview card with the `schedule.open` button and the `schedule.notice` line; **no request to Calendly is made until** the visitor clicks the button or submits the form successfully. Then the official inline widget for `PUBLIC_CALENDLY_URL` loads in place (UX §3).
 - AC2: After a successful submission the widget is (re)initialized with name and email prefilled.
-- AC3: If `PUBLIC_CALENDLY_URL` is unset, the script fails, or nothing renders within 10 s, the fallback link (new tab) is shown; a `<noscript>` link always exists.
+- AC3: `PUBLIC_CALENDLY_URL` defaults to `https://calendly.com/rcasanas/1hr` (contract §8) when unset, so a valid URL always exists. If the Calendly script fails or nothing renders within 10 s, the fallback link to that URL (new tab) is shown; a `<noscript>` link always exists.
 - AC4: Playwright checks that no request to `*.calendly.com` happens before the click, the container after it, and the fallback (Calendly network blocked in tests).
 
 ## US-014 — Spam protection

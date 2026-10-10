@@ -30,7 +30,7 @@ If budget matters more than time, run Agent 3 on Sonnet 5.5 and switch to Opus 5
 You are working on Raulc87/DigitalStrike-main-page. Sprint 001 is ACTIVE (go-ahead given by the
 human owner, Raul Casañas). Hard deadline: release cut Tuesday 2026-10-13 18:00 America/Costa_Rica.
 
-Before writing code, read in this order: CLAUDE.md, AGENTS.md, PROJECT_CONTEXT.md,
+Before writing code, read in this order: AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md,
 docs/specs/PROJECT_SPEC.md, docs/specs/LEAD_ENDPOINT_CONTRACT.md, docs/specs/USER_STORIES.md,
 docs/ux/UX_UI_DIRECTION.md, docs/ux/CONTENT.md, TECH_STACK.md, docs/decisions/ADR-*.md,
 docs/plans/IMPLEMENTATION_PLAN.md, docs/sprints/SPRINT_001.md.
@@ -43,8 +43,9 @@ Rules:
 - Visitor-facing text comes verbatim from docs/ux/CONTENT.md. Do not rewrite copy; if something
   is missing or wrong, tell me.
 - Edit only files your workstream owns per the File Ownership Map in SPRINT_001.md. If you need a
-  change in another owner's file, tell me instead of editing it. You may add your own dependencies
-  and npm scripts to package.json (Agent 1 owns the file).
+  change in another owner's file, tell me instead of editing it. This includes package.json and
+  the tool configs (Agent 1 only): the scaffold pre-installs what the sprint needs; ask me for
+  anything else.
 - Branch per story with the names in SPRINT_001.md. I explicitly authorize you to create and push
   these branch names even if this environment assigned you a different default branch.
 - One PR per branch, base main. PR title "[DS-NNN] ...", commit subjects "DS-NNN: ...".
@@ -79,7 +80,10 @@ Order of work:
      UX_UI_DIRECTION.md §2.1 and the derived tokens of §2.2 in @theme (no colour or font literals in components), Node 22 LTS
      (.nvmrc), @fontsource/archivo and @fontsource/ibm-plex-mono.
    - ESLint (TS + Astro), Prettier, astro check, Vitest, Playwright config (Chromium desktop +
-     390 px project). npm scripts: dev, build, preview, lint, check, test, test:e2e.
+     390 px project). npm scripts: dev, build, preview, lint, check, test, test:e2e,
+     mock:lead (node scripts/mock-lead-endpoint.mjs) and lhci. Pre-install for the other agents:
+     vitest, @playwright/test, @axe-core/playwright, @lhci/cli; the Vitest include covers
+     tests/unit/** and apps-script/tests/** (Node environment for the latter).
    - astro.config.mjs reads PUBLIC_SITE_URL and PUBLIC_BASE_PATH (USER_STORIES US-001 AC4); every
      internal link and asset honours the base path.
    - Pages /es/ and /en/ composing stub components for every section with the anchors of UX §1;
@@ -181,11 +185,11 @@ Order of work:
      submission_id looked up in column R (§5.4), hourly/daily/per-email throttles counted from
      the stored rows (§5.3) — the sheet behind a small interface so tests can fake it; CacheService
      only as an optional optimisation — MailApp quota check, lead_id, row building with formula-injection guard (§6),
-     response bodies (§7). Steps 7–9 of §5 (idempotency lookup, throttles, append) run under one LockService lock. Never log personal data.
+     response bodies (§7). Steps 7–10 of §5 (idempotency lookup with pending-email recovery, throttles, append with `pending` email statuses, emails) run under one LockService lock. Never log personal data.
    - Tests with Vitest in Node for lib/ (load the files into a vm context or via a tiny shim —
      document the choice in apps-script/README.md), covering every rule, error code and decoy path.
-   - Coordinate with Agent 1 (through me) to add your Vitest include pattern and any devDependency
-     to package.json once the scaffold is merged; until then you may keep a temporary local config
+   - The scaffold's Vitest config already includes apps-script/tests/**; ask me (for Agent 1) for any
+     other devDependency. Until the scaffold is merged you may keep a temporary local config
      inside apps-script/.
    - docs/runbooks/APPS_SCRIPT_SETUP.md for me: create the sheet, run setupSheet(), create the
      Apps Script project (manual copy or clasp), set every Script Property of contract §8, deploy
@@ -229,7 +233,7 @@ checks locally for evidence only, without committing. For each finding state the
 evidence, the violated spec / contract / acceptance criterion, and the expected outcome; the
 owning agent fixes it, and you review the new commits as a fresh review.
 
-First read, in order: CLAUDE.md, AGENTS.md, PROJECT_CONTEXT.md, docs/specs/PROJECT_SPEC.md,
+First read, in order: AGENTS.md, CLAUDE.md, PROJECT_CONTEXT.md, docs/specs/PROJECT_SPEC.md,
 docs/specs/LEAD_ENDPOINT_CONTRACT.md, docs/specs/USER_STORIES.md, docs/ux/UX_UI_DIRECTION.md,
 docs/ux/CONTENT.md, TECH_STACK.md, docs/decisions/ADR-*.md, docs/plans/IMPLEMENTATION_PLAN.md,
 docs/sprints/SPRINT_001.md.
@@ -244,8 +248,8 @@ e2e, and verify:
   language; no prices, refunds, invented proof or client names (BR-001–BR-004)
 - UI: theme tokens only, AA contrast, widths 360/390/768/1024/1440 without horizontal scroll,
   44 px targets, keyboard and focus, base path correctness for GitHub Pages
-- file ownership per SPRINT_001.md (only the PR's workstream files, except allowed dependency
-  additions), naming (branch, PR title, commits), filled PR template
+- file ownership per SPRINT_001.md (only the PR's workstream files; package.json and configs only
+  in Agent 1's PRs), naming (branch, PR title, commits), filled PR template
 - security and privacy: no secrets, no personal data in logs, HTML escaping in emails,
   formula-injection guard, server-side validation, no tracking added
 - tests derive from the ACs and cover happy path, error paths and the "store before email /

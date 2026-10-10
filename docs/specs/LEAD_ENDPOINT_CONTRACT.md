@@ -109,11 +109,11 @@ Spreadsheet formula injection: any stored text value starting with `=`, `+`, `-`
 3. **Honeypot** (§5.1) → decoy success, stop.
 4. Field validation (§3), including `elapsed_ms` and `submission_id` → `validation_failed` with every field error.
 5. **Minimum fill time** (§5.2) → decoy success, stop.
-6. Acquire the script lock (`LockService`, wait ≤ 10 s; timeout → `storage_unavailable`). Steps 7–9 run under the lock.
-7. **Idempotency** (§5.4): `submission_id` already in column R → respond the original success, stop.
+6. Acquire the script lock (`LockService`, wait ≤ 10 s; timeout → `storage_unavailable`). Steps 7–10 run under the lock; it is released in a `finally` after step 10.
+7. **Idempotency** (§5.4): `submission_id` already in column R → complete any email still `pending` in that row (step 10, recovery), then respond the original success, stop.
 8. **Throttles** (§5.3) → `rate_limited`.
-9. Append the row (§6) and release the lock. Failure → `storage_unavailable`.
-10. Send the owner notification, then the visitor confirmation (ADR-005), each only if `MailApp.getRemainingDailyQuota()` ≥ 1 (else status `quota_exceeded`). Each failure is caught, recorded in the row (`owner_email_status` / `confirmation_email_status` = `failed`), and does **not** change the response.
+9. Append the row (§6) with both email statuses `pending`. Failure → `storage_unavailable`.
+10. Send the owner notification, then the visitor confirmation (ADR-005), each only if `MailApp.getRemainingDailyQuota()` ≥ 1 (else status `quota_exceeded`). After each attempt its status in the row (`owner_email_status` / `confirmation_email_status`) is updated from `pending` to `sent`, `failed`, `skipped` or `quota_exceeded`. Each failure is caught and does **not** change the response.
 11. Respond success.
 
 ### 5.1 Honeypot
@@ -132,8 +132,9 @@ Counted under the script lock from the stored rows themselves (columns A and E o
 
 ### 5.4 Idempotency (durable)
 - The source of truth is column R of the sheet. Under the script lock, the server looks the `submission_id` up in column R (exact, whole-cell match, e.g. `TextFinder.matchEntireCell(true)`); a CacheService entry may short-circuit the lookup but a cache miss always falls back to the sheet, whatever the age of the original lead.
-- A request whose `submission_id` is found returns `{ "ok": true, "lead_id": <lead_id of that row> }` and stores and sends nothing.
-- Tests cover: retry after a cache miss, retry hours later, and two concurrent requests with the same `submission_id` (exactly one row).
+- A request whose `submission_id` is found returns `{ "ok": true, "lead_id": <lead_id of that row> }` and stores nothing new.
+- **Recovery after an interrupted run.** Because the original run holds the lock until its emails are recorded, a `pending` status seen under the lock means that run stopped after the append (timeout, quota kill, crash). The retry then sends only the emails still `pending` (step 10) and updates their status; emails already `sent`, `failed`, `skipped` or `quota_exceeded` are never resent. An email can be sent twice only if the run stopped between the send and the status update (at-least-once, accepted).
+- Tests cover: retry after a cache miss, retry hours later, two concurrent requests with the same `submission_id` (exactly one row), and a retry after a run interrupted between the append and the email updates (the `pending` emails are sent once).
 - The client keeps the same `submission_id` for retries after a timeout, network error, `storage_unavailable` or `internal_error`, so a lost response never creates a duplicate lead or duplicate emails. The client generates a new `submission_id` only after a success (or a page reload).
 
 ## 6. Google Sheet
@@ -156,8 +157,8 @@ Spreadsheet: owned by the owner's Google account; worksheet name `leads`. Row 1 
 | L | `language` | `es` / `en` |
 | M | `consent` | `TRUE` |
 | N | `privacy_notice_version` | as sent by the client (validated against `ACCEPTED_PRIVACY_NOTICE_VERSIONS`) |
-| O | `owner_email_status` | `sent` / `failed` / `skipped` / `quota_exceeded` |
-| P | `confirmation_email_status` | `sent` / `failed` / `skipped` / `quota_exceeded` |
+| O | `owner_email_status` | `pending` (set at append) → `sent` / `failed` / `skipped` / `quota_exceeded` |
+| P | `confirmation_email_status` | `pending` (set at append) → `sent` / `failed` / `skipped` / `quota_exceeded` |
 | Q | `notes` | empty; for the owner's manual notes |
 | R | `submission_id` | as sent (idempotency key) |
 | S | `last_contact_at` | empty on creation; the owner writes the date (`yyyy-MM-dd`) of each later contact. Retention (PROJECT_SPEC §7) counts 24 months from this date, or from `submitted_at` while it is empty |

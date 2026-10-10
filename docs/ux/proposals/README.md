@@ -51,3 +51,20 @@ Three original ball marks (`marks/`), switchable in the mockup's hero via the mo
 The marks are drawn from scratch for DigitalStrike. The reference images the owner shared are watermarked stock (Shutterstock, Dreamstime) and were used only as ideas, never traced, so the final mark can be registered with the Registro de la Propiedad Industrial. They are concept-level vectors; a designer can refine the chosen one before registration.
 
 Checks: `contrast.py` on every pair above; layout check at 360/390/768/1024/1280/1440 px with no overflow and all targets ≥ 44 px.
+
+## Proposal A v3 — Dugout · Palette 1 · owner's logo (2026-10-10, awaiting approval)
+
+File: `propuesta-a-v3-dugout-logo.html`. Same as v2, with the logo the owner supplied (a refinement of the "Costura" concept: white ball, navy outline, teal herringbone stitches, navy `>_` cursor). The owner's reference was a raster image without watermarks; it is redrawn here as vectors so it scales and can be used in production:
+
+| File (`logo/`) | Use |
+|---|---|
+| `logo-mark.svg` | Mark on light backgrounds (navy outline) |
+| `logo-mark-on-dark.svg` | Mark on the site's dark backgrounds (off-white outline) — hero, header, footer |
+| `logo-horizontal-light.svg` / `logo-horizontal-dark.svg` | Mark + stacked wordmark + tagline (documents, social) |
+| `logo-header-dark.svg` | Compact one-line lockup for the header |
+| `logo-mark-mono.svg` | One colour |
+| `favicon.svg` | Navy rounded square with the ball |
+
+Logo colours: navy `#0B1F44`, teal `#0E8A9B`, white. Teal is used for graphics and large text only (4.1:1 on white is enough for ≥ 24 px; body text uses the site tokens). On the dark site the wordmark is off-white + cyan (`#21C7D9`), because navy on navy is 1.13:1.
+
+Wordmark text in the SVGs uses Archivo 800; before registering the mark or printing, convert the text to outlines. Tagline written as "We strike out your software needs" (sentence case), matching the approved slogan.

@@ -2,8 +2,8 @@
 
 ## Metadata
 - Version: 1.0
-- Status: Draft — becomes **LOCKED** for Sprint 001 when this PR is approved and merged
-- Pre-lock revisions (2026-10-10, review of PR #1): `elapsed_ms` replaces `form_started_at` (clock skew), `submission_id` idempotency, daily cap and Gmail-quota check, `privacy_notice_version` sent by the client
+- Status: **LOCKED for Sprint 001** — approved by Raul Casañas; effective when PR #1 is merged
+- Pre-lock revisions (2026-10-10, reviews of PR #1): `elapsed_ms` replaces `form_started_at` (clock skew), `submission_id` idempotency, daily cap and Gmail-quota check, `privacy_notice_version` sent by the client; throttles and idempotency read from the sheet (durable), not from CacheService; column S `last_contact_at` for retention
 - Related spec: `docs/specs/PROJECT_SPEC.md` (FR-010 to FR-018, BR-007 to BR-009, NFR-006)
 - Related stories: US-009, US-010, US-011, US-012, US-014
 - Related ADRs: ADR-002 (Apps Script backend), ADR-004 (spam protection), ADR-005 (email)
@@ -110,11 +110,11 @@ Spreadsheet formula injection: any stored text value starting with `=`, `+`, `-`
 4. Field validation (§3), including `elapsed_ms` and `submission_id` → `validation_failed` with every field error.
 5. **Minimum fill time** (§5.2) → decoy success, stop.
 6. Acquire the script lock (`LockService`, wait ≤ 10 s; timeout → `storage_unavailable`). Steps 7–9 run under the lock.
-7. **Idempotency** (§5.4): known `submission_id` → respond the original success, stop.
+7. **Idempotency** (§5.4): `submission_id` already in column R → respond the original success, stop.
 8. **Throttles** (§5.3) → `rate_limited`.
-9. Store the row (§6), record the `submission_id`, increment the counters, release the lock. Failure → `storage_unavailable`.
+9. Append the row (§6) and release the lock. Failure → `storage_unavailable`.
 10. Send the owner notification, then the visitor confirmation (ADR-005), each only if `MailApp.getRemainingDailyQuota()` ≥ 1 (else status `quota_exceeded`). Each failure is caught, recorded in the row (`owner_email_status` / `confirmation_email_status` = `failed`), and does **not** change the response.
-9. Respond success.
+11. Respond success.
 
 ### 5.1 Honeypot
 `website` absent, `null` or empty after trim → normal. Any other value or type → bot: respond the normal success body with a random `lead_id`, store nothing, send nothing.
@@ -122,16 +122,18 @@ Spreadsheet formula injection: any stored text value starting with `=`, `+`, `-`
 ### 5.2 Minimum fill time
 A valid `elapsed_ms` below 3000 → treated as a bot (decoy success, nothing stored, no email). Because it is a client-measured duration, no server clock comparison is involved.
 
-### 5.3 Throttles (CacheService)
-- Per email: at most `MAX_LEADS_PER_EMAIL_PER_HOUR` (default 3) accepted leads per normalized email per rolling hour.
-- Global hourly: at most `MAX_LEADS_PER_HOUR` (default 20) accepted leads per hour (CacheService).
-- Global daily: at most `MAX_LEADS_PER_DAY` (default 40, i.e. 80 email recipients, below the ~100/day consumer Gmail quota) accepted leads per calendar day in America/Costa_Rica (counter in PropertiesService keyed `leads_count_yyyy-MM-dd`, because CacheService entries expire after 6 h).
+### 5.3 Throttles (durable: counted from the sheet)
+Counted under the script lock from the stored rows themselves (columns A and E of the most recent rows, at most `MAX_LEADS_PER_DAY` + 1 rows read), so they cannot be bypassed by cache eviction and need no extra storage. CacheService may be used only as a read optimisation, never as the source of truth.
+- Per email: at most `MAX_LEADS_PER_EMAIL_PER_HOUR` (default 3) stored leads with the same normalized email in the last 60 minutes.
+- Global hourly: at most `MAX_LEADS_PER_HOUR` (default 20) stored leads in the last 60 minutes.
+- Global daily: at most `MAX_LEADS_PER_DAY` (default 40, i.e. 80 email recipients, below the ~100/day consumer Gmail quota) stored leads on the current calendar day in America/Costa_Rica.
 - Independently, emails are sent only while `MailApp.getRemainingDailyQuota()` ≥ 1 (step 10); a lead is never rejected because of email quota.
 - Exceeded → `rate_limited` with `retry_after_seconds` (seconds until the window or the day resets). Apps Script cannot see the client IP; no IP is ever stored.
 
-### 5.4 Idempotency
-- After storing a lead, the server keeps `submission_id → lead_id` in CacheService for 6 h (and in column R of the sheet).
-- A request whose `submission_id` is known returns `{ "ok": true, "lead_id": <original> }` and stores and sends nothing.
+### 5.4 Idempotency (durable)
+- The source of truth is column R of the sheet. Under the script lock, the server looks the `submission_id` up in column R (exact, whole-cell match, e.g. `TextFinder.matchEntireCell(true)`); a CacheService entry may short-circuit the lookup but a cache miss always falls back to the sheet, whatever the age of the original lead.
+- A request whose `submission_id` is found returns `{ "ok": true, "lead_id": <lead_id of that row> }` and stores and sends nothing.
+- Tests cover: retry after a cache miss, retry hours later, and two concurrent requests with the same `submission_id` (exactly one row).
 - The client keeps the same `submission_id` for retries after a timeout, network error, `storage_unavailable` or `internal_error`, so a lost response never creates a duplicate lead or duplicate emails. The client generates a new `submission_id` only after a success (or a page reload).
 
 ## 6. Google Sheet
@@ -158,8 +160,9 @@ Spreadsheet: owned by the owner's Google account; worksheet name `leads`. Row 1 
 | P | `confirmation_email_status` | `sent` / `failed` / `skipped` / `quota_exceeded` |
 | Q | `notes` | empty; for the owner's manual notes |
 | R | `submission_id` | as sent (idempotency key) |
+| S | `last_contact_at` | empty on creation; the owner writes the date (`yyyy-MM-dd`) of each later contact. Retention (PROJECT_SPEC §7) counts 24 months from this date, or from `submitted_at` while it is empty |
 
-`skipped` is used when the email is disabled by configuration (`SEND_EMAILS=false`). Rows are appended; the script never edits `status` or `notes` after creation.
+`skipped` is used when the email is disabled by configuration (`SEND_EMAILS=false`). Rows are appended; after creation the script only fills columns O and P (email outcome) and never edits `status`, `notes` or `last_contact_at`.
 
 ## 7. Response body
 

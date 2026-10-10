@@ -1,6 +1,6 @@
 # ADR-005 — Transactional email (owner notification and visitor confirmation)
 
-- Status: Proposed
+- Status: **Accepted** — effective when PR #1 is merged
 - Date: 2026-10-09
 - Decision owner: Raul Casañas
 - Related specs: PROJECT_SPEC FR-012–FR-014, BR-009; CONTENT §14; US-011, US-012

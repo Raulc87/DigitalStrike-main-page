@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2 (2026-10-10: owner answers, review fixes)
-- Status: Draft — pending human owner approval (PR `DS-DOCS-discovery-specs`)
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged
 - Owner / final reviewer: Raul Casañas (CEO, DigitalStrike Solutions)
 - Last updated: 2026-10-09
 - Sources: discovery conversation (2026-10-09); Drive folder `Documentacion/07-DigitalStrike`:
@@ -102,7 +102,7 @@ The page must:
 |---|---|
 | NFR-001 | Mobile-first. No horizontal scroll at 360, 390, 768, 1024 and 1440 px; touch targets ≥ 44×44 px. |
 | NFR-002 | Accessibility: WCAG 2.1 AA contrast for all text, keyboard-operable navigation, form and dialog, visible focus, labelled fields, `lang` attribute per page. |
-| NFR-003 | Performance: static HTML; Lighthouse Performance ≥ 90 and Accessibility ≥ 95 on mobile for `/es/` (Calendly excluded: loaded lazily when the section approaches the viewport). |
+| NFR-003 | Performance: static HTML; Lighthouse Performance ≥ 90 and Accessibility ≥ 95 on mobile for `/es/` (Calendly is not loaded until the visitor clicks "Ver horarios disponibles" or submits the form, FR-016, so it does not affect the score). |
 | NFR-004 | SEO: unique title and description per language, `hreflang` alternates (`es`, `en`, `x-default`), canonical URLs, Open Graph image, `sitemap.xml`, `robots.txt`. |
 | NFR-005 | Privacy: no analytics, no third-party cookies from the site itself; fonts self-hosted; Calendly is loaded only after an explicit visitor action (FR-016) and disclosed in the privacy notice. |
 | NFR-006 | Security: no secrets in the repository or the client bundle; the Apps Script endpoint validates everything server-side; personal data is never logged. |
@@ -113,10 +113,10 @@ The page must:
 - Jurisdiction: **Costa Rica, Ley 8968** (Protección de la Persona frente al Tratamiento de sus Datos Personales).
 - Data controller: Raul Casañas, operating as DigitalStrike Solutions (natural person until incorporation).
 - Data collected: the lead form fields; no IP address is stored.
-- Storage and processors: Google (Sheets, Apps Script, Gmail) and Calendly (only if the visitor books). Both may process data outside Costa Rica; the privacy notice says so.
+- Storage and processors: Google (Sheets, Apps Script, Gmail) for every lead; Calendly from the moment its calendar loads (after the visitor clicks "Ver horarios disponibles" or submits the form, FR-016): it receives technical browser data, may set its own cookies and, if the visitor books, the booking data. Both may process data outside Costa Rica; the privacy notice says so.
 - Consent: an explicit, unchecked checkbox linked to the privacy notice; version `privacy_notice_version` stored with each lead.
 - Rights: access, rectification, deletion by email to the contact address.
-- Retention: 24 months from the last contact, or until deletion is requested (confirmed by the owner 2026-10-10).
+- Retention: 24 months from the last contact, or until deletion is requested (confirmed by the owner 2026-10-10). Operated through sheet column S `last_contact_at` (contract §6) and the owner procedure in `docs/runbooks/APPS_SCRIPT_SETUP.md` (US-010 AC6): a monthly review deletes rows whose `last_contact_at` (or `submitted_at` when empty) is older than 24 months, and deletion requests are handled within 5 business days.
 - The privacy notice v1 (`2026-10-14-v1`) in CONTENT.md is approved by the owner for publication (merging this spec) and is still to be reviewed by Cinthia Hernández; it is shown publicly with its version and date. Each lead stores the version the visitor saw.
 
 ## 8. Success criteria

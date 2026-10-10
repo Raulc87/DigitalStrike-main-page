@@ -1,6 +1,6 @@
 # ADR-002 — Lead backend: Google Apps Script now, Python/Java later
 
-- Status: Proposed (owner chose Apps Script on 2026-10-09)
+- Status: **Accepted** — effective when PR #1 is merged
 - Date: 2026-10-09
 - Decision owner: Raul Casañas
 - Related specs: LEAD_ENDPOINT_CONTRACT, PROJECT_SPEC FR-010–FR-018; US-010–US-012, US-014

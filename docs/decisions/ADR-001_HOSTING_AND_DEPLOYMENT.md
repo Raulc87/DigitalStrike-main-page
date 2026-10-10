@@ -1,6 +1,6 @@
 # ADR-001 — Hosting and deployment
 
-- Status: Proposed
+- Status: **Accepted** — effective when PR #1 is merged
 - Date: 2026-10-09
 - Decision owner: Raul Casañas
 - Related specs: PROJECT_SPEC §9, TECH_STACK §2, §9; US-016, US-017

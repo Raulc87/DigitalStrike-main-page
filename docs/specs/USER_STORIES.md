@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2 (2026-10-10: contract pre-lock revisions, click-to-load Calendly, Lighthouse check, proposal A, photo)
-- Status: Draft — pending human owner approval
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged
 - Related: `PROJECT_SPEC.md`, `LEAD_ENDPOINT_CONTRACT.md`, `docs/ux/UX_UI_DIRECTION.md`, `docs/ux/CONTENT.md`
 - Story IDs map to branches `DS-<NNN>-<slug>` (AGENTS.md). "Widths" always means 360, 390, 768, 1024 and 1440 px.
 
@@ -78,10 +78,11 @@ As a visitor, I can describe my need and send it.
 ## US-010 — Lead endpoint (Apps Script): validate and store
 As the owner, every lead lands in my Google Sheet.
 - AC1: `doPost` implements contract §5 in that order, including idempotency (§5.4) and the daily cap (§5.3); `doGet` returns `{ "ok": true, "service": "ds-lead-endpoint" }` for health checks.
-- AC2: A valid lead appends one row with columns A–R in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
+- AC2: A valid lead appends one row with columns A–S in contract §6 order, `submitted_at` in America/Costa_Rica `yyyy-MM-dd HH:mm:ss`, `status = new`, `lead_id` format as specified, formula-injection prefixing applied.
 - AC3: A `setupSheet()` function creates the `leads` worksheet header and the `status` dropdown (`new`, `contacting`, `accepted`, `rejected`) idempotently.
 - AC4: Sheet write failure → `storage_unavailable`; unexpected exception → `internal_error`; personal data never appears in `console.log`/Stackdriver logs (only `lead_id` and error codes).
 - AC5: Pure logic (validation, normalization, enums, throttle decisions, lead_id, row building, email rendering) is in files testable with Vitest in Node; tests cover every rule and error code.
+- AC6: `docs/runbooks/APPS_SCRIPT_SETUP.md` includes the owner's data procedures: updating `last_contact_at`, the monthly retention review (delete rows older than 24 months from `last_contact_at`, or `submitted_at` when empty) and handling access/correction/deletion requests within 5 business days, matching the privacy notice.
 
 ## US-011 — Owner notification email ("cover letter")
 - AC1: After the row is stored, an email is sent to `OWNER_NOTIFICATION_EMAIL` with subject and body of CONTENT §14.1, `Reply-To` = visitor email, HTML + plain-text.
@@ -101,7 +102,7 @@ As the owner, every lead lands in my Google Sheet.
 
 ## US-014 — Spam protection
 - AC1 (client, Agent 2): honeypot field per UX §3 and `elapsed_ms` sent.
-- AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (`CacheService`, `PropertiesService` for the daily counter); decoys return the normal success body and store nothing.
+- AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (counted from the stored rows under the script lock, contract §5.3–5.4; CacheService only as an optional optimisation); decoys return the normal success body and store nothing.
 - AC3: Tests cover each path, including that rate-limited requests are not stored and send no email.
 
 ## US-015 — Local mock, CI
@@ -122,7 +123,7 @@ As the owner, every lead lands in my Google Sheet.
 - AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps (FTP account, DNS for `digitalstrike-solutions.com`, SSL) and how to roll back (re-run the workflow on the previous release).
 
 ## US-018 — Privacy notice
-- AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, version and "draft" status line.
+- AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, including its version line (no other status text).
 - AC2: The version shown is `PUBLIC_PRIVACY_NOTICE_VERSION`; the runbook states that it must be listed in the Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` before a frontend with a new version is deployed.
 - AC-UI.
 

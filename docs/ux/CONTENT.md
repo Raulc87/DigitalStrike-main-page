@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2
-- Status: **Draft for owner approval.** v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); English is the translation of this draft and is re-synced once the Spanish is approved.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
 - Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.

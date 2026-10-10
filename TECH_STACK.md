@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.1
-- Status: Draft — pending human owner approval
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged
 - Owner: Raul Casañas
 - Reference implementation: `Raulc87/gaby-main-page` (first SDD pilot: same frontend stack, Sheets + Calendly lead flow)
 
@@ -39,7 +39,7 @@ Least-complex stack that meets the requirements, reusing what the pilot proved.
 Google Sheets, worksheet `leads`, columns exactly as contract §6. No database.
 
 ## 7. Integrations
-- Google Sheets + Gmail via Apps Script services (`SpreadsheetApp`, `MailApp`, `CacheService`, `LockService`, `PropertiesService`).
+- Google Sheets + Gmail via Apps Script services (`SpreadsheetApp`, `MailApp`, `LockService`, `PropertiesService` for configuration; `CacheService` only as an optional optimisation — throttles and idempotency read the sheet, contract §5.3–5.4).
 - Calendly inline embed (official `widget.js`), URL `https://calendly.com/rcasanas/1hr`.
 - LinkedIn: plain link.
 

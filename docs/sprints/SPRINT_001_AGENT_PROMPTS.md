@@ -178,9 +178,10 @@ Order of work:
    - apps-script/Code.js: doPost, doGet (health) and setupSheet() as thin wrappers.
    - apps-script/lib/*.js: pure logic — normalization and validation (contract §3), enums (§4),
      processing order (§5), honeypot, minimum fill time (elapsed_ms), idempotency by
-     submission_id (§5.4), hourly/daily throttles (CacheService / PropertiesService behind small
-     interfaces so tests can fake them), MailApp quota check, lead_id, row building with formula-injection guard (§6),
-     response bodies (§7). Use LockService around the append. Never log personal data.
+     submission_id looked up in column R (§5.4), hourly/daily/per-email throttles counted from
+     the stored rows (§5.3) — the sheet behind a small interface so tests can fake it; CacheService
+     only as an optional optimisation — MailApp quota check, lead_id, row building with formula-injection guard (§6),
+     response bodies (§7). Steps 7–9 of §5 (idempotency lookup, throttles, append) run under one LockService lock. Never log personal data.
    - Tests with Vitest in Node for lib/ (load the files into a vm context or via a tiny shim —
      document the choice in apps-script/README.md), covering every rule, error code and decoy path.
    - Coordinate with Agent 1 (through me) to add your Vitest include pattern and any devDependency

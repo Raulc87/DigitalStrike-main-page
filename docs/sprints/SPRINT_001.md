@@ -24,7 +24,8 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 1 | Repository exists and is public (`Raulc87/DigitalStrike-main-page`) | Done |
 | 2 | Docs PR `DS-DOCS-discovery-specs` approved and merged (specs, contract, stories, UX, content, stack, ADRs, plan, this sprint) | **Open — owner** |
 | 3 | `LEAD_ENDPOINT_CONTRACT.md` v1.0 locked (by merging gate 2) | **Open — owner** |
-| 4 | Readiness checklist run (below) with no open blocking items | **Open — gates 2, 3, 6** |
+| 3b | Proposals PR `DS-DOCS-ux-proposals` (#2) merged after #1, so the approved visual reference `docs/ux/proposals/propuesta-a-v3-dugout-logo.html` exists on `main` before Agent 1 starts | **Open — owner** |
+| 4 | Readiness checklist run (below) with no open blocking items | **Open — gates 2, 3, 3b, 6** |
 | 5 | `main` protected in GitHub (PR required, no force push/deletion) | Recommended — owner |
 | 6 | Explicit go-ahead from the human owner | **Open — owner** |
 

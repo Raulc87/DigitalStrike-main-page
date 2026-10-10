@@ -1,7 +1,7 @@
 # Look-and-feel proposals (US-019)
 
 - Status: **Decided — Proposal A v3 "Dugout" with Palette 1 and the ball logo, approved by Raul Casañas on 2026-10-10** (tagline "We strike out your software needs" approved too). Recorded in `docs/ux/UX_UI_DIRECTION.md` §2; the logo kit lives in `docs/assets/brand/`. A, A v2, B and C are kept as history only.
-- Built with the kit's `ux-proposals` skill on 2026-10-09 from `docs/ux/UX_UI_DIRECTION.md` §2.1 (identity v1: palette, logo, Archivo + IBM Plex Mono) and the Spanish copy in `docs/ux/CONTENT.md` (verbatim).
+- Built with the kit's `ux-proposals` skill on 2026-10-09 from `docs/ux/UX_UI_DIRECTION.md` §2.1 (identity v1: palette, logo, Archivo + IBM Plex Mono) and the Spanish copy in `docs/ux/CONTENT.md` as it stood that day. A, B and C use that first draft of the copy; A v2 and A v3 add the owner's answers of 2026-10-10. `docs/ux/CONTENT.md` remains the only source of approved copy; where a mockup differs from it, CONTENT.md wins.
 - These are **visual references, not production code.** Open the HTML files in a browser (fonts load from Google Fonts in the mockups only; production self-hosts them).
 
 All three share palette, logo, fonts, copy and section order. They differ only in treatment.
@@ -22,7 +22,7 @@ Note on C: its large ball-and-seams outline goes beyond the tone rule (baseball 
 
 Provisional in all three: Raul's photo (monogram), project screenshots, client logos (placeholders), Calendly (placeholder box), mobile menu (not drawn). Identity v1 pending Cami's approval.
 
-After the decision: the Visual Identity section (UX §2.2) and story US-020 are filled in a follow-up docs PR.
+Decision recorded in PR #1: UX §2.2 names A v3 as the visual reference; US-020 was withdrawn because the palette was approved before the build.
 
 ## Proposal A v2 — Dugout with Palette 1 (2026-10-10, superseded by v3)
 
@@ -67,4 +67,4 @@ File: `propuesta-a-v3-dugout-logo.html`. Same as v2, with the logo the owner sup
 
 Logo colours: navy `#0B1F44`, teal `#0E8A9B`, white. Teal is used for graphics and large text only (4.1:1 on white is enough for ≥ 24 px; body text uses the site tokens). On the dark site the wordmark is off-white + cyan (`#21C7D9`), because navy on navy is 1.13:1.
 
-Wordmark text in the SVGs uses Archivo 800; before registering the mark or printing, convert the text to outlines. Tagline written as "We strike out your software needs" (sentence case), matching the approved slogan.
+Wordmark text in the SVGs uses Archivo 800; before registering the mark or printing, convert the text to outlines. The approved tagline is "We strike out your software needs": sentence case in prose and page copy; the logo lockups set it in uppercase as a typographic style ("WE STRIKE OUT YOUR SOFTWARE NEEDS").

@@ -50,9 +50,9 @@
 - Where the sprint deliverable runs: public (GitHub Pages), endpoint on Apps Script
 
 ## Open questions
-- Palette may change (look and feel A approved 2026-10-10) — US-020, Sprint 002
+- Logo lockups: convert the wordmark text to outlines before printing / trademark filing (owner)
 - Raul's photo ≥ 800×800 px (provisional 200 px in use)
 - Sanitized screenshot of the Poliart platform for the showroom
 - GoDaddy hosting plan bought? cPanel Linux?
-- Cami's approval of visual identity v1
+- Cami's sign-off on the approved identity (Origo governance; does not block the build)
 - Legal review of privacy notice v1 (Cinthia)

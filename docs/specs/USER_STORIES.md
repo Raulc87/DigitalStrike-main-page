@@ -16,17 +16,17 @@ Common acceptance criteria for every UI story (**AC-UI**):
 
 ## US-001 — Frontend scaffold and theme (foundation)
 As the team, we need a project skeleton so three agents can work in parallel.
-- AC1: Astro (static output) + TypeScript (strict) + Tailwind CSS v4 with the provisional tokens of UX §2.1 defined in `@theme`; Archivo and IBM Plex Mono self-hosted with `@fontsource`.
+- AC1: Astro (static output) + TypeScript (strict) + Tailwind CSS v4 with the approved tokens of UX §2.1 defined in `@theme`; Archivo and IBM Plex Mono self-hosted with `@fontsource`.
 - AC2: npm scripts `dev`, `build`, `preview`, `lint`, `check`, `test`, `test:e2e` exist and pass on the scaffold.
 - AC3: Pages `/es/` and `/en/` compose stub components for every section of UX §1 with the right anchors; `src/components/lead/LeadForm.astro` and `src/components/schedule/Scheduling.astro` exist as stubs handed to Agent 2.
 - AC4: `astro.config.mjs` reads `PUBLIC_SITE_URL` and `PUBLIC_BASE_PATH` so the same code builds for GitHub Pages (`/DigitalStrike-main-page/`) and for a root domain; all internal links and assets respect the base path.
-- AC5: Brand SVGs copied from `docs/assets/brand/` to `public/brand/`; `favicon.svg` created per UX §2.1.
+- AC5: The approved logo kit is copied unchanged from `docs/assets/brand/` to `public/brand/`, and `favicon.svg` to `public/favicon.svg`; the header shows `logo-mark-on-dark.svg` plus the live wordmark of UX §2.1.
 
 ## US-002 — Languages: routing, detection, toggle, SEO
 As a visitor, I see the page in my language and can switch it.
 - AC1: `/` redirects to the saved `ds_lang` if present; otherwise `/es/` when the first preferred browser language starts with `es`, otherwise `/en/`. Without JS, `/` shows links to both.
 - AC2: The `ES | EN` toggle is visible at every width, goes to the same section on the other page and saves `ds_lang`; a later visit to `/` honours it.
-- AC3: Each page has `lang`, unique title/description (CONTENT §1), canonical URL, `hreflang` alternates `es`, `en`, `x-default` (→ `/`), Open Graph tags with a 1200×630 image built from the brand assets.
+- AC3: Each page has `lang`, unique title/description (CONTENT §1), canonical URL, `hreflang` alternates `es`, `en`, `x-default` (→ `/`), Open Graph tags with a 1200×630 PNG built from `logo-horizontal-dark.svg` on the navy token.
 - AC4: `sitemap.xml` and `robots.txt` are generated with the correct site URL and base path.
 - AC5: Vitest covers the detection function (es-CR, es, es-419, en-US, fr-FR, empty list, saved preference wins, storage throws).
 
@@ -127,14 +127,11 @@ As the owner, every lead lands in my Google Sheet.
 - AC-UI.
 
 ## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10
-- AC1: 2–3 HTML proposals with the identity v1 palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*
-- AC2: The owner's choice and date are recorded in UX §2.2. *(Proposal A — Dugout, chosen by Raul on 2026-10-10.)*
+- AC1: 2–3 HTML proposals with the brand palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*
+- AC2: The owner's choice and date are recorded in UX §2.2. *(Proposal A v3 — Dugout with Palette 1 and the ball logo, approved by Raul on 2026-10-10.)*
 
-## US-020 — Apply the final palette
-Proposal A's treatment is built directly in Sprint 001 (UX §2.2), so this story only covers the palette change the owner announced as possible.
-- AC1: When the owner approves a new palette in UX §2.1, only the token values in `src/styles/global.css` (and the logo SVGs, if they change) are updated; no component changes.
-- AC2: Every section in both languages at every width; contrast AA re-checked for every pair; all existing tests green.
-- *(Sprint 002, after the palette decision.)*
+## US-020 — Apply the final palette — WITHDRAWN 2026-10-10
+The final palette and logo were approved before the build started (UX §2), so Sprint 001 builds them directly and this story is not needed. Kept for traceability; a future palette change would be a new story.
 
 ## Traceability
 

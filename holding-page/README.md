@@ -34,4 +34,4 @@ If GoDaddy offers "Website Builder" or "Coming soon" pages, ignore them; this pa
 
 ## Updating the email later
 
-When the corporate mailbox exists, replace `rcasanas@gmail.com` in `index.html` (one `mailto:` link) and re-upload the file.
+The "Email us" button points to the corporate mailbox `manager@digitalstrike-solutions.com` (Google Workspace, configured 2026-10-10). To change it, edit the one `mailto:` link in `index.html` and re-upload that file.

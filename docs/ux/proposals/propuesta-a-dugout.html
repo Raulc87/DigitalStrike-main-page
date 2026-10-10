@@ -16,7 +16,7 @@ section{padding:clamp(56px,8vw,104px) 0}
 .banner{font:500 .8rem/1.4 var(--font-mono);padding:10px var(--gutter);background:#FFF6E0;color:#3A2A0A;border-bottom:2px dashed var(--color-leather-ink);text-align:center}
 .skip{position:absolute;left:-999px;display:inline-flex;align-items:center;min-height:44px;padding:8px 12px}.skip:focus{left:8px;top:8px;z-index:99;background:var(--color-bone);color:var(--color-carbon);padding:8px 12px}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--color-leather);outline-offset:2px}
+:focus-visible{outline:2px solid var(--color-leather);outline-offset:2px;box-shadow:0 0 0 2px var(--color-carbon)}
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
 .mark{width:40px;height:40px;flex:none}
 .wordmark{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:0;line-height:1}
@@ -25,7 +25,8 @@ a{color:inherit}
 .site-header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
 .nav{display:none;gap:24px}.nav a{text-decoration:none;font-weight:500;padding:12px 0}
-@media (min-width:1024px){.nav{display:flex}}
+@media (min-width:1200px){.nav{display:flex}}
+.nav a,.btn{white-space:nowrap}
 .hdr-actions{display:flex;align-items:center;gap:12px}
 .lang{display:flex;align-items:center;gap:2px;font-size:.85rem}.lang a{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;text-decoration:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;font-size:1rem}

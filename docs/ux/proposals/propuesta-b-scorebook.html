@@ -1,0 +1,277 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DigitalStrike · Propuesta B — Scorebook</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>
+:root{--color-carbon:#14181F;--color-night:#1B2B46;--color-leather:#C8872A;--color-leather-ink:#92631F;--color-stitch:#B3372B;--color-bone:#F2EFE9;--color-muted:#9AA3B2;--color-muted-light:#4A5263;
+--font-sans:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;--font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;--gutter:clamp(16px,4vw,40px);}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;font-family:var(--font-sans);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+h1,h2,h3{line-height:1.15;margin:0 0 .5em;font-weight:800;letter-spacing:-.01em}
+h1{font-size:clamp(2.25rem,5.2vw,3.6rem)} h2{font-size:clamp(1.75rem,3.4vw,2.5rem)} h3,.h3{font-size:1.2rem;font-weight:700}
+p{margin:0 0 1em}
+.mono{font-family:var(--font-mono)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 var(--gutter)}
+section{padding:clamp(56px,8vw,104px) 0}
+.banner{font:500 .8rem/1.4 var(--font-mono);padding:10px var(--gutter);background:#FFF6E0;color:#3A2A0A;border-bottom:2px dashed var(--color-leather-ink);text-align:center}
+.skip{position:absolute;left:-999px;display:inline-flex;align-items:center;min-height:44px;padding:8px 12px}.skip:focus{left:8px;top:8px;z-index:99;background:var(--color-bone);color:var(--color-carbon);padding:8px 12px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--color-leather);outline-offset:2px;box-shadow:0 0 0 2px var(--color-carbon)}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
+.mark{width:40px;height:40px;flex:none}
+.wordmark{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:0;line-height:1}
+.wm-digital,.wm-strike{font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.wm-sol{flex-basis:100%;font:500 .62rem/1.6 var(--font-mono);letter-spacing:.32em}
+.site-header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.nav{display:none;gap:24px}.nav a{text-decoration:none;font-weight:500;padding:12px 0}
+@media (min-width:1200px){.nav{display:flex}}
+.nav a,.btn{white-space:nowrap}
+.hdr-actions{display:flex;align-items:center;gap:12px}
+.lang{display:flex;align-items:center;gap:2px;font-size:.85rem}.lang a{display:inline-flex;min-width:44px;min-height:44px;align-items:center;justify-content:center;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;border-radius:999px;font-weight:700;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;font-size:1rem}
+.btn-sm{min-height:44px;padding:8px 16px;font-size:.9rem}
+@media (max-width:480px){.btn-sm{display:none}}
+.btn-primary{background:var(--color-leather);color:var(--color-carbon)}
+.btn-block{width:100%}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.hero{display:grid;gap:40px;align-items:center}
+@media (min-width:900px){.hero{grid-template-columns:1.25fr .75fr}}
+.hero-art{position:relative;display:grid;place-items:center;min-height:220px}
+.hero-mark{width:min(260px,60vw);height:auto;position:relative;z-index:1}
+.seams,.grid-lines{display:none}
+@media (max-width:899px){.hero-art{aspect-ratio:auto!important;min-height:160px!important;border-left:0!important}.hero-mark{width:120px!important}}
+.eyebrow,.kicker{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+.lead{font-size:1.15rem;max-width:60ch}
+.slogan{font-style:italic;font-weight:600}
+.values{display:grid;gap:24px}
+@media (min-width:768px){.values{grid-template-columns:repeat(3,1fr)}}
+.v-n{font-size:.8rem}
+.sec-head{max-width:720px;margin-bottom:40px}
+.intro{font-size:1.1rem}
+.tiers{display:grid;gap:20px}
+@media (min-width:768px){.tiers{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1280px){.tiers{grid-template-columns:repeat(3,1fr)}}
+.card{padding:28px;display:flex;flex-direction:column}
+.tier-letter{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem}
+.who{font-weight:500}
+.incl{padding-left:1.1em;margin:0 0 1.5em;flex:1}.incl li{margin-bottom:.35em}
+.tier .btn{align-self:flex-start}
+.note{margin-top:28px;font-size:.95rem}
+.steps{list-style:none;padding:0;margin:0 0 40px;display:grid;gap:24px}
+@media (min-width:1024px){.steps{grid-template-columns:repeat(4,1fr)}}
+.step-n{display:block;font-size:1.6rem;font-weight:600;margin-bottom:.5rem}
+.warranty{display:flex;gap:20px;align-items:flex-start;padding:28px}
+.shield{width:48px;height:48px;flex:none}
+.warranty h3{margin-bottom:.3em}.warranty p{margin:0}
+.works{display:grid;gap:24px}
+@media (min-width:900px){.works{grid-template-columns:repeat(3,1fr)}}
+.work{padding:0;overflow:hidden}
+.shot{aspect-ratio:16/10;display:grid;place-items:center;position:relative;font-size:2.4rem;font-weight:600}
+.work-body{padding:24px;display:flex;flex-direction:column;flex:1}
+.chips{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:.75rem;padding:4px 10px;border-radius:999px}
+.link{font-weight:600;display:inline-flex;align-items:center;min-height:44px}
+.private{font-size:.8rem;margin:auto 0 0;padding-top:8px}
+.pending{font:500 .72rem/1.3 var(--font-mono);border:1.5px dashed currentColor;padding:4px 8px;border-radius:6px;opacity:.9}
+.shot .pending{position:absolute;bottom:10px;right:10px}
+.about{display:grid;gap:40px;align-items:start}
+@media (min-width:900px){.about{grid-template-columns:.8fr 1.2fr}}
+.photo{aspect-ratio:1;border-radius:12px;display:grid;place-items:center;position:relative;font-size:4rem;font-weight:800;max-width:420px}
+.photo .pending{position:absolute;bottom:12px;left:12px;font-size:.72rem;font-weight:500}
+.person{font-size:1.1rem}.person .mono{font-size:.8rem;margin-left:8px}
+.facts{margin:20px 0 24px}
+.slots{list-style:none;padding:0;margin:0;display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:900px){.slots{grid-template-columns:repeat(4,1fr)}}
+.slot{min-height:110px;display:grid;place-items:center;text-align:center;padding:16px;border:2px dashed;border-radius:12px;font-size:.85rem}
+.form-wrap{display:grid;gap:40px}
+@media (min-width:1024px){.form-wrap{grid-template-columns:.8fr 1.2fr}}
+.form-card{padding:clamp(20px,4vw,40px);border-radius:12px}
+.field{display:flex;flex-direction:column;margin-bottom:18px;min-width:0}
+.row2{display:grid;gap:0 16px}@media (min-width:640px){.row2{grid-template-columns:1fr 1fr}}
+label{font-weight:600;margin-bottom:6px;font-size:.95rem}
+input,select,textarea{font:inherit;min-height:48px;padding:10px 14px;border-radius:8px;border:1.5px solid;width:100%}
+textarea{min-height:120px;resize:vertical}
+.hint{font-size:.82rem;margin:6px 0 0}
+.consent{display:flex;gap:12px;align-items:flex-start;margin:6px 0 20px}
+.consent input{width:24px;min-height:24px;height:24px;margin-top:2px;flex:none}
+.consent label{font-weight:400;font-size:.9rem}
+.small{font-size:.85rem}
+.thanks{padding:8px 0}
+.calendly{min-height:420px;border-radius:12px;border:2px dashed;display:grid;place-content:center;text-align:center;gap:8px;padding:24px;margin-bottom:12px}
+.foot{display:grid;gap:20px;padding-top:48px;padding-bottom:48px}
+@media (min-width:900px){.foot{grid-template-columns:1.2fr 1fr}}
+.foot-links{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px 24px}.foot-links a{display:inline-flex;min-height:44px;align-items:center}
+
+body{background:var(--color-bone);color:var(--color-carbon)}
+.mark-dark,.hero-mark-dark{display:none}
+.site-header .mark-light{display:block}
+.wm-strike{color:var(--color-leather-ink)}
+.cursor,.kicker,.eyebrow,.v-n,.tier-letter{color:var(--color-leather-ink)}
+.site-header{background:rgba(242,239,233,.92);border-bottom:1px solid #D9D3C7}
+.btn-secondary{background:transparent;color:var(--color-carbon);border-color:var(--color-carbon)}
+.btn-ghost{background:var(--color-carbon);color:var(--color-bone);border-color:var(--color-carbon)}
+h1{font-size:clamp(2.4rem,6vw,4.4rem);letter-spacing:-.025em}
+h1 em{font-style:normal;color:var(--color-leather-ink);box-shadow:inset 0 -.12em 0 rgba(200,135,42,.35)}
+.hero-art{border-left:1px solid #CFC8BA;min-height:300px}
+.hero-mark-light{width:min(220px,50vw)}
+.slogan{color:var(--color-leather-ink);border-top:1px solid #CFC8BA;padding-top:14px;max-width:44ch}
+.lead,.intro,.who,.value p,.work-body p,.about-copy p,.note,.hint,.small{color:#3B4250}
+.s-values{background:#FFFFFF;border-top:1px solid #E2DCD0;border-bottom:1px solid #E2DCD0;padding:40px 0}
+.value{border-top:3px solid var(--color-carbon);padding-top:16px}
+.s-services{background:var(--color-bone)}
+.tiers{gap:0;border-top:1px solid #CFC8BA;border-left:1px solid #CFC8BA}
+.card{background:#FFFFFF;border-radius:4px}
+.tier{border-radius:0;border-right:1px solid #CFC8BA;border-bottom:1px solid #CFC8BA}
+.tier-letter{font-size:1.6rem;font-weight:600;letter-spacing:0;text-transform:none}
+.s-process{background:var(--color-carbon);color:var(--color-bone)}
+.s-process .kicker,.s-process .step-n{color:var(--color-leather)}
+.s-process .intro,.s-process .step p{color:#C9CED8}
+.step{border-left:1px solid #3A4458;padding-left:20px}
+.warranty{background:var(--color-leather);color:var(--color-carbon);border-radius:4px}
+.s-work{background:#FFFFFF}
+.work{border:1px solid #DCD5C8;background:var(--color-bone)}
+.shot{background:var(--color-night);color:var(--color-bone)}
+.shot .pending{color:#F2D39C}
+.chip{background:#FFFFFF;border:1px solid #CFC8BA;color:var(--color-carbon)}
+.link{color:var(--color-leather-ink)}
+.s-about{background:var(--color-bone)}
+.photo{background:var(--color-night);color:var(--color-bone);border-radius:4px}
+.photo .pending{color:#F2D39C}
+.s-clients{background:#FFFFFF}
+.slot{border-color:#BDB5A6;color:var(--color-muted-light)}
+.s-form{background:var(--color-night);color:var(--color-bone)}
+.s-form .kicker{color:var(--color-leather)}
+.s-form .form-context p{color:#D5DAE3}
+.form-card{background:var(--color-bone);color:var(--color-carbon);border-radius:4px}
+.form-card .hint{color:#3B4250}
+input,select,textarea{background:#FFFFFF;color:var(--color-carbon);border-color:#9C9586;border-radius:4px}
+.s-schedule{background:var(--color-bone)}
+.calendly{border-color:#BDB5A6;color:var(--color-muted-light);background:#FFFFFF}
+.site-footer{background:var(--color-carbon);color:var(--color-bone)}
+.site-footer .mark-light{display:none}.site-footer .mark-dark{display:block}
+.site-footer .wm-strike,.site-footer .slogan{color:var(--color-leather)}
+.site-footer .small{color:#C9CED8}
+.pending{color:#7A5310}
+</style></head><body>
+<div class="banner" role="note"><strong>Propuesta B — Scorebook (clara y editorial)</strong> · Referencia visual, no es producción. Provisional: foto de Raul (monograma), capturas de proyectos, logos de clientes, calendario de Calendly. Identidad v1 pendiente de aprobación de Cami.</div>
+<a class="skip" href="#inicio">Saltar al contenido</a>
+<header class="site-header"><div class="wrap hdr"><a class="brand" href="#inicio" aria-label="DigitalStrike Solutions, inicio"><svg class="mark mark-dark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#F2EFE9" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#C8872A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#F2EFE9" stroke-width="6" stroke-linecap="round" fill="none"/></svg><svg class="mark mark-light" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#14181F" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#9A6412" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#14181F" stroke-width="6" stroke-linecap="round" fill="none"/></svg><span class="wordmark"><span class="wm-digital">Digital</span><span class="wm-strike">Strike</span><span class="wm-sol">SOLUTIONS</span></span></a>
+<nav class="nav" aria-label="Principal"><a href="#servicios">Servicios</a><a href="#como-trabajamos">Cómo trabajamos</a><a href="#proyectos">Proyectos</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a></nav>
+<div class="hdr-actions"><div class="lang mono" aria-label="Cambiar idioma"><a href="#" aria-current="true"><b>ES</b></a><span aria-hidden="true">|</span><a href="#" lang="en">EN</a></div>
+<a class="btn btn-primary btn-sm" href="#agenda">Agenda tu sesión 0</a></div></div></header>
+
+<main>
+<section id="inicio" class="s-hero"><div class="wrap hero">
+<div class="hero-copy">
+<p class="eyebrow mono"><span class="cursor">&gt;_</span> Software a la medida · Desde Costa Rica para el mundo</p>
+<h1>Soluciones de software que se adaptan a <em>tu negocio</em>, no al revés.</h1>
+<p class="lead">Desde tu primera página web hasta el sistema que ordena tu empresa. Trabajamos cerca de ti y ajustamos el rumbo cuando tu negocio lo necesita.</p>
+<p class="slogan">Sacamos de circulación tus necesidades de software.</p>
+<div class="ctas"><a class="btn btn-primary" href="#contacto">Cuéntanos tu idea</a><a class="btn btn-secondary" href="#agenda">Agenda tu sesión 0</a></div>
+</div>
+<div class="hero-art" aria-hidden="true"><svg class="seams" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+<circle cx="300" cy="300" r="290" fill="none" stroke="currentColor" stroke-width="2"/>
+<path d="M120 60 C 260 200, 260 400, 120 540" fill="none" stroke="var(--color-stitch)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+<path d="M480 60 C 340 200, 340 400, 480 540" fill="none" stroke="var(--color-stitch)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+</svg><svg class="hero-mark hero-mark-dark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#F2EFE9" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#C8872A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#F2EFE9" stroke-width="6" stroke-linecap="round" fill="none"/></svg><svg class="hero-mark hero-mark-light" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#14181F" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#9A6412" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#14181F" stroke-width="6" stroke-linecap="round" fill="none"/></svg><div class="grid-lines"></div></div>
+</div></section>
+
+<section class="s-values" aria-label="Por qué DigitalStrike"><div class="wrap values">
+<div class="value"><span class="v-n mono">01</span><h2 class="h3">Cercanía real</h2><p>Hablas directamente con quien construye tu solución. Participas en cada etapa y ves avances desde el inicio.</p></div>
+<div class="value"><span class="v-n mono">02</span><h2 class="h3">Nos adaptamos al cambio</h2><p>Si tu negocio cambia mientras construimos, el software cambia con él. Ajustamos el plan contigo.</p></div>
+<div class="value"><span class="v-n mono">03</span><h2 class="h3">Experiencia probada</h2><p>Más de 17 años construyendo plataformas para empresas como Google, Sephora, Experian y Wells Fargo, ahora al servicio de tu proyecto.</p></div>
+</div></section>
+
+<section id="servicios" class="s-services"><div class="wrap">
+<div class="sec-head"><p class="kicker mono">&gt;_ servicios</p><h2>Lo que construimos</h2><p class="intro">Cada proyecto es distinto, por eso cada propuesta se arma según tu alcance. Estos son los tipos de proyecto que hacemos con más frecuencia.</p></div>
+<div class="tiers"><article class="card tier"><p class="tier-letter mono">Banda A</p>
+<h3>Presencia web</h3><p class="who">Personas emprendedoras y marcas que necesitan una página profesional que venda.</p><ul class="incl"><li>Página de una sola vista, enfocada en convertir</li><li>Diseño pensado primero para celular</li><li>Español e inglés si lo necesitas</li><li>Formulario de contacto</li><li>Publicación en tu dominio</li></ul>
+<a class="btn btn-ghost" href="#contacto">Quiero algo así</a></article>
+<article class="card tier"><p class="tier-letter mono">Banda B</p>
+<h3>Aplicaciones web</h3><p class="who">Negocios que necesitan algo más que una vitrina: catálogos, agendas, cursos o pedidos.</p><ul class="incl"><li>Funcionalidades a la medida como catálogo, carrito o formulario de captación</li><li>Panel para administrar tu contenido</li><li>Integración con las herramientas que ya usas</li></ul>
+<a class="btn btn-ghost" href="#contacto">Quiero algo así</a></article>
+<article class="card tier"><p class="tier-letter mono">Banda C</p>
+<h3>Sistemas para empresas</h3><p class="who">Empresas que pierden tiempo o dinero en procesos manuales, inventarios o reportes.</p><ul class="incl"><li>Inventario, reportería y automatización de procesos</li><li>Frontend y backend a la medida</li><li>Entregas progresivas para que veas avances</li></ul>
+<a class="btn btn-ghost" href="#contacto">Quiero algo así</a></article>
+<article class="card tier"><p class="tier-letter mono">Banda D</p>
+<h3>Soluciones a la medida</h3><p class="who">Problemas poco convencionales que piden pensar fuera de la caja.</p><ul class="incl"><li>Varias tecnologías trabajando juntas</li><li>Integración de datos e inteligencia artificial aplicada</li><li>Arquitectura pensada para crecer</li></ul>
+<a class="btn btn-ghost" href="#contacto">Quiero algo así</a></article>
+<article class="card tier"><p class="tier-letter mono">>_ Extra</p>
+<h3>Mejoras y personalizaciones</h3><p class="who">¿Ya tienes un sistema? Lo extendemos, lo integramos o lo modernizamos.</p><ul class="incl"><li>Nuevas funcionalidades</li><li>Integraciones</li><li>Migraciones y mejoras de rendimiento</li></ul>
+<a class="btn btn-ghost" href="#contacto">Quiero algo así</a></article></div>
+<p class="note">No publicamos precios fijos: te enviamos una propuesta clara después de entender lo que necesitas.</p>
+</div></section>
+
+<section id="como-trabajamos" class="s-process"><div class="wrap">
+<div class="sec-head"><p class="kicker mono">&gt;_ proceso</p><h2>Cómo trabajamos</h2><p class="intro">Un proceso claro, con tu participación en cada paso.</p></div>
+<ol class="steps"><li class="step"><span class="step-n mono">01</span><h3>Sesión 0</h3><p>Conversamos una hora sobre tu problema o tu idea, sin compromiso.</p></li>
+<li class="step"><span class="step-n mono">02</span><h3>Propuesta y alcance</h3><p>Te enviamos una propuesta con el alcance por escrito, las entregas y cómo vamos a validar cada una.</p></li>
+<li class="step"><span class="step-n mono">03</span><h3>Construimos por entregas</h3><p>Ves avances reales, opinas y ajustamos el rumbo juntos. Nada de sorpresas al final.</p></li>
+<li class="step"><span class="step-n mono">04</span><h3>Lanzamiento y acompañamiento</h3><p>Publicamos tu solución y te seguimos acompañando después del lanzamiento.</p></li></ol>
+<div class="warranty"><svg class="shield" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 L40 10 V22 C40 33 33 40 24 44 C15 40 8 33 8 22 V10 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M17 24 L22 29 L32 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div><h3>Garantía de 6 meses en todos los proyectos</h3><p>Si aparece un error en lo que acordamos, lo corregimos sin costo durante los seis meses siguientes al lanzamiento.</p></div></div>
+</div></section>
+
+<section id="proyectos" class="s-work"><div class="wrap">
+<div class="sec-head"><p class="kicker mono">&gt;_ proyectos</p><h2>Proyectos de nuestro equipo</h2><p class="intro">Algunos proyectos construidos por nuestro equipo. Pronto sumaremos más casos.</p></div>
+<div class="works"><article class="card work"><div class="shot" aria-hidden="true"><span class="mono">GK</span><span class="pending">Captura pendiente</span></div>
+<div class="work-body"><h3>Página de captación para un programa de salud financiera</h3><p>Página bilingüe que presenta la oferta, filtra a las personas interesadas con una pregunta y guarda cada contacto en Google Sheets antes de abrir la agenda.</p><ul class="chips"><li class="chip mono">Astro</li><li class="chip mono">TypeScript</li><li class="chip mono">Python</li><li class="chip mono">Google Sheets</li><li class="chip mono">Calendly</li><li class="chip mono">Playwright</li></ul><a class="link" href="#proyectos">Ver código en GitHub ↗</a></div></article>
+<article class="card work"><div class="shot" aria-hidden="true"><span class="mono">CH</span><span class="pending">Captura pendiente</span></div>
+<div class="work-body"><h3>Sitio de marca personal para una conferencista y coach</h3><p>Sitio de una página, bilingüe, con secciones animadas y cambio de idioma al instante.</p><ul class="chips"><li class="chip mono">React</li><li class="chip mono">Vite</li><li class="chip mono">JavaScript</li><li class="chip mono">CSS</li></ul><a class="link" href="#proyectos">Ver código en GitHub ↗</a></div></article>
+<article class="card work"><div class="shot" aria-hidden="true"><span class="mono">IA</span><span class="pending">Captura pendiente</span></div>
+<div class="work-body"><h3>Plataforma de reportes con IA para una imprenta</h3><p>La gerencia pide reportes en lenguaje natural y los recibe en segundos, en lugar de esperar de 5 a 10 días. Unifica 3 bases de datos y limita la IA a un catálogo de reportes aprobados y auditables.</p><ul class="chips"><li class="chip mono">Python</li><li class="chip mono">React</li><li class="chip mono">Claude</li><li class="chip mono">Docker</li></ul><p class="private mono">Caso de estudio · código privado</p></div></article></div>
+</div></section>
+
+<section id="nosotros" class="s-about"><div class="wrap about">
+<div class="photo" role="img" aria-label="Raul Casañas, CEO de DigitalStrike Solutions"><span>RC</span><span class="pending">Foto pendiente</span></div>
+<div class="about-copy"><p class="kicker mono">&gt;_ nosotros</p><h2>La persona detrás de DigitalStrike</h2>
+<p class="person"><strong>Raul Casañas</strong> <span class="mono">CEO y fundador</span></p>
+<p>Desarrollo software desde 2009. En más de 17 años he construido plataformas empresariales de punta a punta para compañías como Google, Sephora, Experian, Wells Fargo y TreviPay: desde el módulo de inventario de las tiendas de Google hasta servicios de pagos B2B que procesan más de US$6.000 millones al año.</p>
+<p>Mi especialidad es que los sistemas lentos se vuelvan rápidos y que el trabajo manual desaparezca: he llevado tiempos de respuesta de minutos a milisegundos, he liderado migraciones críticas sin perder un solo dato y hoy integro inteligencia artificial de forma segura y auditable.</p>
+<p>Fundé DigitalStrike para dejar de vender horas y empezar a resolver problemas, los tuyos, con la misma calidad que exigen las grandes compañías. El nombre viene del béisbol, que jugué de joven: aquí sacamos de circulación tus necesidades de software.</p>
+<ul class="chips facts"><li class="chip mono">17+ años de experiencia</li><li class="chip mono">Equipos de hasta 8 personas liderados</li><li class="chip mono">Java · Python · React · TypeScript · AWS</li><li class="chip mono">IA aplicada</li><li class="chip mono">Scrum Master certificado (PSM I)</li><li class="chip mono">Español e inglés</li></ul>
+<a class="btn btn-secondary" href="#nosotros">Ver perfil en LinkedIn ↗</a></div>
+</div></section>
+
+<section id="clientes" class="s-clients"><div class="wrap">
+<div class="sec-head"><h2>Empresas que confían en nosotros</h2></div>
+<ul class="slots"><li class="slot">Este espacio está reservado para tu marca</li><li class="slot">Este espacio está reservado para tu marca</li><li class="slot">Este espacio está reservado para tu marca</li><li class="slot">Este espacio está reservado para tu marca</li></ul>
+</div></section>
+
+<section id="contacto" class="s-form"><div class="wrap form-wrap">
+<div class="form-context"><p class="kicker mono">&gt;_ contacto</p><h2>Cuéntanos tu idea</h2>
+<p>Responde unas preguntas rápidas. Te escribimos en un máximo de 2 días hábiles.</p>
+<p class="small">Los campos con * son obligatorios.</p></div>
+<div class="form-card">
+<form id="lead" novalidate>
+<div class="field"><label for="f-name">Nombre *</label><input id="f-name" autocomplete="name" value="Ana María Pérez"></div>
+<div class="field"><label for="f-email">Correo electrónico *</label><input id="f-email" type="email" autocomplete="email" value="ana.perez@ejemplo.com"></div>
+<div class="row2"><div class="field"><label for="f-phone">Teléfono o WhatsApp (opcional)</label><input id="f-phone" type="tel" placeholder="+506 8888 0000" aria-describedby="h-phone"><p id="h-phone" class="hint">Incluye el código de país, por ejemplo +506 8888 0000.</p></div>
+<div class="field"><label for="f-company">Empresa o marca (opcional)</label><input id="f-company" value="Panadería La Esquina"></div></div>
+<div class="field"><label for="f-type">¿Qué necesitas? *</label><select id="f-type"><option value="">Elige una opción</option><option value="website">Página web</option><option value="web_app" selected>Aplicación web (catálogo, agenda, cursos…)</option><option value="business_system">Sistema para mi empresa (inventario, reportes, procesos)</option><option value="custom_solution">Solución a la medida / algo fuera de lo común</option><option value="not_sure">Aún no lo sé</option></select></div>
+<div class="row2"><div class="field"><label for="f-budget">¿Cuánto planeas invertir? *</label><select id="f-budget" aria-describedby="h-budget"><option value="">Elige una opción</option><option value="under_1000">Menos de US$1.000</option><option value="from_1000_to_3000" selected>US$1.000 – 3.000</option><option value="from_3000_to_10000">US$3.000 – 10.000</option><option value="from_10000_to_25000">US$10.000 – 25.000</option><option value="over_25000">Más de US$25.000</option><option value="not_sure">Aún no lo tengo definido</option></select><p id="h-budget" class="hint">Nos ayuda a proponerte la mejor solución para tu presupuesto.</p></div>
+<div class="field"><label for="f-time">¿Para cuándo lo necesitas? *</label><select id="f-time"><option value="">Elige una opción</option><option value="asap">Lo antes posible</option><option value="within_1_month">En el próximo mes</option><option value="within_3_months" selected>En los próximos 3 meses</option><option value="flexible">Sin prisa / flexible</option></select></div></div>
+<div class="field"><label for="f-msg">Cuéntanos el problema o la idea *</label><textarea id="f-msg" rows="4" aria-describedby="h-msg">Quiero un catálogo en línea con pedidos por WhatsApp para mi panadería.</textarea><p id="h-msg" class="hint">Qué quieres lograr, para quién y qué has intentado hasta ahora. Mínimo 20 caracteres.</p></div>
+<div class="consent"><input id="f-consent" type="checkbox"><label for="f-consent">Acepto que DigitalStrike Solutions use mis datos para responder a mi solicitud, según el aviso de privacidad. * <a class="link" href="#contacto">Leer el aviso de privacidad</a></label></div>
+<button class="btn btn-primary btn-block" type="submit">Enviar mi idea</button>
+</form>
+<div id="thanks" class="thanks" hidden tabindex="-1"><h3>¡Recibido, Ana!</h3><p>Te enviamos un correo de confirmación. Si quieres adelantar, agenda tu sesión 0 aquí abajo.</p><a class="btn btn-primary" href="#agenda">Agendar mi sesión 0</a></div>
+</div></div></section>
+
+<section id="agenda" class="s-schedule"><div class="wrap">
+<div class="sec-head"><h2>Agenda tu sesión 0</h2><p class="intro">Una conversación de una hora para entender tu problema y ver si somos el equipo indicado para resolverlo.</p></div>
+<div class="calendly"><p class="mono">calendly.com/rcasanas/1hr</p><p class="pending">Aquí va el calendario de Calendly (inline)</p></div>
+<p class="small"><a class="link" href="#agenda">¿No ves el calendario? Ábrelo en una pestaña nueva.</a></p>
+</div></section>
+</main>
+
+<footer class="site-footer"><div class="wrap foot">
+<div><a class="brand" href="#inicio" aria-label="DigitalStrike Solutions, inicio"><svg class="mark mark-dark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#F2EFE9" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#B3372B" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#C8872A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#F2EFE9" stroke-width="6" stroke-linecap="round" fill="none"/></svg><svg class="mark mark-light" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" >  <circle cx="52" cy="52" r="44" fill="none" stroke="#14181F" stroke-width="4"/>  <path d="M30 29 l 6 -4 M26 41 l 7 -2 M26 63 l 7 2 M30 75 l 6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M74 29 l -6 -4 M78 41 l -7 -2 M78 63 l -7 2 M74 75 l -6 4" stroke="#8E2B21" stroke-width="3.5" stroke-linecap="round" fill="none"/>  <path d="M40 40 L52 52 L40 64" fill="none" stroke="#9A6412" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>  <path d="M58 64 H70" stroke="#14181F" stroke-width="6" stroke-linecap="round" fill="none"/></svg><span class="wordmark"><span class="wm-digital">Digital</span><span class="wm-strike">Strike</span><span class="wm-sol">SOLUTIONS</span></span></a><p class="slogan">Sacamos de circulación tus necesidades de software.</p></div>
+<ul class="foot-links"><li><a href="#contacto">Escríbenos</a></li><li><a href="#nosotros">LinkedIn</a></li><li><a href="#contacto">Aviso de privacidad</a></li></ul>
+<p class="small">San José, Costa Rica · Trabajamos con clientes en todo el mundo</p>
+<p class="small">© 2026 DigitalStrike Solutions. Todos los derechos reservados.</p>
+</div></footer>
+<script>
+document.getElementById('lead').addEventListener('submit',function(e){e.preventDefault();this.hidden=true;var t=document.getElementById('thanks');t.hidden=false;t.focus();});
+</script></body></html>

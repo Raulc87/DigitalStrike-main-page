@@ -208,15 +208,19 @@ Order of work:
    allowed-to-fail with a comment until Agent 2's integration PR lands. CI never calls Google.
    .env.example with every PUBLIC_* variable of contract §8 (no real values except the public
    Calendly and LinkedIn URLs).
-4. DS-016-pages-deploy — US-016: .github/workflows/pages.yml (push to main + manual), using
-   repository variables for PUBLIC_*; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
-   Actions", set repository variables, release smoke test, tagging v0.1.0) and
+4. DS-016-pages-deploy — US-016: .github/workflows/pages.yml (push to main + manual), the preview,
+   using repository variables for PUBLIC_* and PUBLIC_NOINDEX=true; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
+   Actions", set repository variables, release smoke test on https://digitalstrike-solutions.com incl. the check for GoDaddy-injected
+   scripts, tagging v0.1.0) and
    docs/runbooks/LOCAL_DEVELOPMENT.md (Windows and macOS notes: Node 22, OneDrive locks, ports).
-5. DS-017-cpanel-release — US-017 (stretch): release-cpanel.yml on release published + manual,
-   FTPS upload of dist/ built for the root domain, skipped with a notice when secrets are missing;
-   public/.htaccess (HTTPS redirect, 404, no breakage of /es/ and /en/);
-   docs/runbooks/DEPLOYMENT.md (GoDaddy FTP account, DNS for digitalstrike-solutions.com, SSL,
-   rollback).
+5. DS-017-cpanel-release — US-017 (Must, the production deploy, ADR-001): release-cpanel.yml on
+   release published + manual, FTPS upload of dist/ built for https://digitalstrike-solutions.com
+   with base path /, secrets CPANEL_HOST/USERNAME/PASSWORD/TARGET_DIR, skipped with a notice when
+   they are missing; removes the holding-page files that are not in dist/ and touches nothing
+   outside the target dir (AC5); public/.htaccess (HTTPS redirect as on the live holding page,
+   Options -Indexes, 404, no breakage of /es/ and /en/); docs/runbooks/DEPLOYMENT.md (dedicated
+   FTP account limited to public_html, the four secrets, AutoSSL check, asking GoDaddy to disable
+   their injected script, rollback). Open it early enough for the owner to dry-run it on Monday.
 ```
 
 ## Review-only agent (Opus 5.5, effort high)
@@ -249,7 +253,7 @@ e2e, and verify:
 - copy matches CONTENT.md verbatim in ES and EN; no hard-coded visitor-facing strings; inclusive
   language; no prices, refunds, invented proof or client names (BR-001–BR-004)
 - UI: theme tokens only, AA contrast, widths 360/390/768/1024/1440 without horizontal scroll,
-  44 px targets, keyboard and focus, base path correctness for GitHub Pages
+  44 px targets, keyboard and focus, base path correctness for the GitHub Pages preview and the root-domain production build
 - file ownership per SPRINT_001.md (only the PR's workstream files; package.json and configs only
   in Agent 1's PRs), naming (branch, PR title, commits), filled PR template
 - security and privacy: no secrets, no personal data in logs, HTML escaping in emails,

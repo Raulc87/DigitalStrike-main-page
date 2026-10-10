@@ -27,7 +27,7 @@ As a visitor, I see the page in my language and can switch it.
 - AC1: `/` redirects to the saved `ds_lang` if present; otherwise `/es/` when the first preferred browser language starts with `es`, otherwise `/en/`. Without JS, `/` shows links to both.
 - AC2: The `ES | EN` toggle is visible at every width, goes to the same section on the other page and saves `ds_lang`; a later visit to `/` honours it.
 - AC3: Each page has `lang`, unique title/description (CONTENT §1), canonical URL, `hreflang` alternates `es`, `en`, `x-default` (→ `/`), Open Graph tags with a 1200×630 PNG built from `logo-horizontal-dark.svg` on the navy token.
-- AC4: `sitemap.xml` and `robots.txt` are generated with the correct site URL and base path.
+- AC4: `sitemap.xml` and `robots.txt` are generated with the correct site URL and base path. When `PUBLIC_NOINDEX=true` (Pages preview), every page has `<meta name="robots" content="noindex">` and `robots.txt` disallows all.
 - AC5: Vitest covers the detection function (es-CR, es, es-419, en-US, fr-FR, empty list, saved preference wins, storage throws).
 
 ## US-003 — Header, hero, value strip, footer
@@ -111,16 +111,25 @@ As the owner, every lead lands in my Google Sheet.
 - AC3: CI never uses real Google endpoints or credentials.
 - AC4 (NFR-003): a CI job runs Lighthouse CI (`@lhci/cli`, mobile preset, 3 runs) against the built `/es/` and `/en/` pages served locally and fails below Performance 0.90 or Accessibility 0.95. Calendly is not loaded (click-to-load), so it does not affect the score.
 
-## US-016 — Preview and first release on GitHub Pages
-- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*.
+## US-016 — Preview on GitHub Pages and release runbook
+- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*. The preview build sets `PUBLIC_NOINDEX=true` (US-002 AC4), so the preview never competes with `digitalstrike-solutions.com` in search (ADR-001).
 - AC2: `https://raulc87.github.io/DigitalStrike-main-page/` serves the site; `/es/` and `/en/` work, assets load, and the form submits to the real Apps Script endpoint once `PUBLIC_LEAD_ENDPOINT_URL` is set.
-- AC3: `docs/runbooks/RELEASE.md` explains how to cut a release (tag `vX.Y.Z` + GitHub Release) and the smoke test (both languages, submit a test lead, check the row and both emails, Calendly visible, then mark the test row `rejected`).
+- AC3: `docs/runbooks/RELEASE.md` explains how to cut a release (tag `vX.Y.Z` + GitHub Release, which triggers US-017) and the smoke test on `https://digitalstrike-solutions.com`:
+  - both languages, over HTTPS;
+  - submit a test lead, check the row and both emails, then mark the test row `rejected`;
+  - Calendly visible;
+  - the served HTML contains no GoDaddy-injected script (`wsimg.com`, `secureserver.net`).
 
-## US-017 — Release deployment to GoDaddy cPanel
+## US-017 — Release deployment to GoDaddy cPanel (production)
 - AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR`.
-- AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing.
-- AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS, sets a 404 page, and does not break `/es/` and `/en/`.
-- AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps (FTP account, DNS for `digitalstrike-solutions.com`, SSL) and how to roll back (re-run the workflow on the previous release).
+- AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing. (For `v0.1.0` the owner sets them by Mon 2026-10-12, so the release does deploy.)
+- AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS (as the live holding page already does), disables directory listing, sets a 404 page, and does not break `/es/` and `/en/`.
+- AC5: The upload replaces the holding page: files that are no longer in `dist/` (the holding page's `index.html` and `assets/`) are removed from the target directory, and nothing outside it is touched (e.g. a state file or an explicit clean of the holding-page paths).
+- AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps and how to roll back (re-run the workflow on the previous release). Steps:
+  - create a dedicated FTP account limited to `public_html`;
+  - set the four secrets;
+  - check that AutoSSL is active (already done 2026-10-10);
+  - ask GoDaddy support to disable their injected monitoring script.
 
 ## US-018 — Privacy notice
 - AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, including its version line (no other status text).

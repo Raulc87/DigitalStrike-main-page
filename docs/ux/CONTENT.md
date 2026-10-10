@@ -211,7 +211,7 @@ Versión 2026-10-14-v1
 
 **Quién es responsable de tus datos.** Raul Casañas, quien opera bajo la marca DigitalStrike Solutions en San José, Costa Rica. Contacto: {contact_email}.
 
-**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. Este sitio no guarda tu dirección IP ni usa cookies de seguimiento.
+**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. El formulario no guarda tu dirección IP y el sitio no usa cookies de seguimiento. Como en cualquier sitio web, nuestro proveedor de alojamiento (GoDaddy) registra datos técnicos de cada visita, como la dirección IP, por seguridad y funcionamiento del servidor.
 
 **Para qué los usamos.** Solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad.
 
@@ -229,7 +229,7 @@ Version 2026-10-14-v1
 
 **Who is responsible for your data.** Raul Casañas, operating under the brand DigitalStrike Solutions in San José, Costa Rica. Contact: {contact_email}.
 
-**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. This site doesn't store your IP address or use tracking cookies.
+**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. The form doesn't store your IP address and the site doesn't use tracking cookies. As with any website, our hosting provider (GoDaddy) logs technical data about each visit, such as the IP address, for security and server operation.
 
 **What we use it for.** Only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising.
 

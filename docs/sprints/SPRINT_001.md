@@ -12,10 +12,11 @@
 Publish the first public, bilingual DigitalStrike Solutions page that explains the services, shows the team's work and the CEO, and turns visitors into leads (Google Sheet + owner email + visitor confirmation) and session-0 bookings (Calendly).
 
 ## Required Deliverable
-- `https://raulc87.github.io/DigitalStrike-main-page/` serving `/es/` and `/en/` with every section of UX §1.
+- `https://digitalstrike-solutions.com` (GoDaddy cPanel, deployed by `release-cpanel.yml` from release `v0.1.0`) serving `/es/` and `/en/` with every section of UX §1, over HTTPS, replacing the holding page.
+- Previews of `main` on `https://raulc87.github.io/DigitalStrike-main-page/` (`noindex`).
 - Lead form → real Apps Script → row in the sheet with `status = new` → both emails received.
 - Calendly inline visible and working.
-- CI green on `main`; GitHub Release `v0.1.0` published.
+- CI green on `main`; GitHub Release `v0.1.0` published and deployed to production by the workflow.
 
 ## Entry Gates
 
@@ -39,12 +40,12 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 4. Contracts and integrations | Contract v1.0 complete (endpoint, CORS, body, enums, processing order, sheet columns, responses, config, mock); failure behaviour defined for Sheets, email and Calendly; credentials rule stated (TECH_STACK §11). **OK — locks on merge.** |
 | 5. Data, legal, security | Jurisdiction Costa Rica (Ley 8968); consent checkbox; privacy notice v1 `2026-10-14-v1` decided by the owner (retention 24 months confirmed; Calendly loading disclosed; Cinthia's review to follow); the version the visitor saw is stored per lead; spam protection and idempotency in scope (US-014). **OK.** |
 | 5.1 UI | Visual identity **approved** 2026-10-10: proposal A v3, Palette 1 and the ball logo (UX §2; tokens mandatory). Go-live assets: logo kit (vector) ✅; photo ✅ provisional 200 px (≥ 800 px version: Raul, Sprint 002); final copy — all [CONFIRMAR] items answered 2026-10-10, **approved by merging this PR**. |
-| 6. Stack and environment | GitHub Pages capability confirmed (public repo); GoDaddy runtime not needed (ADR-001/002); local run defined (dev + mock); test/lint/CI named. **OK.** |
+| 6. Stack and environment | GoDaddy Deluxe cPanel + `digitalstrike-solutions.com` bought 2026-10-10, AutoSSL active and HTTPS forced, Python apps supported (ADR-001/002); GitHub Pages for previews (public repo); local run defined (dev + mock); test/lint/CI/CD named. **OK.** Open for the deliverable (not blocking kickoff): FTP account + `CPANEL_*` secrets, GoDaddy injected script removal (owner, Mon). |
 | 7. Parallelization | 3 agents assigned; ownership map, scaffold-first order, integration PR owner (Agent 2), conflict rule below. **OK.** |
 | 7.1 Merge control | Every prompt in `SPRINT_001_AGENT_PROMPTS.md` states "never merge/approve"; review-only agent runs in its own session with the independence rule. **OK.** `main` protection: owner. |
 | 8. Go-ahead | **Open** (after gates 2 and 3b). |
 
-**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 3b (merge PR #2 after this one, so the approved visual reference is on `main` before Agent 1 starts), gate 6 (go-ahead). Not blocking but needed for the deliverable: Apps Script deployed + repository variables set by Mon 2026-10-12 EOD (owner), Pages enabled (owner).
+**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 3b (merge PR #2 after this one, so the approved visual reference is on `main` before Agent 1 starts), gate 6 (go-ahead). Not blocking but needed for the deliverable, by Mon 2026-10-12 EOD (owner): Apps Script deployed + repository variables set; Pages enabled; cPanel FTP account + `CPANEL_*` secrets; GoDaddy's injected script disabled.
 
 ## Planned Stories
 
@@ -62,8 +63,8 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | US-010 + US-014 (server) Apps Script endpoint | Agent 3 | Contract | `DS-010-apps-script-endpoint` | Must |
 | US-011 + US-012 Emails | Agent 3 | US-010 | `DS-011-lead-emails` | Must |
 | US-015 Mock and CI | Agent 3 | US-001 (CI), contract (mock) | `DS-015-mock-and-ci` | Must |
-| US-016 Pages deploy + RELEASE runbook | Agent 3 | US-001 | `DS-016-pages-deploy` | Must |
-| US-017 cPanel release workflow | Agent 3 | US-016 | `DS-017-cpanel-release` | Stretch (Must in Sprint 002, PROJECT_SPEC §3) |
+| US-016 Pages preview + RELEASE runbook | Agent 3 | US-001 | `DS-016-pages-deploy` | Must |
+| US-017 cPanel production release workflow | Agent 3 | US-016 | `DS-017-cpanel-release` | Must (production on `digitalstrike-solutions.com`, ADR-001) |
 | US-019 Look-and-feel proposals | Claude (docs) + owner | UX/CONTENT | `DS-DOCS-ux-proposals` | Done — proposal A chosen 2026-10-10 |
 | US-020 Apply final palette | — | — | — | Withdrawn: palette approved before the build |
 
@@ -87,9 +88,9 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 
 ## Merge / Integration Order
 1. `DS-001-frontend-scaffold` (Agent 1). Agent 2 starts after it merges. Agent 3's `DS-010` can merge in any order (it touches only `apps-script/`).
-2. Phase 1 PRs in any order, each with green CI once CI exists. Suggested owner merge order: DS-015 (mock) → DS-002 → DS-003 → DS-009 → DS-010 → DS-011 → DS-015-ci → DS-004 → DS-006 → DS-013 → DS-018 → DS-016.
+2. Phase 1 PRs in any order, each with green CI once CI exists. Suggested owner merge order: DS-015 (mock) → DS-002 → DS-003 → DS-009 → DS-010 → DS-011 → DS-015-ci → DS-004 → DS-006 → DS-013 → DS-018 → DS-016 → DS-017.
 3. `DS-009-integration-e2e` (Agent 2) — integration PR owner.
-4. Owner smoke test on Pages with the real endpoint (RELEASE.md), then tag `v0.1.0`.
+4. Owner checks the Pages preview with the real endpoint, then publishes release `v0.1.0`; `release-cpanel.yml` deploys it to `digitalstrike-solutions.com`; owner runs the smoke test there (RELEASE.md).
 
 ## Conflict Resolution
 - Resolved when found, by the human owner with the agent that owns the conflicting file.
@@ -103,7 +104,7 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 
 ## Sprint Definition of Done
 - Must stories meet their ACs; CI green on `main`.
-- Smoke test on the Pages URL passed with the real endpoint (row + 2 emails + Calendly).
+- Smoke test on `https://digitalstrike-solutions.com` passed with the real endpoint (row + 2 emails + Calendly, HTTPS, no GoDaddy-injected script).
 - No known critical regression; owner approves; `v0.1.0` released.
 
 ## Owner checklist (outside the agents)
@@ -112,6 +113,9 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - [x] Approve the visual identity — proposal A v3, Palette 1, ball logo and tagline (2026-10-10).
 - [ ] Create the leads sheet + Apps Script project, deploy, set Script Properties, put the `/exec` URL in repository variable `PUBLIC_LEAD_ENDPOINT_URL` (runbook from DS-010/DS-016).
 - [x] Provisional photo supplied (200 px). A ≥ 800×800 px version later.
-- [ ] Tuesday: smoke test, publish release `v0.1.0`.
+- [x] Buy the GoDaddy Deluxe plan and `digitalstrike-solutions.com`; SSL active, HTTPS forced, holding page live (2026-10-10).
+- [ ] Create a dedicated cPanel FTP account limited to `public_html`; set repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (runbook from DS-017) — by Mon.
+- [ ] Ask GoDaddy support to disable the monitoring script they inject into HTML pages — by Mon.
+- [ ] Tuesday: publish release `v0.1.0` (deploys to GoDaddy), smoke test on `https://digitalstrike-solutions.com`.
 
 Agent kickoff prompts and model recommendations: `docs/sprints/SPRINT_001_AGENT_PROMPTS.md`.

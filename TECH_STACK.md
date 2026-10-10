@@ -10,13 +10,13 @@
 **Simple.** A bilingual static page, one lead endpoint, one spreadsheet, two emails, one embed. One integration contract (frontend ↔ Apps Script) because two workstreams share it.
 
 ## 2. Hosting and Environment Constraints
-- Hosting provider: **GitHub Pages** for preview and the first release (2026-10-14); **GoDaddy cPanel** (Linux shared hosting) for production once the plan and `digitalstrike-solutions.com` exist (ADR-001).
+- Hosting provider: **GoDaddy cPanel** (Linux shared hosting, Deluxe plan, `digitalstrike-solutions.com`, bought 2026-10-10, AutoSSL active) for production from the first release; **GitHub Pages** for previews of `main` (ADR-001).
 - Control panel/runtime: none needed by the site — it is static files. The lead endpoint runs on Google Apps Script (ADR-002).
 - Deployment restrictions: cPanel accepts static files over FTPS/SFTP; no build runs on the server.
-- Cost constraints: free tiers only (GitHub public repo, Google account, Calendly free).
+- Cost constraints: the GoDaddy plan and domain; otherwise free tiers (GitHub public repo, Google account, Calendly free).
 - Portability: the static `dist/` runs on any web server; the endpoint URL is configuration.
-- Runtime availability on the GoDaddy plan: **not required now** (no server code). Recorded in ADR-001 together with the Python path (ADR-002).
-- Where the Sprint 001 deliverable runs: **public on GitHub Pages**, endpoint on Apps Script, sheet in the owner's Google Drive.
+- Runtime availability on the GoDaddy plan: cPanel "Setup Python App" confirmed by GoDaddy support (2026-10-10). **Not used now** (no server code); reserved for the Python roadmap (ADR-002 stage 1, Flask on Passenger).
+- Where the Sprint 001 deliverable runs: **public on `https://digitalstrike-solutions.com`** (GoDaddy cPanel), endpoint on Apps Script, sheet in the owner's Google Drive.
 
 ## 3. Selection Principle
 Least-complex stack that meets the requirements, reusing what the pilot proved.
@@ -33,7 +33,7 @@ Least-complex stack that meets the requirements, reusing what the pilot proved.
 - Responsibilities: contract `docs/specs/LEAD_ENDPOINT_CONTRACT.md` — validate, throttle, store, email.
 - Code lives in the repo under `apps-script/` (source of truth) and is copied to the Apps Script project manually or with `clasp` (runbook).
 - Why: free, no server, no stored service-account keys, Sheets and Gmail are native, works with any static host including GitHub Pages.
-- Future backend: Python (Flask/FastAPI) on cPanel or a cloud, later Java/Spring microservices on AWS — triggers and migration path in ADR-002 §Future.
+- Future backend: Python (Flask on the cPanel Python app; FastAPI if hosted elsewhere), later Java/Spring microservices on AWS — triggers and migration path in ADR-002 §Future.
 
 ## 6. Persistence
 Google Sheets, worksheet `leads`, columns exactly as contract §6. No database.
@@ -59,15 +59,15 @@ Google Sheets, worksheet `leads`, columns exactly as contract §6. No database.
 
 ## 9. CI/CD (GitHub Actions)
 - `ci.yml` — on PR and push to `main`: install, lint, check, unit, build, e2e (mock).
-- `pages.yml` — on push to `main` (and manual): build with Pages base path, deploy to GitHub Pages.
-- `release-cpanel.yml` — on `release: published` (and manual): build for the root domain and upload to cPanel over FTPS; skipped with a notice while secrets are missing (ADR-001).
+- `pages.yml` — on push to `main` (and manual): build with the Pages base path and `noindex`, deploy the preview to GitHub Pages.
+- `release-cpanel.yml` — on `release: published` (and manual): build for the root domain and upload to cPanel over FTPS — this is the **production deploy**; skipped with a notice while secrets are missing (ADR-001).
 
 ## 10. Hosting / Deployment
 See ADR-001 and `docs/runbooks/RELEASE.md`, `docs/runbooks/DEPLOYMENT.md`.
 
 ## 11. Security and Secrets
 - Repository *variables* (public): `PUBLIC_*` values, including the Apps Script URL (public by nature).
-- Repository *secrets*: cPanel FTP credentials only.
+- Repository *secrets*: cPanel FTP credentials only (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR`), for a dedicated FTP account limited to `public_html`.
 - Apps Script Script Properties: sheet ID, emails, limits. Never committed.
 - Server-side validation, HTML escaping in emails, formula-injection guard in the sheet, no personal data in logs.
 
@@ -81,6 +81,7 @@ See ADR-001 and `docs/runbooks/RELEASE.md`, `docs/runbooks/DEPLOYMENT.md`.
 - Apps Script cold start can take 1–3 s: the form shows "Enviando…"; 20 s client timeout.
 - Response always HTTP 200: clients must read `ok` (contract §1).
 - The owner's personal Gmail is the sender until the corporate mailbox exists (ADR-005).
+- GoDaddy injects a monitoring script into served HTML; it must be disabled by GoDaddy support before the first release (NFR-005, ADR-001 release gate).
 
 ## 14. Upgrade / Scaling Path
 Change the backend (ADR-002 §Future) when any of these appear: authenticated users, payments, a client portal, more than one form/endpoint with shared logic, need for a real database or CRM, email volume beyond Gmail quotas, or the need to run AI features server-side.

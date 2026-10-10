@@ -11,7 +11,7 @@ What runs the lead endpoint (validate, store in Google Sheets, send two emails)?
 ## Context
 - The owner wants Python as the long-term backend language, possibly Java microservices on AWS later, but wants the simplest option for the first release.
 - The pilot (`gaby-main-page`) used Flask on cPanel Passenger with a Google service account; that requires a confirmed cPanel Python runtime and storing a key on the server, and does not run on GitHub Pages.
-- ADR-001 serves the first release from GitHub Pages.
+- ADR-001 (revised 2026-10-10) serves production from GoDaddy cPanel (Deluxe) on `digitalstrike-solutions.com`. GoDaddy support confirmed on 2026-10-10 that the plan offers cPanel "Setup Python App", so stage 1 below can run on the same host. The site stays static; Apps Script remains the backend for now.
 
 ## Decision Drivers
 - Working form on 2026-10-14 on any static host.
@@ -50,7 +50,7 @@ Fastest path to a reliable lead flow with zero infrastructure, consistent with A
 | Stage | Trigger (any of) | Target | Notes |
 |---|---|---|---|
 | 0 — now | — | Apps Script + Sheets + Gmail | This ADR |
-| 1 — Python service | 2+ endpoints with shared logic; client portal or admin views; AI features server-side; a real database or CRM; email beyond Gmail quotas | **Python** (FastAPI preferred; Flask acceptable) — on cPanel "Setup Python App" if the plan supports it (pilot precedent), otherwise a small container on a cloud (e.g. AWS App Runner/ECS, Fly.io, Cloud Run) | Keep contract body compatible (`ok`, `error_code`, `field_errors`); add proper HTTP status codes; move storage behind an adapter (Sheets → PostgreSQL); service account or OAuth for Sheets during transition |
+| 1 — Python service | 2+ endpoints with shared logic; client portal or admin views; AI features server-side; a real database or CRM; email beyond Gmail quotas | **Python** — on the GoDaddy cPanel "Setup Python App" (confirmed available 2026-10-10; Passenger serves WSGI, so **Flask** is the natural fit there, as in the pilot; FastAPI needs an ASGI→WSGI adapter such as `a2wsgi`), otherwise FastAPI or Flask in a small container on a cloud (e.g. AWS App Runner/ECS, Fly.io, Cloud Run) | Keep contract body compatible (`ok`, `error_code`, `field_errors`); add proper HTTP status codes; move storage behind an adapter (Sheets → PostgreSQL); service account or OAuth for Sheets during transition |
 | 2 — Java / microservices | Several products or teams; high traffic; integrations that need queues/events; enterprise clients requiring it | **Java 21 + Spring Boot** services on **AWS** (ECS/Fargate or EKS), PostgreSQL (RDS), queues (SQS/Kafka), API gateway | Only when the business needs it — the owner's expertise makes this natural, but it is not justified for one form |
 
 Migration rule: a new ADR supersedes this one; the contract version is bumped first (change management); frontend switches by changing `PUBLIC_LEAD_ENDPOINT_URL`; the old Apps Script stays deployed until the new endpoint passes the release smoke test.

@@ -44,8 +44,7 @@ The page must:
 - Lead capture to Google Sheets through a Google Apps Script web app (ADR-002), contract `docs/specs/LEAD_ENDPOINT_CONTRACT.md`.
 - Owner notification email ("cover letter") and visitor confirmation email (ADR-005).
 - Spam protection (ADR-004).
-- CI on GitHub Actions; public preview and first release on GitHub Pages (ADR-001).
-- Stretch for Sprint 001 (Must in Sprint 002): release deployment workflow to GoDaddy cPanel (US-017).
+- CI/CD on GitHub Actions: every merge to `main` deploys a preview to GitHub Pages; publishing a GitHub Release deploys production to GoDaddy cPanel at `https://digitalstrike-solutions.com` (ADR-001, US-016, US-017).
 
 ### Out of scope (now)
 - Prices on the page; refunds/devolution policy (pending legal review).
@@ -112,8 +111,8 @@ The page must:
 
 - Jurisdiction: **Costa Rica, Ley 8968** (Protección de la Persona frente al Tratamiento de sus Datos Personales).
 - Data controller: Raul Casañas, operating as DigitalStrike Solutions (natural person until incorporation).
-- Data collected: the lead form fields; no IP address is stored.
-- Storage and processors: Google (Sheets, Apps Script, Gmail) for every lead; Calendly from the moment its calendar loads (after the visitor clicks "Ver horarios disponibles" or submits the form, FR-016): it receives technical browser data and may set its own cookies; when it loads after a successful submission it also receives the visitor's name and email to prefill the booking (FR-015); if the visitor books, it processes the booking data. Both may process data outside Costa Rica; the privacy notice says so.
+- Data collected: the lead form fields; the form stores no IP address. The hosting provider (GoDaddy) keeps standard server access logs (IP, user agent) for security and operation; the privacy notice says so.
+- Storage and processors: GoDaddy (hosting: server access logs of every visit); Google (Sheets, Apps Script, Gmail) for every lead; Calendly from the moment its calendar loads (after the visitor clicks "Ver horarios disponibles" or submits the form, FR-016): it receives technical browser data and may set its own cookies; when it loads after a successful submission it also receives the visitor's name and email to prefill the booking (FR-015); if the visitor books, it processes the booking data. Both may process data outside Costa Rica; the privacy notice says so.
 - Consent: an explicit, unchecked checkbox linked to the privacy notice; version `privacy_notice_version` stored with each lead.
 - Rights: access, rectification, deletion by email to the contact address.
 - Retention: 24 months from the last contact, or until deletion is requested (confirmed by the owner 2026-10-10). Operated through sheet column S `last_contact_at` (contract §6) and the owner procedure in `docs/runbooks/APPS_SCRIPT_SETUP.md` (US-010 AC6): a monthly review deletes rows whose `last_contact_at` (or `submitted_at` when empty) is older than 24 months, and deletion requests are handled within 5 business days. Deletion covers every copy the controller holds: the sheet row, the owner notification in the owner's mailbox (found by `lead_id` in the subject), the visitor confirmation in Sent (found by the visitor's address), and both emptied from Trash. Apps Script logs hold only `lead_id` (NFR-006).
@@ -125,23 +124,23 @@ The page must:
 |---|---|---|
 | Qualified leads | **20 to 40 leads in 90 days** from the first public release (2026-10-14 → 2027-01-12); ≥ 20 is success, 40 is the stretch goal | Rows in the leads sheet, excluding test rows and `rejected` spam |
 | Session 0 bookings | Tracked, no target yet | Calendly dashboard |
-| First release | Public page with working form and Calendly before **Wednesday 2026-10-14** (entrepreneur meet-up) | GitHub Pages URL live, smoke test passed |
+| First release | Public page with working form and Calendly before **Wednesday 2026-10-14** (entrepreneur meet-up) | `https://digitalstrike-solutions.com` live from release `v0.1.0`, smoke test passed |
 
 ## 9. Constraints
 
-- Hosting: GoDaddy cPanel (production, once the plan and the domain `digitalstrike-solutions.com` exist); GitHub Pages for preview and the first release (ADR-001).
+- Hosting: GoDaddy cPanel, Deluxe plan, `digitalstrike-solutions.com` (bought 2026-10-10; SSL active; Python apps supported) for production; GitHub Pages for previews (ADR-001).
 - Backend: Google Apps Script now; Python later (ADR-002).
 - Languages: Spanish and English.
 - Timeline: first release by 2026-10-14.
-- Budget: free tiers only for now (GitHub, Google, Calendly free plan).
+- Budget: the GoDaddy Deluxe plan and domain (bought 2026-10-10); otherwise free tiers (GitHub, Google, Calendly free plan).
 
 ## 10. Open questions
 
-Resolved 2026-10-10: session 0 is free (BR-010); 2-business-day reply (BR-011); 24-month retention (§7); 17+ years (CV and LinkedIn are in sync); Poliart agrees to be named in the showroom (private repo, no link); a provisional 200×200 photo was supplied; visual identity = proposal A v3 with Palette 1, the ball logo and the tagline "We strike out your software needs" (approved 2026-10-10).
+Resolved 2026-10-10: GoDaddy Deluxe cPanel hosting and `digitalstrike-solutions.com` bought, SSL active, Python apps supported (ADR-001); session 0 is free (BR-010); 2-business-day reply (BR-011); 24-month retention (§7); 17+ years (CV and LinkedIn are in sync); Poliart agrees to be named in the showroom (private repo, no link); a provisional 200×200 photo was supplied; visual identity = proposal A v3 with Palette 1, the ball logo and the tagline "We strike out your software needs" (approved 2026-10-10).
 
 Still open (non-blocking for Sprint 001):
 1. Convert the logo lockups' wordmark text to outlines before printing or the trademark filing (owner).
 2. A ≥ 800×800 px photo to replace the provisional 200 px one.
 3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
-4. Has the GoDaddy hosting plan been bought, and is it cPanel (Linux)? Needed only for US-017.
+4. GoDaddy support to disable the monitoring script their server injects into HTML pages (NFR-005; release gate, ADR-001).
 5. Cami's sign-off on the approved identity (Origo governance; does not block the build).

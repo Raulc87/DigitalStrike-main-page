@@ -208,7 +208,7 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 | `REPLY_TO_EMAIL` | `rcasanas@gmail.com` | Reply-To for the visitor confirmation |
 | `SENDER_NAME` | `DigitalStrike Solutions` | Display name of emails |
 | `CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` | Used in the confirmation email |
-| `SITE_URL` | `https://raulc87.github.io/DigitalStrike-main-page` | Used in emails |
+| `SITE_URL` | `https://digitalstrike-solutions.com` | Used in emails |
 | `ACCEPTED_PRIVACY_NOTICE_VERSIONS` | `2026-10-14-v1` | Comma-separated versions the server accepts; add a new version **before** deploying the frontend that shows it |
 | `SEND_EMAILS` | `true` | `false` → emails `skipped` (testing) |
 | `MAX_LEADS_PER_EMAIL_PER_HOUR` | `3` | §5.3 |
@@ -222,11 +222,12 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 | `PUBLIC_CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` |
 | `PUBLIC_CONTACT_EMAIL` | `rcasanas@gmail.com` |
 | `PUBLIC_LINKEDIN_URL` | `https://www.linkedin.com/in/raul-casanas/` |
-| `PUBLIC_SITE_URL` | `https://raulc87.github.io` (Pages) / `https://digitalstrike-solutions.com` |
+| `PUBLIC_SITE_URL` | `https://digitalstrike-solutions.com` (production and canonical); the Pages preview build uses `https://raulc87.github.io` |
 | `PUBLIC_BASE_PATH` | `/DigitalStrike-main-page` (Pages) / `/` (own domain) |
 | `PUBLIC_SHOW_CLIENT_LOGOS` | `true` / `false` (FR-009) |
 | `PUBLIC_SHOW_PENDING_BADGES` | `true` in preview builds, `false` in production |
 | `PUBLIC_PRIVACY_NOTICE_VERSION` | `2026-10-14-v1` — shown in the notice and sent with each lead |
+| `PUBLIC_NOINDEX` | `true` in the Pages preview build, `false` (or unset) in production (ADR-001) |
 
 ## 9. Local mock
 

@@ -77,8 +77,8 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 | Path | Owner |
 |---|---|
 | `package.json`, lockfile, `astro.config.mjs`, `tsconfig.json`, ESLint/Prettier/Vitest/Playwright config | Agent 1 only. The scaffold pre-installs every dependency and npm script the sprint needs (Agent 1 prompt); anything else another agent needs is requested from Agent 1 through the owner (AGENTS.md) |
-| `src/layouts/**`, `src/pages/**`, `src/components/sections/**`, `src/styles/**`, `src/i18n/index.ts`, `src/i18n/{es,en}/content.ts`, `src/lib/i18n/**`, `public/**` except `public/.htaccess` | Agent 1 |
-| `src/components/lead/**`, `src/components/schedule/**`, `src/components/privacy/**`, `src/lib/lead/**`, `src/lib/schedule/**`, `src/i18n/{es,en}/form.ts`, `tests/e2e/**` | Agent 2 (stubs created by Agent 1 in Phase 0 are handed over on merge; Agent 1 renders `PrivacyNotice` inside the privacy pages) |
+| `src/layouts/**`, `src/pages/**`, `src/components/sections/**`, `src/styles/**`, `src/i18n/index.ts`, `src/i18n/{es,en}/content.ts`, `src/lib/i18n/**`, `public/**` except `public/.htaccess`; the e2e specs of its own sections: `tests/e2e/{scaffold,i18n,header-hero-footer,services-process,work-about-clients}.spec.ts` (owner decision 2026-10-11) | Agent 1 |
+| `src/components/lead/**`, `src/components/schedule/**`, `src/components/privacy/**`, `src/lib/lead/**`, `src/lib/schedule/**`, `src/i18n/{es,en}/form.ts`, `tests/e2e/**` except Agent 1's section specs (form, privacy, Calendly and the integration suite) | Agent 2 (stubs created by Agent 1 in Phase 0 are handed over on merge; Agent 1 renders `PrivacyNotice` inside the privacy pages) |
 | `apps-script/**`, `scripts/**`, `.github/workflows/**`, `.env.example`, `public/.htaccess`, `docs/runbooks/**` | Agent 3 |
 | `tests/unit/**` | Owner of the code under test |
 | `docs/specs/**`, `docs/ux/**`, `docs/plans/**`, `docs/sprints/**`, `docs/decisions/**`, `docs/assets/**`, `AGENTS.md`, `PROJECT_CONTEXT.md`, `README.md`, `TECH_STACK.md` | Human owner (changes via `DS-DOCS-*` PRs) |

@@ -65,6 +65,29 @@ for (const lang of ['es', 'en'] as const) {
       expect(followsContact).toBe(true);
     });
 
+    test('keyboard: same when the URL already ends in #contacto', async ({ page }) => {
+      await page.goto(`/${lang}/#contacto`);
+      // the visitor comes back up to the services and uses a card
+      await page.evaluate(() => {
+        document.body.style.paddingBottom = '3000px';
+        document.getElementById('servicios')?.scrollIntoView({ behavior: 'instant' });
+      });
+      expect(await page.evaluate(() => location.hash)).toBe('#contacto');
+      await page.locator('a[data-project-type="business_system"]').focus();
+      await page.keyboard.press('Enter');
+      await page.keyboard.press('Tab');
+      const followsContact = await page.evaluate(() => {
+        const contact = document.getElementById('contacto')!;
+        const active = document.activeElement!;
+        return (
+          !active.matches('a[data-project-type]') &&
+          (contact.contains(active) ||
+            !!(contact.compareDocumentPosition(active) & Node.DOCUMENT_POSITION_FOLLOWING))
+        );
+      });
+      expect(followsContact).toBe(true);
+    });
+
     test.describe('without JavaScript', () => {
       test.use({ javaScriptEnabled: false });
       test('the CTA still jumps to the form with ?tipo=', async ({ page }) => {

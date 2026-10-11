@@ -1,0 +1,12 @@
+---
+// Stub handed to Agent 2 (US-018). Rendered by the privacy pages (src/pages/*/privacidad|privacy).
+import type { Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<article data-lang={lang}></article>

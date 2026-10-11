@@ -1,0 +1,14 @@
+dist
+.astro
+node_modules
+package-lock.json
+public
+docs
+holding-page
+.claude
+.lighthouseci
+playwright-report
+test-results
+*.md
+.github
+CLAUDE.md

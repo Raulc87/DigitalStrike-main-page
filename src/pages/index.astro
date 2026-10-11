@@ -1,0 +1,60 @@
+---
+// Root page (ADR-003, US-002 AC1): the script sends the visitor to the saved or detected language;
+// without JavaScript the two language links are shown.
+import '../styles/global.css';
+import { routes } from '../lib/i18n/routes';
+import { withBase } from '../lib/i18n/url';
+
+const abs = (path: string) => new URL(withBase(path), Astro.site).href;
+const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DigitalStrike Solutions</title>
+    <meta name="description" content="DigitalStrike Solutions" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={abs('')} />
+    <link rel="alternate" hreflang="es" href={abs(routes.home.es)} />
+    <link rel="alternate" hreflang="en" href={abs(routes.home.en)} />
+    <link rel="alternate" hreflang="x-default" href={abs('')} />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+  </head>
+  <body>
+    <noscript>
+      <main class="section-shell flex min-h-screen flex-col items-center justify-center gap-6">
+        <img src={withBase('brand/logo-mark-on-dark.svg')} alt="" width="96" height="96" />
+        <p class="flex gap-6 text-lg">
+          <a href={withBase(routes.home.es)} hreflang="es" lang="es">
+            Español
+          </a>
+          <a href={withBase(routes.home.en)} hreflang="en" lang="en">
+            English
+          </a>
+        </p>
+      </main>
+    </noscript>
+    <a hidden id="ds-es" href={withBase(routes.home.es)}>
+      es
+    </a>
+    <a hidden id="ds-en" href={withBase(routes.home.en)}>
+      en
+    </a>
+    <script>
+      import { detectLanguage } from '../lib/i18n/detect';
+
+      let storage: Storage | undefined;
+      try {
+        storage = window.localStorage;
+      } catch {
+        storage = undefined;
+      }
+      const lang = detectLanguage(navigator.languages ?? [navigator.language], storage);
+      const target = document.getElementById(`ds-${lang}`) as HTMLAnchorElement | null;
+      if (target) location.replace(target.href + location.hash);
+    </script>
+  </body>
+</html>

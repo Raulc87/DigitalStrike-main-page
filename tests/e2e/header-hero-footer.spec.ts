@@ -1,3 +1,7 @@
+// OWNER: Agent 1 (site shell, content sections, i18n and SEO). The owner approved these e2e specs as
+// Agent 1's files (2026-10-11), an exception to the SPRINT_001 ownership map. Agent 2's lead-form,
+// scheduling and privacy flows have their own specs: do not duplicate the scope below.
+// SCOPE: US-003: header nav and mobile menu, hero, value strip, footer, axe, five-width scroll.
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 

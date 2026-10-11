@@ -1,0 +1,24 @@
+---
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n';
+import { showPendingBadges } from '../../lib/i18n/site';
+
+interface Props {
+  lang: Locale;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+---
+
+{showPendingBadges && (
+  <span
+    data-pending-badge
+    class:list={[
+      'border-sand text-sand inline-block rounded-full border px-2.5 py-0.5 font-mono text-xs',
+      className,
+    ]}
+  >
+    {t(lang, 'pending.badge')}
+  </span>
+)}

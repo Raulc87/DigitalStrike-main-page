@@ -83,7 +83,7 @@ export const enForm: Record<FormKey, string> = {
     "In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser and may set its own cookies. If it loads after you submit the form, we pass it your name and email to prefill the booking. If you book, it processes the booking data. These services may store data outside Costa Rica.",
   'privacy.retention.title': 'How long.',
   'privacy.retention.body':
-    'Up to 24 months from our last contact, or until you ask us to delete it.',
+    "Up to 24 months from our last contact, or until you ask us to delete it. When we delete your data, the Google spreadsheet's version history may still show it; we don't use that history for anything.",
   'privacy.rights.title': 'Your rights.',
   'privacy.rights.body':
     "Under Costa Rica's Law 8968 you can request access to, correction or deletion of your data by writing to {contact_email}. We reply within 5 business days.",

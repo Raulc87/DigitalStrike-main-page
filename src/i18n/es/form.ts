@@ -82,7 +82,7 @@ export const esForm = {
     'En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador y puede usar sus propias cookies. Si se carga después de enviar el formulario, le pasamos tu nombre y correo para prellenar la cita. Si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.',
   'privacy.retention.title': 'Cuánto tiempo.',
   'privacy.retention.body':
-    'Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos.',
+    'Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos. Cuando borramos tus datos, el historial de versiones de la hoja de cálculo de Google puede seguir mostrándolos; no lo usamos para nada.',
   'privacy.rights.title': 'Tus derechos.',
   'privacy.rights.body':
     'Conforme a la Ley 8968 puedes pedir acceso, corrección o eliminación de tus datos escribiendo a {contact_email}. Respondemos en un plazo máximo de 5 días hábiles.',

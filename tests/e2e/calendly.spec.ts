@@ -35,7 +35,7 @@ test('no request to Calendly before the click; the widget loads in place after i
   page,
 }) => {
   const requests = await track(page, 'fake');
-  await page.goto('/es/');
+  await page.goto('es/');
   await page.locator('#agenda').scrollIntoViewIfNeeded();
   await page.waitForLoadState('networkidle');
   expect(requests).toEqual([]);
@@ -57,7 +57,7 @@ test('no request to Calendly before the click; the widget loads in place after i
 
 test('Calendly blocked: the fallback link opens Calendly in a new tab', async ({ page }) => {
   await track(page, 'abort');
-  await page.goto('/es/');
+  await page.goto('es/');
   await page.getByRole('button', { name: esForm['schedule.open'] }).click();
   const link = page.locator('[data-schedule-fallback] a');
   await expect(link).toBeVisible();
@@ -69,7 +69,7 @@ test('Calendly blocked: the fallback link opens Calendly in a new tab', async ({
 test('nothing rendered within 10 s: the fallback link appears', async ({ page }) => {
   await page.clock.install();
   await track(page, 'inert');
-  await page.goto('/es/');
+  await page.goto('es/');
   await page.getByRole('button', { name: esForm['schedule.open'] }).click();
   const fallback = page.locator('[data-schedule-fallback]');
   await page.clock.runFor(9_000);
@@ -79,7 +79,7 @@ test('nothing rendered within 10 s: the fallback link appears', async ({ page })
 });
 
 test('a <noscript> link to Calendly always exists', async ({ page }) => {
-  await page.goto('/en/');
+  await page.goto('en/');
   const html = await page.locator('[data-schedule-preview] noscript').innerHTML();
   expect(html).toContain('href="https://calendly.com/rcasanas/1hr"');
   expect(html).toContain('target="_blank"');
@@ -93,7 +93,7 @@ for (const [lang, t] of [
     page,
   }) => {
     const requests = await track(page, 'fake');
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const notice = page.locator('[data-schedule-notice]');
     await expect(notice).toHaveText(t['schedule.notice']);
     const link = notice.locator('a[data-privacy-open]');

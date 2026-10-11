@@ -1,17 +1,72 @@
 ---
 import { t } from '../../i18n';
-import type { Locale } from '../../i18n';
+import type { ContentKey, Locale } from '../../i18n';
+import { routes } from '../../lib/i18n/routes';
+import { serviceCards } from '../../lib/i18n/projectTypes';
+import { withBase } from '../../lib/i18n/url';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+const key = (id: string, part: string) => `services.${id}.${part}` as ContentKey;
+const home = withBase(routes.home[lang]);
 ---
 
-<!-- Stub from the scaffold (DS-001); the section story fills it in. -->
-<section id="servicios" class="">
-  <div class="section-shell py-16">
+<section id="servicios">
+  <div class="section-shell py-16 md:py-20">
     <h2>{t(lang, 'services.title')}</h2>
+    <p class="text-text-2 mt-4 max-w-3xl">{t(lang, 'services.intro')}</p>
+
+    <ul class="mt-10 grid list-none gap-6 p-0 md:grid-cols-2 xl:grid-cols-3">
+      {serviceCards.map((card) => (
+        <li
+          data-service-card
+          class="bg-card border-border hover:border-cyan flex flex-col rounded-xl border p-6 transition-colors"
+        >
+          <p class="text-cyan font-mono text-sm tracking-widest" aria-hidden="true">
+            {card.tier}
+          </p>
+          <h3 class="mt-2 text-xl font-bold">{t(lang, key(card.id, 'title'))}</h3>
+          <p class="text-text-2 mt-3">{t(lang, key(card.id, 'for'))}</p>
+          <ul class="mt-4 mb-6 list-disc space-y-2 pl-5 marker:text-cyan">
+            {Array.from({ length: card.includes }, (_, i) => (
+              <li>{t(lang, key(card.id, `includes.${i + 1}`))}</li>
+            ))}
+          </ul>
+          <a
+            href={`${home}?tipo=${card.code}#contacto`}
+            data-project-type={card.code}
+            class="border-border-strong text-off hover:border-cyan mt-auto inline-flex min-h-12 items-center justify-center rounded-full border-2 px-6 font-semibold no-underline"
+          >
+            {t(lang, 'services.card_cta')}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <p class="text-text-2 mt-8 max-w-3xl">{t(lang, 'services.note')}</p>
   </div>
 </section>
+
+<script>
+  import { PRESELECT_EVENT } from '../../lib/i18n/projectTypes';
+
+  // Card CTA (US-004 AC2). Without JS the link opens `?tipo=<code>#contacto` (the form reads
+  // `tipo` on load). With JS the page does not reload: it announces the choice with a window event
+  // and jumps to the form.
+  document.querySelectorAll<HTMLAnchorElement>('a[data-project-type]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.dispatchEvent(
+        new CustomEvent(PRESELECT_EVENT, { detail: { code: link.dataset.projectType } }),
+      );
+      const target = document.getElementById('contacto');
+      if (target) {
+        target.scrollIntoView();
+        history.pushState(null, '', '#contacto');
+      }
+    });
+  });
+</script>

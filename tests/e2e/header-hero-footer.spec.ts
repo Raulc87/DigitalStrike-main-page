@@ -23,7 +23,7 @@ for (const lang of ['es', 'en'] as const) {
       await expect(hero.locator('h1 em')).toHaveCount(1);
       await expect(hero.locator('a[href="#contacto"]')).toBeVisible();
       await expect(hero.locator('a[href="#agenda"]')).toBeVisible();
-      await expect(page.locator('section.bg-steel li')).toHaveCount(3);
+      await expect(page.locator('[data-value-strip] li')).toHaveCount(3);
     });
 
     test('footer links', async ({ page }) => {

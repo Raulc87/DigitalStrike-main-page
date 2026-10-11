@@ -92,7 +92,36 @@ export const en: Record<ContentKey, string> = {
   'warranty.title': '6-month warranty on every project',
   'warranty.body':
     'If a defect shows up in what we agreed on, we fix it at no cost for six months after launch.',
+
   'work.title': "Our team's work",
+  'work.intro': 'A few projects built by our team. More cases coming soon.',
+  'work.repo_link': 'View code on GitHub',
+  'work.private': 'Case study · private code',
+  'work.1.title': 'Lead-generation page for a financial-health programme',
+  'work.1.body':
+    'A bilingual page that presents the offer, screens interested people with one question and saves every lead to Google Sheets before opening the booking calendar.',
+  'work.1.tags': 'Astro · TypeScript · Python · Google Sheets · Calendly · Playwright',
+  'work.2.title': 'Personal-brand site for a speaker and coach',
+  'work.2.body': 'A bilingual one-page site with animated sections and instant language switching.',
+  'work.2.tags': 'React · Vite · JavaScript · CSS',
+  'work.3.title': 'AI reporting platform for Poliart Impresores',
+  'work.3.body':
+    'Management asks for reports in plain language and gets them in seconds instead of waiting 5 to 10 days. It unifies 3 databases and limits the AI to a catalogue of approved, auditable reports.',
+  'work.3.tags': 'Python · React · Claude · Docker',
   'about.title': 'The person behind DigitalStrike',
+  'about.name': 'Raul Casañas',
+  'about.role': 'CEO and founder',
+  'about.p1':
+    "I've been building software since 2009. In 17+ years I've built enterprise platforms end to end for companies like Google, Sephora, Experian, Wells Fargo and TreviPay: from the inventory module of Google's stores to B2B payment services processing over US$6 billion a year.",
+  'about.p2':
+    "My speciality is making slow systems fast and making manual work disappear: I've taken response times from minutes to milliseconds, led critical migrations without losing a single record, and today I integrate AI in a safe, auditable way.",
+  'about.p3':
+    'I founded DigitalStrike to stop selling hours and start solving problems, yours, with the quality big companies demand. The name comes from baseball, which I played growing up: here, we strike out your software needs.',
+  'about.facts':
+    '17+ years of experience · Led teams of up to 8 engineers · Java · Python · React · TypeScript · AWS · Applied AI · Certified Scrum Master (PSM I) · Spanish and English',
+  'about.linkedin': 'View LinkedIn profile',
+  'about.photo_alt': 'Raul Casañas, CEO of DigitalStrike Solutions',
   'clients.title': 'Companies that trust us',
+  'clients.slot': 'This space is reserved for your brand',
+  'pending.badge': 'Provisional content',
 };

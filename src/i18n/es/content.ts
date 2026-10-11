@@ -95,9 +95,39 @@ export const es = {
   'warranty.title': 'Garantía de 6 meses en todos los proyectos',
   'warranty.body':
     'Si aparece un error en lo que acordamos, lo corregimos sin costo durante los seis meses siguientes al lanzamiento.',
+
   'work.title': 'Proyectos de nuestro equipo',
+  'work.intro': 'Algunos proyectos construidos por nuestro equipo. Pronto sumaremos más casos.',
+  'work.repo_link': 'Ver código en GitHub',
+  'work.private': 'Caso de estudio · código privado',
+  'work.1.title': 'Página de captación para un programa de salud financiera',
+  'work.1.body':
+    'Página bilingüe que presenta la oferta, filtra a las personas interesadas con una pregunta y guarda cada contacto en Google Sheets antes de abrir la agenda.',
+  'work.1.tags': 'Astro · TypeScript · Python · Google Sheets · Calendly · Playwright',
+  'work.2.title': 'Sitio de marca personal para una conferencista y coach',
+  'work.2.body':
+    'Sitio de una página, bilingüe, con secciones animadas y cambio de idioma al instante.',
+  'work.2.tags': 'React · Vite · JavaScript · CSS',
+  'work.3.title': 'Plataforma de reportes con IA para Poliart Impresores',
+  'work.3.body':
+    'La gerencia pide reportes en lenguaje natural y los recibe en segundos, en lugar de esperar de 5 a 10 días. Unifica 3 bases de datos y limita la IA a un catálogo de reportes aprobados y auditables.',
+  'work.3.tags': 'Python · React · Claude · Docker',
   'about.title': 'La persona detrás de DigitalStrike',
+  'about.name': 'Raul Casañas',
+  'about.role': 'CEO y fundador',
+  'about.p1':
+    'Desarrollo software desde 2009. En más de 17 años he construido plataformas empresariales de punta a punta para compañías como Google, Sephora, Experian, Wells Fargo y TreviPay: desde el módulo de inventario de las tiendas de Google hasta servicios de pagos B2B que procesan más de US$6.000 millones al año.',
+  'about.p2':
+    'Mi especialidad es que los sistemas lentos se vuelvan rápidos y que el trabajo manual desaparezca: he llevado tiempos de respuesta de minutos a milisegundos, he liderado migraciones críticas sin perder un solo dato y hoy integro inteligencia artificial de forma segura y auditable.',
+  'about.p3':
+    'Fundé DigitalStrike para dejar de vender horas y empezar a resolver problemas, los tuyos, con la misma calidad que exigen las grandes compañías. El nombre viene del béisbol, que jugué de joven: aquí sacamos de circulación tus necesidades de software.',
+  'about.facts':
+    '17+ años de experiencia · Equipos de hasta 8 personas liderados · Java · Python · React · TypeScript · AWS · IA aplicada · Scrum Master certificado (PSM I) · Español e inglés',
+  'about.linkedin': 'Ver perfil en LinkedIn',
+  'about.photo_alt': 'Raul Casañas, CEO de DigitalStrike Solutions',
   'clients.title': 'Empresas que confían en nosotros',
+  'clients.slot': 'Este espacio está reservado para tu marca',
+  'pending.badge': 'Contenido provisional',
 } as const;
 
 export type ContentKey = keyof typeof es;

@@ -1,17 +1,73 @@
 ---
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
+import { linkedinUrl } from '../../lib/i18n/site';
+import { withBase } from '../../lib/i18n/url';
+import PendingBadge from './PendingBadge.astro';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+
+// The provisional photo is 200×200 px: never render it wider than that. When the ≥ 800 px version
+// replaces public/images/raul-casanas.jpg, raise this constant (US-007 AC2).
+const PHOTO_SIZE = 200;
+const facts = t(lang, 'about.facts').split(' · ');
 ---
 
-<!-- Stub from the scaffold (DS-001); the section story fills it in. -->
 <section id="nosotros" class="bg-steel">
-  <div class="section-shell py-16">
+  <div class="section-shell py-16 md:py-20">
     <h2>{t(lang, 'about.title')}</h2>
+
+    <div class="mt-10 grid gap-10 md:grid-cols-[auto_1fr] md:gap-12">
+      <div class="flex flex-col items-start gap-3">
+        <!-- The monogram sits behind the photo: it shows if the file is missing (onerror removes the img). -->
+        <div
+          data-photo
+          class="border-border-strong bg-navy relative overflow-hidden rounded-xl border"
+          style={`width: ${PHOTO_SIZE}px; height: ${PHOTO_SIZE}px; max-width: 100%;`}
+        >
+          <span
+            data-monogram
+            class="text-cyan absolute inset-0 flex items-center justify-center font-mono text-5xl font-medium"
+            aria-hidden="true"
+          >
+            RC
+          </span>
+          <img
+            src={withBase('images/raul-casanas.jpg')}
+            alt={t(lang, 'about.photo_alt')}
+            width={PHOTO_SIZE}
+            height={PHOTO_SIZE}
+            class="relative size-full object-cover"
+            onerror="this.remove()"
+          />
+        </div>
+        <PendingBadge lang={lang} />
+      </div>
+
+      <div class="max-w-3xl">
+        <p class="text-2xl font-bold">{t(lang, 'about.name')}</p>
+        <p class="text-cyan font-mono text-sm tracking-widest uppercase">{t(lang, 'about.role')}</p>
+        <p class="mt-6">{t(lang, 'about.p1')}</p>
+        <p class="mt-4">{t(lang, 'about.p2')}</p>
+        <p class="mt-4">{t(lang, 'about.p3')}</p>
+        <ul class="my-6 flex list-none flex-wrap gap-2 p-0" data-facts>
+          {facts.map((fact) => (
+            <li class="bg-grid text-text-2 rounded-md px-3 py-1.5 font-mono text-sm">{fact}</li>
+          ))}
+        </ul>
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener"
+          class="border-off text-off hover:border-cyan inline-flex min-h-12 items-center justify-center rounded-full border-2 px-7 font-semibold no-underline"
+        >
+          {t(lang, 'about.linkedin')}
+        </a>
+      </div>
+    </div>
   </div>
 </section>

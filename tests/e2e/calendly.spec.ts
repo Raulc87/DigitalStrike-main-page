@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { esForm } from '../../src/i18n/es/form';
+import { enForm } from '../../src/i18n/en/form';
 
 // US-013 AC1, AC3, AC4: no Calendly request before the click; the widget container after it; the
 // fallback when Calendly is blocked or renders nothing within 10 s. Calendly's network is always
@@ -83,3 +84,27 @@ test('a <noscript> link to Calendly always exists', async ({ page }) => {
   expect(html).toContain('href="https://calendly.com/rcasanas/1hr"');
   expect(html).toContain('target="_blank"');
 });
+
+for (const [lang, t] of [
+  ['es', esForm],
+  ['en', enForm],
+] as const) {
+  test(`/${lang}/ the notice links to the privacy notice without loading Calendly`, async ({
+    page,
+  }) => {
+    const requests = await track(page, 'fake');
+    await page.goto(`/${lang}/`);
+    const notice = page.locator('[data-schedule-notice]');
+    await expect(notice).toHaveText(t['schedule.notice']);
+    const link = notice.locator('a[data-privacy-open]');
+    await expect(link).toHaveText(lang === 'es' ? 'aviso de privacidad' : 'privacy notice');
+    await link.click();
+    const dialog = page.getByRole('dialog', { name: t['privacy.title'] });
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(link).toBeFocused();
+    await expect(page.locator('[data-schedule-preview]')).toBeVisible();
+    expect(requests).toEqual([]);
+  });
+}

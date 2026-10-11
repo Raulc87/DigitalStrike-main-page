@@ -3,6 +3,8 @@
 // "Ver horarios disponibles" or submits the lead form; then the official Calendly inline widget.
 import type { Locale } from '../../i18n';
 import { formT } from '../../lib/lead/messages';
+import { routes } from '../../lib/i18n/routes';
+import { withBase } from '../../lib/i18n/url';
 import { calendlyUrl } from '../../lib/schedule/config';
 
 interface Props {
@@ -11,6 +13,15 @@ interface Props {
 
 const { lang } = Astro.props;
 const fallbackLink = 'inline-flex min-h-11 items-center underline underline-offset-4';
+
+// The words "aviso de privacidad" / "privacy notice" inside the CONTENT §11 notice become a link
+// that opens the privacy dialog (owner decision 2026-10-11); the sentence itself is unchanged.
+const privacyWords = { es: 'aviso de privacidad', en: 'privacy notice' } as const;
+const notice = formT(lang, 'schedule.notice');
+const at = notice.indexOf(privacyWords[lang]);
+const noticeBefore = at < 0 ? notice : notice.slice(0, at);
+const noticeLink = at < 0 ? '' : privacyWords[lang];
+const noticeAfter = at < 0 ? '' : notice.slice(at + noticeLink.length);
 ---
 
 <section id="agenda" class="bg-steel" data-lang={lang}>
@@ -32,7 +43,8 @@ const fallbackLink = 'inline-flex min-h-11 items-center underline underline-offs
         >
           {formT(lang, 'schedule.open')}
         </button>
-        <p class="text-text-2 max-w-md text-sm">{formT(lang, 'schedule.notice')}</p>
+        <!-- prettier-ignore -->
+        <p class="text-text-2 max-w-md text-sm" data-schedule-notice>{noticeBefore}{noticeLink && <a href={withBase(routes.privacy[lang])} target="_blank" rel="noopener" data-privacy-open class="underline underline-offset-4">{noticeLink}</a>}{noticeAfter}</p>
         <noscript>
           <a href={calendlyUrl} target="_blank" rel="noopener" class={fallbackLink}>
             {formT(lang, 'schedule.fallback')}

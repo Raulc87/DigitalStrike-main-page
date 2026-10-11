@@ -18,7 +18,7 @@ for (const { lang, page: path, t } of cases) {
     await page.goto(`/${lang}/`);
     const name = page.locator('form[data-lead-form] input[name="name"]');
     await name.fill('Ana María');
-    const link = page.locator('[data-privacy-open]');
+    const link = page.locator('#contacto [data-privacy-open]');
     await expect(link).toHaveText(t['form.consent.link']);
     const url = page.url();
     await link.click();

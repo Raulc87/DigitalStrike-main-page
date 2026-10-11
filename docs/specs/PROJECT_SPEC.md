@@ -48,7 +48,7 @@ The page must:
 
 ### Out of scope (now)
 - Prices on the page; refunds/devolution policy (pending legal review).
-- Analytics, tracking pixels, cookie banner (the site's own code sets no cookies; GoDaddy's injected script sets its own, disclosed in the privacy notice, ADR-001). A consent banner is reconsidered if the site targets EU visitors (GDPR) or GoDaddy's script changes.
+- Client-side analytics added by our code (e.g. Google Analytics), tracking pixels, cookie banner. Visit statistics from the server logs (cPanel Awstats, §8) are in scope. (The site's own code sets no cookies; GoDaddy's injected script sets its own, disclosed in the privacy notice, ADR-001). A consent banner is reconsidered if the site targets EU visitors (GDPR) or GoDaddy's script changes.
 - WhatsApp button, Instagram link (accounts do not exist yet), company LinkedIn page.
 - Real client logos (none available yet), testimonials.
 - Blog, accounts/login, payments, CMS.

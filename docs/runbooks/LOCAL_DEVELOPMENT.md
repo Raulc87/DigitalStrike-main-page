@@ -69,11 +69,15 @@ Notes:
   `npm run mock:lead` for e2e. Build first with the base path `/` (the default in `.env.example`).
 - `npm run lhci` rebuilds `dist/` with the base path `/` and needs Chrome installed. Run
   `npm run build` again afterwards if you need the Pages base-path build.
-- To see the Pages preview build locally:
+- To see the Pages preview build locally, set the base path for **both** commands. `astro preview`
+  reads it too, and an inline variable applies to one command only:
   ```bash
-  PUBLIC_BASE_PATH=/DigitalStrike-main-page npm run build && npm run preview
+  PUBLIC_BASE_PATH=/DigitalStrike-main-page npm run build
+  PUBLIC_BASE_PATH=/DigitalStrike-main-page npm run preview
   ```
-  Then open <http://localhost:4321/DigitalStrike-main-page/>.
+  PowerShell: `$env:PUBLIC_BASE_PATH="/DigitalStrike-main-page"; npm run build; npm run preview`.
+  Then open <http://localhost:4321/DigitalStrike-main-page/es/>. Close that terminal afterwards
+  (PowerShell keeps the variable), or the next `npm run dev` also uses the base path.
 - Formatting: `npx prettier --write <files>` fixes what `npm run lint` reports.
 
 ## 5. Ports

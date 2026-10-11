@@ -1,0 +1,68 @@
+# Preview of main on GitHub Pages (US-016, ADR-001): https://raulc87.github.io/DigitalStrike-main-page/
+# Review only, never linked publicly, built with noindex. Production is release-cpanel.yml.
+# Settings → Pages → Source must be "GitHub Actions". PUBLIC_* values come from repository
+# *variables* (Settings → Secrets and variables → Actions → Variables); unset ones fall back to the
+# code defaults of contract §8, except PUBLIC_LEAD_ENDPOINT_URL (unset → the form shows the error
+# with the mailto fallback).
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PUBLIC_SITE_URL: https://raulc87.github.io
+      PUBLIC_BASE_PATH: /DigitalStrike-main-page
+      PUBLIC_NOINDEX: 'true'
+      PUBLIC_SHOW_PENDING_BADGES: 'true'
+      PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL }}
+      PUBLIC_CALENDLY_URL: ${{ vars.PUBLIC_CALENDLY_URL }}
+      PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+      PUBLIC_LINKEDIN_URL: ${{ vars.PUBLIC_LINKEDIN_URL }}
+      PUBLIC_PRIVACY_NOTICE_VERSION: ${{ vars.PUBLIC_PRIVACY_NOTICE_VERSION }}
+      PUBLIC_SHOW_CLIENT_LOGOS: ${{ vars.PUBLIC_SHOW_CLIENT_LOGOS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Check the base path and noindex in the output
+        run: |
+          grep -q 'href="/DigitalStrike-main-page/' dist/es/index.html
+          grep -q '<meta name="robots" content="noindex' dist/es/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Only this job can deploy (least privilege, TECH_STACK §11).
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

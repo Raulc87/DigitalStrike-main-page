@@ -81,7 +81,8 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 | `src/components/lead/**`, `src/components/schedule/**`, `src/components/privacy/**`, `src/lib/lead/**`, `src/lib/schedule/**`, `src/i18n/{es,en}/form.ts`, `tests/e2e/**` | Agent 2 (stubs created by Agent 1 in Phase 0 are handed over on merge; Agent 1 renders `PrivacyNotice` inside the privacy pages) |
 | `apps-script/**`, `scripts/**`, `.github/workflows/**`, `.env.example`, `public/.htaccess`, `docs/runbooks/**` | Agent 3 |
 | `tests/unit/**` | Owner of the code under test |
-| `docs/specs/**`, `docs/ux/**`, `docs/plans/**`, `docs/sprints/**`, `docs/decisions/**`, `docs/assets/**`, `AGENTS.md`, `PROJECT_CONTEXT.md`, `README.md` | Human owner (changes via `DS-DOCS-*` PRs) |
+| `docs/specs/**`, `docs/ux/**`, `docs/plans/**`, `docs/sprints/**`, `docs/decisions/**`, `docs/assets/**`, `AGENTS.md`, `PROJECT_CONTEXT.md`, `README.md`, `TECH_STACK.md` | Human owner (changes via `DS-DOCS-*` PRs) |
+| `holding-page/**` (temporary page live until `v0.1.0`) | Human owner (changes via `DS-CHORE-*` or `DS-DOCS-*` PRs) |
 
 ## Integration Contract
 `docs/specs/LEAD_ENDPOINT_CONTRACT.md` v1.0 — locked for this sprint. Enum labels are duplicated on purpose (Agent 2's `form.ts` for the form, Agent 3's email templates); both copy them verbatim from contract §4.

@@ -4,7 +4,7 @@ A temporary, static page to publish at `digitalstrike-solutions.com` until the r
 
 - Approved identity: Palette 1, ball logo and tagline (`docs/ux/UX_UI_DIRECTION.md` §2 in PR #1).
 - Bilingual: Spanish by default for Spanish browsers, English otherwise, with an ES | EN toggle (saved as `ds_lang`, same key as the main site).
-- The page's own code has no form, no cookies, no analytics and no third-party requests (fonts are self-hosted; Calendly and LinkedIn are plain links). **However**, on GoDaddy the server injects its own performance monitoring script into every HTML page, which calls GoDaddy's domains and sets GoDaddy cookies (`_tccl_visitor` for 1 year, `_tccl_visit`, `_scc_session`; checked 2026-10-11, ADR-001). The owner keeps that script (decision 2026-10-11); the main site's privacy notice discloses it. The holding page has no notice and is temporary: it is replaced by release `v0.1.0`.
+- The page's own code has no form, no cookies, no analytics and no third-party requests (fonts are self-hosted; Calendly and LinkedIn are plain links). **However**, on GoDaddy the server injects its own performance monitoring script into every HTML page, which calls GoDaddy's domains and sets GoDaddy cookies (`_tccl_visitor` for 1 year, `_tccl_visit`, `_scc_session`; checked 2026-10-11, ADR-001). The owner keeps that script (decision 2026-10-11); the main site's privacy notice discloses it. The holding page discloses it in a short bilingual privacy line in its footer (added 2026-10-11) until release `v0.1.0` replaces it with the full site and its privacy notice.
 - `noindex`: search engines won't index the temporary text. The real site will be indexable.
 - Fonts: Archivo and IBM Plex Mono (SIL Open Font License; licence files in `assets/fonts/`).
 

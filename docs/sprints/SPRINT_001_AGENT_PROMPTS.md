@@ -213,8 +213,9 @@ Order of work:
    using repository variables for PUBLIC_* and PUBLIC_NOINDEX=true; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
    Actions", set repository variables, release smoke test on https://digitalstrike-solutions.com covering every bullet of US-016 AC3:
    the privacy-notice check, the fresh-browser check of the live cookies (names, lifetimes),
-   the injected script's source and any third-party domains against CONTENT §13, and the
-   production Lighthouse run; tagging v0.1.0) and
+   the injected script's source and third-party domains against the baseline in US-016 AC3 and
+   ADR-001 (img1.wsimg.com script, csp.secureserver.net beacons; CONTENT §13 is the visitor-facing
+   wording), and the production Lighthouse run; tagging v0.1.0) and
    docs/runbooks/LOCAL_DEVELOPMENT.md (Windows and macOS notes: Node 22, OneDrive locks, ports).
 5. DS-017-cpanel-release — US-017 (Must, the production deploy, ADR-001): release-cpanel.yml on
    release published + manual, FTPS upload of dist/ built for https://digitalstrike-solutions.com

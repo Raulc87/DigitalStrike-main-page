@@ -72,7 +72,9 @@ Release smoke test (`RELEASE.md`) on `https://digitalstrike-solutions.com` after
 - both languages and HTTPS;
 - form → sheet row + two emails;
 - Calendly;
-- the privacy notice in both languages mentions GoDaddy's access logs, monitoring script and cookies.
+- the privacy notice in both languages mentions GoDaddy's access logs, monitoring script and cookies;
+- in a fresh browser profile, the live cookies and third-party domains match the baseline in US-016 AC3 (`_tccl_visitor` up to 1 year, `_tccl_visit`, `_scc_session`; `img1.wsimg.com`, `csp.secureserver.net`);
+- the production Lighthouse scores are recorded (NFR-003).
 
 ## Review Trigger
-A server-side backend moves to the cPanel Python app (ADR-002 stage 1); the site starts targeting EU visitors, or the injected script collects more than technical visit data (then revisit the disclosure or ask GoDaddy to remove it); hosting renewal (compare the renewal price with Option C).
+A server-side backend moves to the cPanel Python app (ADR-002 stage 1); the site starts targeting EU visitors; the injected script adds a cookie, a longer lifetime or a new third-party domain, or collects more than technical visit data; or it pulls production Lighthouse below NFR-003 (then revisit the disclosure or ask GoDaddy to remove it); hosting renewal (compare the renewal price with Option C).

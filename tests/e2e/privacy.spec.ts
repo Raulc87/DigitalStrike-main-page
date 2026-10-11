@@ -7,15 +7,15 @@ import { enForm } from '../../src/i18n/en/form';
 // and the standalone pages.
 
 const cases = [
-  { lang: 'es', page: '/es/privacidad/', t: esForm },
-  { lang: 'en', page: '/en/privacy/', t: enForm },
+  { lang: 'es', page: 'es/privacidad/', t: esForm },
+  { lang: 'en', page: 'en/privacy/', t: enForm },
 ] as const;
 
 for (const { lang, page: path, t } of cases) {
   test(`/${lang}/ privacy dialog keeps form data, closes with Esc and returns focus`, async ({
     page,
   }) => {
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const name = page.locator('form[data-lead-form] input[name="name"]');
     await name.fill('Ana María');
     const link = page.locator('#contacto [data-privacy-open]');

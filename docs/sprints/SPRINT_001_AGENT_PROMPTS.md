@@ -138,7 +138,8 @@ Order of work:
      credentials "omit", 20 s timeout via AbortController) mapping every response of §7 plus
      network errors, timeouts and malformed bodies.
    - LeadForm: fields, order, labels, hints and option labels from CONTENT.md §10 and contract §4;
-     honeypot `website` (visually hidden, tabindex -1, autocomplete off, aria-hidden);
+     honeypot per UX §3 "Autofill and honeypot" (separate form outside the lead form, value sent
+     as `website`), visible fields with the autocomplete values of that table;
      elapsed_ms from performance.now() since first render; submission_id (crypto.randomUUID)
      kept across retries of an unchanged payload, renewed after success and whenever a field
      changes after a failed attempt (contract §5.4); privacy_notice_version

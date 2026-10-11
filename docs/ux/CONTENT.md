@@ -217,7 +217,7 @@ Versión 2026-10-14-v1
 
 **Dónde se guardan.** En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador y puede usar sus propias cookies. Si se carga después de enviar el formulario, le pasamos tu nombre y correo para prellenar la cita. Si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.
 
-**Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos.
+**Cuánto tiempo.** Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos. Cuando borramos tus datos, el historial de versiones de la hoja de cálculo de Google puede seguir mostrándolos; no lo usamos para nada.
 
 **Tus derechos.** Conforme a la Ley 8968 puedes pedir acceso, corrección o eliminación de tus datos escribiendo a {contact_email}. Respondemos en un plazo máximo de 5 días hábiles.
 
@@ -235,7 +235,7 @@ Version 2026-10-14-v1
 
 **Where it is stored.** In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser and may set its own cookies. If it loads after you submit the form, we pass it your name and email to prefill the booking. If you book, it processes the booking data. These services may store data outside Costa Rica.
 
-**How long.** Up to 24 months from our last contact, or until you ask us to delete it.
+**How long.** Up to 24 months from our last contact, or until you ask us to delete it. When we delete your data, the Google spreadsheet's version history may still show it; we don't use that history for anything.
 
 **Your rights.** Under Costa Rica's Law 8968 you can request access to, correction or deletion of your data by writing to {contact_email}. We reply within 5 business days.
 

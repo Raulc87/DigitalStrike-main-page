@@ -15,6 +15,8 @@
  *   GET  /exec       health check, like doGet
  *   GET  /__leads    stored rows as JSON objects keyed by column name (for tests)
  *   DELETE /__leads  clears the store (for tests)
+ *   Call /__leads from Playwright's `request` fixture or Node fetch, not from page JavaScript:
+ *   a cross-origin DELETE needs a preflight, which this mock refuses on purpose.
  *
  * Environment:
  *   MOCK_PORT (default 8787), MOCK_HOST (default 127.0.0.1)

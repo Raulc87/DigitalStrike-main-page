@@ -68,7 +68,7 @@ function doPost(e) {
         },
       },
       composeEmail: function (kind, lead, context) {
-        // Templates (CONTENT §14) come with DS-011 (US-011, US-012).
+        // CONTENT §14 templates (lib/emails.js).
         return composeLeadEmail(kind, lead, context);
       },
       log: logEvent_,

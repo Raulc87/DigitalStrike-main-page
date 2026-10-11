@@ -16,10 +16,8 @@ Google Apps Script web app that implements `docs/specs/LEAD_ENDPOINT_CONTRACT.md
 | `lib/lead.js` | Costa Rica time, `lead_id`, row building with the formula-injection guard, reading a row back (§6) |
 | `lib/throttle.js` | Per-email, hourly and daily throttles counted from the stored rows (§5.3) |
 | `lib/sheet.js` | The `leads` sheet behind a small store interface; `setupLeadsSheet` |
+| `lib/emails.js` | Owner "cover letter" and visitor confirmation of CONTENT §14 (HTML + plain text, ES/EN, every visitor value HTML-escaped, Reply-To per ADR-005) |
 | `lib/handler.js` | The pipeline of §5 (order, one script lock around steps 7–10, idempotency with recovery of `pending` emails, email statuses) and the response bodies of §7 |
-
-Email templates (CONTENT §14) are added by DS-011 (US-011, US-012). Until then the email step
-records `failed` for both emails; the lead is still stored.
 
 ## Design notes
 

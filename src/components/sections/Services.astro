@@ -62,10 +62,10 @@ const home = withBase(routes.home[lang]);
       window.dispatchEvent(
         new CustomEvent(PRESELECT_EVENT, { detail: { code: link.dataset.projectType } }),
       );
-      // Setting the hash is a native fragment navigation: it scrolls to the form and moves the
-      // sequential focus starting point there, so the next Tab continues inside #contacto.
-      if (location.hash === '#contacto') document.getElementById('contacto')?.scrollIntoView();
-      else location.hash = 'contacto';
+      // Navigating to the fragment (also when the URL already ends in #contacto, where setting
+      // `location.hash` would do nothing) scrolls to the form and moves the sequential focus
+      // starting point there, so the next Tab continues inside #contacto.
+      location.assign('#contacto');
     });
   });
 </script>

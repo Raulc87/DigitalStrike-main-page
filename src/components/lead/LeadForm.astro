@@ -4,6 +4,7 @@
 import type { Locale } from '../../i18n';
 import { routes } from '../../lib/i18n/routes';
 import { withBase } from '../../lib/i18n/url';
+import { leadEndpointUrl } from '../../lib/lead/config';
 import { formT, optionLabel } from '../../lib/lead/messages';
 import { BUDGET_RANGES, PROJECT_TYPES, TIMELINES } from '../../lib/lead/types';
 import PrivacyDialog from '../privacy/PrivacyDialog.astro';
@@ -39,7 +40,14 @@ const controlClass =
 
 <section id="contacto" class="bg-navy">
   <div class="section-shell py-16">
-    <div class="mx-auto max-w-[720px]" data-lead-root data-lang={lang}>
+    <!-- data-endpoint says only whether PUBLIC_LEAD_ENDPOINT_URL was set at build time (never the URL),
+         so the integration e2e can stop with a clear message on a build without it. -->
+    <div
+      class="mx-auto max-w-[720px]"
+      data-lead-root
+      data-lang={lang}
+      data-endpoint={leadEndpointUrl ? 'configured' : 'missing'}
+    >
       <div data-lead-form-view>
         <h2 id="lead-title" class="text-off">
           {formT(lang, 'form.title')}

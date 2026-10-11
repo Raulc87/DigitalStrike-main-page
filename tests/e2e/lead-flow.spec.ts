@@ -37,6 +37,23 @@ async function fakeCalendly(page: Page): Promise<string[]> {
   return requests;
 }
 
+// Every flow test needs a site built with PUBLIC_LEAD_ENDPOINT_URL: without it the form shows the
+// generic error and never posts (by design). Stop once with a clear message instead of ~20
+// unrelated assertion failures.
+test.beforeAll(async ({ browser }) => {
+  const page = await browser.newPage();
+  await page.goto('es/');
+  const endpoint = await page.locator('[data-lead-root]').getAttribute('data-endpoint');
+  await page.close();
+  if (endpoint !== 'configured') {
+    throw new Error(
+      'lead-flow.spec.ts needs a site built with PUBLIC_LEAD_ENDPOINT_URL set, e.g. ' +
+        '`PUBLIC_LEAD_ENDPOINT_URL=http://127.0.0.1:8787/exec npm run build` (contract §8). ' +
+        'The suite routes that URL to its own in-process mock; no separate mock process is needed.',
+    );
+  }
+});
+
 test.beforeEach(async ({ page }) => {
   await fakeCalendly(page);
 });
@@ -272,7 +289,9 @@ test('a form filled the way autofill leaves it is stored with an empty honeypot 
   expect(await mocks.ok.leads()).toHaveLength(1);
 });
 
-test('the language follows the browser and the toggle on the built site', async ({ browser }) => {
+test('the root page follows the browser language on the built site (es-CR, en-US)', async ({
+  browser,
+}) => {
   for (const [locale, lang] of [
     ['es-CR', 'es'],
     ['en-US', 'en'],

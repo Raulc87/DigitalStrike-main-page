@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { t } from '../i18n';
 import type { Locale } from '../i18n';
-import { routes } from '../lib/i18n/routes';
+import { otherLocale, routes } from '../lib/i18n/routes';
 import type { RouteName } from '../lib/i18n/routes';
 import { LOCALES, withBase } from '../lib/i18n/url';
 
@@ -25,7 +25,7 @@ const canonical = abs(routes[route][lang]);
 const ogImage = abs('og-image.png');
 const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
 const ogLocale = { es: 'es_CR', en: 'en_US' } as const;
-const otherLang = lang === 'es' ? 'en' : 'es';
+const otherLang = otherLocale(lang);
 ---
 
 <!doctype html>

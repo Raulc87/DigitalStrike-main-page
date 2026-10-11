@@ -1,15 +1,18 @@
 ---
 import type { Locale } from '../../i18n';
+import type { RouteName } from '../../lib/i18n/routes';
+import LangToggle from './LangToggle.astro';
 import { withBase } from '../../lib/i18n/url';
 
 interface Props {
   lang: Locale;
+  route?: RouteName;
 }
 
-const { lang } = Astro.props;
+const { lang, route = 'home' } = Astro.props;
 ---
 
-<!-- Scaffold header (US-001 AC5): logo mark + live wordmark. US-003 adds nav, toggle and CTA. -->
+<!-- Logo mark + live wordmark (US-001 AC5), language toggle (US-002). US-003 adds nav and CTA. -->
 <header class="border-border bg-navy/90 sticky top-0 z-50 border-b backdrop-blur" data-lang={lang}>
   <div class="section-shell flex min-h-16 items-center">
     <a href={withBase(`${lang}/`)} class="text-off flex items-center gap-3 no-underline">
@@ -18,5 +21,8 @@ const { lang } = Astro.props;
         DigitalStrike<span class="text-cyan max-[420px]:hidden">&nbsp;Solutions</span>
       </span>
     </a>
+    <div class="ml-auto">
+      <LangToggle lang={lang} route={route} />
+    </div>
   </div>
 </header>

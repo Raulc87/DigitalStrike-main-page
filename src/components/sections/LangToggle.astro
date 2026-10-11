@@ -1,0 +1,59 @@
+---
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n';
+import { routes } from '../../lib/i18n/routes';
+import type { RouteName } from '../../lib/i18n/routes';
+import { LOCALES, withBase } from '../../lib/i18n/url';
+
+interface Props {
+  lang: Locale;
+  route: RouteName;
+}
+
+const { lang, route } = Astro.props;
+---
+
+<nav aria-label={t(lang, 'lang.toggle_label')} class="flex items-center" data-lang-toggle>
+  {LOCALES.map((locale, index) => (
+    <>
+      {index > 0 && (
+        <span aria-hidden="true" class="text-border-strong">
+          |
+        </span>
+      )}
+      <a
+        href={withBase(routes[route][locale])}
+        hreflang={locale}
+        lang={locale}
+        aria-current={locale === lang ? 'true' : undefined}
+        class:list={[
+          'text-off flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 font-mono text-sm no-underline hover:text-cyan',
+          locale === lang ? 'font-bold' : 'text-text-2 font-normal',
+        ]}
+      >
+        {locale.toUpperCase()}
+      </a>
+    </>
+  ))}
+</nav>
+
+<script>
+  import { saveLanguage } from '../../lib/i18n/detect';
+  import type { Locale } from '../../lib/i18n/url';
+
+  // Keep the visitor on the same section: the anchors are shared by both pages (ADR-003).
+  // The choice is saved before navigating; storage failures are ignored.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang-toggle] a[hreflang]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const target = link.getAttribute('hreflang');
+      if (target === 'es' || target === 'en') {
+        try {
+          saveLanguage(target as Locale, window.localStorage);
+        } catch {
+          // storage blocked
+        }
+      }
+      if (location.hash) link.hash = location.hash;
+    });
+  });
+</script>

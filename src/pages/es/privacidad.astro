@@ -7,8 +7,8 @@ import PrivacyNotice from '../../components/privacy/PrivacyNotice.astro';
 const lang = 'es';
 ---
 
-<BaseLayout lang={lang}>
-  <Header lang={lang} />
+<BaseLayout lang={lang} route="privacy">
+  <Header lang={lang} route="privacy" />
   <main id="contenido" class="section-shell py-16">
     <PrivacyNotice lang={lang} />
   </main>

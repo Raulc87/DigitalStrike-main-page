@@ -17,6 +17,8 @@ export const es = {
   'lang.toggle_label': 'Cambiar idioma',
   skip_link: 'Saltar al contenido',
 
+  'footer.privacy': 'Aviso de privacidad',
+
   'services.title': 'Lo que construimos',
   'process.title': 'Cómo trabajamos',
   'work.title': 'Proyectos de nuestro equipo',

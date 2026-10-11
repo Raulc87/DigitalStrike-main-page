@@ -53,7 +53,9 @@ function checkThrottles(recentRows, email, now, config) {
 
   var waits = [];
   if (lastHourSameEmail.length >= config.maxLeadsPerEmailPerHour) {
-    waits.push(secondsUntilHourWindowFrees_(lastHourSameEmail, config.maxLeadsPerEmailPerHour, nowMs));
+    waits.push(
+      secondsUntilHourWindowFrees_(lastHourSameEmail, config.maxLeadsPerEmailPerHour, nowMs),
+    );
   }
   if (lastHour.length >= config.maxLeadsPerHour) {
     waits.push(secondsUntilHourWindowFrees_(lastHour, config.maxLeadsPerHour, nowMs));

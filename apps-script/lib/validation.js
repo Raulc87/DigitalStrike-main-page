@@ -119,7 +119,11 @@ function validateEmail_(v) {
   if (email.length > 254) return { error: FIELD_ERROR.TOO_LONG };
   if (!EMAIL_PATTERN.test(email)) return { error: FIELD_ERROR.INVALID_FORMAT };
   var local = email.slice(0, email.lastIndexOf('@'));
-  if (local.charAt(0) === '.' || local.charAt(local.length - 1) === '.' || local.indexOf('..') !== -1) {
+  if (
+    local.charAt(0) === '.' ||
+    local.charAt(local.length - 1) === '.' ||
+    local.indexOf('..') !== -1
+  ) {
     return { error: FIELD_ERROR.INVALID_FORMAT };
   }
   return { value: email };
@@ -197,7 +201,7 @@ function validateLead(body, acceptedPrivacyNoticeVersions) {
     consent: validateConsent_(body.consent),
     privacy_notice_version: validateOption_(
       body.privacy_notice_version,
-      acceptedPrivacyNoticeVersions || []
+      acceptedPrivacyNoticeVersions || [],
     ),
     submission_id: validateSubmissionId_(body.submission_id),
     elapsed_ms: validateElapsedMs_(body.elapsed_ms),

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { loadAppsScript, type AppsScriptContext } from './helpers/loadAppsScript';
-import { FakeLock, FakeMailer, FakeSpreadsheet, newDataValidation, type FakeSheet } from './helpers/fakes';
+import {
+  FakeLock,
+  FakeMailer,
+  FakeSpreadsheet,
+  newDataValidation,
+  type FakeSheet,
+} from './helpers/fakes';
 import { SCRIPT_PROPERTIES, validBody } from './helpers/fixtures';
 
 function googleServices(props: Record<string, string> = SCRIPT_PROPERTIES) {
@@ -58,7 +64,9 @@ describe('setupSheet (US-010 AC3)', () => {
     expect(sheet.boldHeader).toBe(true);
     expect(sheet.validations).toContain('2:2+999:new|contacting|accepted|rejected');
     // Every column but M (consent) is plain text.
-    const textColumns = new Set(sheet.formats.filter((f) => f.endsWith(':@')).map((f) => Number(f.split(':')[0])));
+    const textColumns = new Set(
+      sheet.formats.filter((f) => f.endsWith(':@')).map((f) => Number(f.split(':')[0])),
+    );
     expect(textColumns.size).toBe(18);
     expect(textColumns.has(gs.COLUMN.consent)).toBe(false);
   });
@@ -70,7 +78,7 @@ describe('setupSheet (US-010 AC3)', () => {
     sheet.appendRow(['2026-10-14 10:00:00', 'contacting']);
     gs.setupSheet();
     expect(sheet.rows).toHaveLength(2);
-    expect(sheet.rows[1][1]).toBe('contacting');
+    expect(sheet.row(2)[1]).toBe('contacting');
   });
 
   it('refuses to overwrite a different header', () => {
@@ -96,7 +104,7 @@ describe('doPost wiring', () => {
     expect(body.ok).toBe(true);
     const sheet = services.spreadsheet.getSheetByName('leads') as FakeSheet;
     expect(sheet.rows).toHaveLength(2);
-    expect(sheet.rows[1][2]).toBe(body.lead_id);
+    expect(sheet.row(2)[2]).toBe(body.lead_id);
     expect(services.lock.held).toBe(false);
     for (const line of services.logs) expect(line).not.toMatch(/ana|Ana|8888/);
   });
@@ -122,7 +130,9 @@ describe('doPost wiring', () => {
 
   it('answers storage_unavailable when the leads tab is missing', () => {
     const services = googleServices();
-    const body = JSON.parse(services.gs.doPost({ postData: { contents: JSON.stringify(validBody()) } }).text);
+    const body = JSON.parse(
+      services.gs.doPost({ postData: { contents: JSON.stringify(validBody()) } }).text,
+    );
     expect(body.error_code).toBe('storage_unavailable');
   });
 });

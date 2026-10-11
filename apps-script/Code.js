@@ -4,7 +4,9 @@
  */
 
 function jsonOutput_(body) {
-  return ContentService.createTextOutput(JSON.stringify(body)).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(body)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }
 
 function scriptConfig_() {
@@ -67,9 +69,10 @@ function doPost(e) {
           MailApp.sendEmail(message);
         },
       },
-      composeEmail: function (kind, lead, context) {
-        // Templates (CONTENT §14) come with DS-011 (US-011, US-012).
-        return composeLeadEmail(kind, lead, context);
+      composeEmail: function () {
+        // The CONTENT §14 templates come with DS-011 (US-011, US-012); until then each email
+        // is recorded as `failed` and the lead is still stored.
+        throw new Error('Email templates are not installed.');
       },
       log: logEvent_,
     });
@@ -92,5 +95,7 @@ function setupSheet() {
   var result = setupLeadsSheet(SpreadsheetApp.openById(config.sheetId), function () {
     return SpreadsheetApp.newDataValidation();
   });
-  console.log(JSON.stringify({ event: 'setup_sheet_done', sheet: result.sheetName, columns: result.columns }));
+  console.log(
+    JSON.stringify({ event: 'setup_sheet_done', sheet: result.sheetName, columns: result.columns }),
+  );
 }

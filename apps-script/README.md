@@ -58,6 +58,15 @@ temporary local config is kept here:
 npx vitest run --config apps-script/vitest.config.mjs
 ```
 
+## Lint
+
+`apps-script/eslint.config.js` applies to this folder (ESLint looks up the nearest config per
+file). It lints `Code.js` and `lib/*.js` as classic scripts and declares the Google services and
+every top-level declaration of those files as globals, so `no-undef` still catches a missing
+function; unused checks apply to locals only. The tests get the same TypeScript rules as the
+root config. It reads the plugin rules directly instead of `tseslint.configs`, which would
+register a second tsconfig root and break typescript-eslint for the whole repository.
+
 ## Deploying
 
 Code here is the source of truth. It is copied to the Apps Script project by hand or with

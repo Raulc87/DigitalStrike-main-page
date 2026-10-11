@@ -15,7 +15,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export type AppsScriptContext = Record<string, any>;
 
 /** Loads lib/*.js, plus Code.js when `withCode` is true; `globals` provides fakes of Google services. */
-export function loadAppsScript(options: { withCode?: boolean; globals?: AppsScriptContext } = {}): AppsScriptContext {
+export function loadAppsScript(
+  options: { withCode?: boolean; globals?: AppsScriptContext } = {},
+): AppsScriptContext {
   const context: AppsScriptContext = vm.createContext({ ...(options.globals ?? {}) });
   const libDir = join(root, 'lib');
   const files = readdirSync(libDir)

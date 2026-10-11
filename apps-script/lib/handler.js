@@ -40,7 +40,16 @@ function errorResponse(errorCode, extra) {
  * Step 10 for one email. Sends it only while its status is `pending`, then records the outcome.
  * Never throws: a failure is recorded and logged, and never changes the response.
  */
-function deliverEmail_(deps, kind, statusColumn, currentStatus, rowNumber, leadId, lead, submittedAt) {
+function deliverEmail_(
+  deps,
+  kind,
+  statusColumn,
+  currentStatus,
+  rowNumber,
+  leadId,
+  lead,
+  submittedAt,
+) {
   if (currentStatus !== EMAIL_STATUS.PENDING) {
     return currentStatus;
   }
@@ -74,8 +83,25 @@ function deliverEmail_(deps, kind, statusColumn, currentStatus, rowNumber, leadI
 }
 
 /** Step 10: owner notification first, then the visitor confirmation. */
-function deliverPendingEmails_(deps, rowNumber, leadId, lead, submittedAt, ownerStatus, confirmationStatus) {
-  deliverEmail_(deps, 'owner', 'owner_email_status', ownerStatus, rowNumber, leadId, lead, submittedAt);
+function deliverPendingEmails_(
+  deps,
+  rowNumber,
+  leadId,
+  lead,
+  submittedAt,
+  ownerStatus,
+  confirmationStatus,
+) {
+  deliverEmail_(
+    deps,
+    'owner',
+    'owner_email_status',
+    ownerStatus,
+    rowNumber,
+    leadId,
+    lead,
+    submittedAt,
+  );
   deliverEmail_(
     deps,
     'confirmation',
@@ -84,7 +110,7 @@ function deliverPendingEmails_(deps, rowNumber, leadId, lead, submittedAt, owner
     rowNumber,
     leadId,
     lead,
-    submittedAt
+    submittedAt,
   );
 }
 
@@ -108,7 +134,7 @@ function processUnderLock_(deps, lead) {
       stored.lead,
       stored.submittedAt,
       stored.ownerEmailStatus,
-      stored.confirmationEmailStatus
+      stored.confirmationEmailStatus,
     );
     return successResponse(stored.leadId);
   }
@@ -141,7 +167,15 @@ function processUnderLock_(deps, lead) {
   deps.log({ event: 'lead_stored', lead_id: leadId });
 
   // Step 10: emails; their outcome never changes the response.
-  deliverPendingEmails_(deps, rowNumber, leadId, lead, submittedAt, EMAIL_STATUS.PENDING, EMAIL_STATUS.PENDING);
+  deliverPendingEmails_(
+    deps,
+    rowNumber,
+    leadId,
+    lead,
+    submittedAt,
+    EMAIL_STATUS.PENDING,
+    EMAIL_STATUS.PENDING,
+  );
 
   // Step 11.
   return successResponse(leadId);
@@ -171,7 +205,11 @@ function handleLeadRequest(rawBody, deps) {
     // Step 4: validation.
     var validation = validateLead(parsed.body, deps.config.acceptedPrivacyNoticeVersions);
     if (!validation.ok) {
-      deps.log({ event: 'rejected', error_code: 'validation_failed', fields: Object.keys(validation.fieldErrors) });
+      deps.log({
+        event: 'rejected',
+        error_code: 'validation_failed',
+        fields: Object.keys(validation.fieldErrors),
+      });
       return errorResponse('validation_failed', { field_errors: validation.fieldErrors });
     }
 

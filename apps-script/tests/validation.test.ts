@@ -30,9 +30,12 @@ describe('parseRequestBody (contract §5 steps 1–2)', () => {
     expect(gs.parseRequestBody('é'.repeat(5121)).errorCode).toBe('payload_too_large');
   });
 
-  it.each([['not json'], ['[]'], ['null'], ['42'], ['"text"'], ['']])('rejects %j as invalid_json', (raw) => {
-    expect(gs.parseRequestBody(raw)).toEqual({ ok: false, errorCode: 'invalid_json' });
-  });
+  it.each([['not json'], ['[]'], ['null'], ['42'], ['"text"'], ['']])(
+    'rejects %j as invalid_json',
+    (raw) => {
+      expect(gs.parseRequestBody(raw)).toEqual({ ok: false, errorCode: 'invalid_json' });
+    },
+  );
 
   it('rejects a missing body as invalid_json', () => {
     expect(gs.parseRequestBody(undefined).errorCode).toBe('invalid_json');
@@ -48,9 +51,12 @@ describe('honeypot (§5.1) and fill time (§5.2)', () => {
     expect(gs.isHoneypotFilled(validBody({ website }))).toBe(false);
   });
 
-  it.each([['http://spam.example'], ['x'], [0], [false], [{}], [[]]])('treats website=%j as a bot', (website) => {
-    expect(gs.isHoneypotFilled(validBody({ website }))).toBe(true);
-  });
+  it.each([['http://spam.example'], ['x'], [0], [false], [{}], [[]]])(
+    'treats website=%j as a bot',
+    (website) => {
+      expect(gs.isHoneypotFilled(validBody({ website }))).toBe(true);
+    },
+  );
 
   it('flags elapsed_ms below 3000', () => {
     expect(gs.isTooFast(0)).toBe(true);
@@ -86,16 +92,23 @@ describe('validateLead (contract §3)', () => {
 
   it('reports every field error at once', () => {
     const errors = errorsFor({ email: 'bad', message: 'short', consent: false });
-    expect(errors).toEqual({ email: 'invalid_format', message: 'too_short', consent: 'must_be_true' });
+    expect(errors).toEqual({
+      email: 'invalid_format',
+      message: 'too_short',
+      consent: 'must_be_true',
+    });
   });
 
   describe('name', () => {
     it('trims and collapses inner whitespace', () => {
       expect(valueOf('name', { name: '  Ana \t  María\n Pérez ' })).toBe('Ana María Pérez');
     });
-    it.each([["O'Neil"], ['Jean-Luc'], ['J. R. Tolkien'], ['Zoë ’Ásh'], ['李小龍'], ['Ño']])('accepts %j', (name) => {
-      expect(errorsFor({ name })).toEqual({});
-    });
+    it.each([["O'Neil"], ['Jean-Luc'], ['J. R. Tolkien'], ['Zoë ’Ásh'], ['李小龍'], ['Ño']])(
+      'accepts %j',
+      (name) => {
+        expect(errorsFor({ name })).toEqual({});
+      },
+    );
     it.each([
       [undefined, 'required'],
       [null, 'required'],
@@ -119,9 +132,12 @@ describe('validateLead (contract §3)', () => {
     it('trims and lowercases', () => {
       expect(valueOf('email', { email: '  Ana.Perez@Example.COM ' })).toBe('ana.perez@example.com');
     });
-    it.each([['a+tag@sub.example.co'], ['a_b%c@x-y.example.org'], ['-ana@example.com']])('accepts %j', (email) => {
-      expect(errorsFor({ email })).toEqual({});
-    });
+    it.each([['a+tag@sub.example.co'], ['a_b%c@x-y.example.org'], ['-ana@example.com']])(
+      'accepts %j',
+      (email) => {
+        expect(errorsFor({ email })).toEqual({});
+      },
+    );
     it.each([
       [undefined, 'required'],
       ['', 'required'],
@@ -181,7 +197,14 @@ describe('validateLead (contract §3)', () => {
     ['project_type', ['website', 'web_app', 'business_system', 'custom_solution', 'not_sure']],
     [
       'budget_range',
-      ['under_1000', 'from_1000_to_3000', 'from_3000_to_10000', 'from_10000_to_25000', 'over_25000', 'not_sure'],
+      [
+        'under_1000',
+        'from_1000_to_3000',
+        'from_3000_to_10000',
+        'from_10000_to_25000',
+        'over_25000',
+        'not_sure',
+      ],
     ],
     ['timeline', ['asap', 'within_1_month', 'within_3_months', 'flexible']],
     ['language', ['es', 'en']],
@@ -247,7 +270,9 @@ describe('validateLead (contract §3)', () => {
       [7, 'invalid_type'],
       ['2026-01-01-v0', 'invalid_option'],
     ])('%j → %s', (version, code) => {
-      expect(errorsFor({ privacy_notice_version: version })).toEqual({ privacy_notice_version: code });
+      expect(errorsFor({ privacy_notice_version: version })).toEqual({
+        privacy_notice_version: code,
+      });
     });
     it('rejects every version when none is configured', () => {
       const result = gs.validateLead(validBody(), []);

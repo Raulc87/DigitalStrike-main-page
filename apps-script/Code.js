@@ -4,7 +4,9 @@
  */
 
 function jsonOutput_(body) {
-  return ContentService.createTextOutput(JSON.stringify(body)).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(body)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }
 
 function scriptConfig_() {
@@ -92,5 +94,7 @@ function setupSheet() {
   var result = setupLeadsSheet(SpreadsheetApp.openById(config.sheetId), function () {
     return SpreadsheetApp.newDataValidation();
   });
-  console.log(JSON.stringify({ event: 'setup_sheet_done', sheet: result.sheetName, columns: result.columns }));
+  console.log(
+    JSON.stringify({ event: 'setup_sheet_done', sheet: result.sheetName, columns: result.columns }),
+  );
 }

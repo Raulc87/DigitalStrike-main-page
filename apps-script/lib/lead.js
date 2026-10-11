@@ -114,7 +114,9 @@ function unguardFormula_(value) {
 function leadFromRow(values) {
   function get(column) {
     var v = values[COLUMN[column] - 1];
-    return v === undefined || v === null ? '' : unguardFormula_(typeof v === 'string' ? v : String(v));
+    return v === undefined || v === null
+      ? ''
+      : unguardFormula_(typeof v === 'string' ? v : String(v));
   }
   return {
     leadId: get('lead_id'),

@@ -51,7 +51,15 @@ export class FakeSheet {
 
   setCell(row: number, column: number, value: Cell): void {
     while (this.rows.length < row) this.rows.push([]);
-    this.rows[row - 1][column - 1] = this.store(value);
+    const line = this.rows[row - 1] as Cell[];
+    line[column - 1] = this.store(value);
+  }
+
+  /** Row `n` (1-based); throws when it does not exist. */
+  row(n: number): Cell[] {
+    const line = this.rows[n - 1];
+    if (!line) throw new Error(`row ${n} does not exist`);
+    return line;
   }
 }
 
@@ -69,14 +77,17 @@ export class FakeRange {
     const out: Cell[][] = [];
     for (let r = 0; r < this.numRows; r++) {
       const line: Cell[] = [];
-      for (let c = 0; c < this.numColumns; c++) line.push(this.sheet.cell(this.row + r, this.column + c));
+      for (let c = 0; c < this.numColumns; c++)
+        line.push(this.sheet.cell(this.row + r, this.column + c));
       out.push(line);
     }
     return out;
   }
 
   setValues(values: Cell[][]): FakeRange {
-    values.forEach((line, r) => line.forEach((v, c) => this.sheet.setCell(this.row + r, this.column + c, v)));
+    values.forEach((line, r) =>
+      line.forEach((v, c) => this.sheet.setCell(this.row + r, this.column + c, v)),
+    );
     return this;
   }
 
@@ -96,7 +107,9 @@ export class FakeRange {
   }
 
   setDataValidation(rule: { values: string[] }): FakeRange {
-    this.sheet.validations.push(`${this.column}:${this.row}+${this.numRows}:${rule.values.join('|')}`);
+    this.sheet.validations.push(
+      `${this.column}:${this.row}+${this.numRows}:${rule.values.join('|')}`,
+    );
     return this;
   }
 
@@ -115,7 +128,8 @@ export class FakeRange {
           const raw = String(this.sheet.cell(this.row + r, this.column));
           const a = matchCase ? raw : raw.toLowerCase();
           const b = matchCase ? text : text.toLowerCase();
-          if (entire ? a === b : a.includes(b)) return new FakeRange(this.sheet, this.row + r, this.column, 1, 1);
+          if (entire ? a === b : a.includes(b))
+            return new FakeRange(this.sheet, this.row + r, this.column, 1, 1);
         }
         return null;
       },

@@ -50,15 +50,29 @@ function optionLabel_(options, code, language) {
 }
 
 function linkHtml_(url) {
-  return '<a href="' + escapeHtml(url) + '" style="' + EMAIL_STYLE.link + '">' + escapeHtml(url) + '</a>';
+  return (
+    '<a href="' + escapeHtml(url) + '" style="' + EMAIL_STYLE.link + '">' + escapeHtml(url) + '</a>'
+  );
 }
 
 function layoutHtml_(innerHtml) {
   return (
-    '<!DOCTYPE html><html><body style="' + EMAIL_STYLE.page + '">' +
-    '<div style="' + EMAIL_STYLE.card + '">' +
-    '<div style="' + EMAIL_STYLE.band + '">DigitalStrike <span style="' + EMAIL_STYLE.bandAccent + '">Solutions</span></div>' +
-    '<div style="' + EMAIL_STYLE.body + '">' + innerHtml + '</div>' +
+    '<!DOCTYPE html><html><body style="' +
+    EMAIL_STYLE.page +
+    '">' +
+    '<div style="' +
+    EMAIL_STYLE.card +
+    '">' +
+    '<div style="' +
+    EMAIL_STYLE.band +
+    '">DigitalStrike <span style="' +
+    EMAIL_STYLE.bandAccent +
+    '">Solutions</span></div>' +
+    '<div style="' +
+    EMAIL_STYLE.body +
+    '">' +
+    innerHtml +
+    '</div>' +
     '</div></body></html>'
   );
 }
@@ -87,37 +101,82 @@ function composeOwnerEmail(lead, context) {
   ];
 
   var subject = singleLine_(
-    'Nuevo prospecto ' + context.leadId + ': ' + lead.name + ' · ' + labels.projectType + ' · ' + labels.budgetRange
+    'Nuevo prospecto ' +
+      context.leadId +
+      ': ' +
+      lead.name +
+      ' · ' +
+      labels.projectType +
+      ' · ' +
+      labels.budgetRange,
   );
 
   var text =
     'Raul:\n\n' +
-    lead.name + ' dejó su idea en la página (' + labels.language + '). Estos son sus datos:\n\n' +
-    details.map(function (d) {
-      return d[0] + ': ' + d[1];
-    }).join('\n') +
+    lead.name +
+    ' dejó su idea en la página (' +
+    labels.language +
+    '). Estos son sus datos:\n\n' +
+    details
+      .map(function (d) {
+        return d[0] + ': ' + d[1];
+      })
+      .join('\n') +
     '\n\nSu mensaje:\n' +
     lead.message +
     '\n\nResponde a este correo para escribirle directamente. El prospecto quedó en la hoja con estado new.\n\n' +
-    '— Formulario de DigitalStrike Solutions · ' + context.leadId + '\n';
+    '— Formulario de DigitalStrike Solutions · ' +
+    context.leadId +
+    '\n';
 
   var html = layoutHtml_(
     '<p>Raul:</p>' +
-    '<p><strong>' + escapeHtml(lead.name) + '</strong> dejó su idea en la página (' + escapeHtml(labels.language) +
-    '). Estos son sus datos:</p>' +
-    '<table role="presentation" style="' + EMAIL_STYLE.table + '">' +
-    details.map(function (d) {
-      var value = d[0] === 'Correo'
-        ? '<a href="mailto:' + escapeHtml(d[1]) + '" style="' + EMAIL_STYLE.link + '">' + escapeHtml(d[1]) + '</a>'
-        : escapeHtml(d[1]);
-      return '<tr><th scope="row" style="' + EMAIL_STYLE.th + '">' + escapeHtml(d[0]) + '</th><td style="' +
-        EMAIL_STYLE.td + '">' + value + '</td></tr>';
-    }).join('') +
-    '</table>' +
-    '<p><strong>Su mensaje:</strong></p>' +
-    '<div style="' + EMAIL_STYLE.quote + '">' + escapeHtmlMultiline_(lead.message) + '</div>' +
-    '<p>Responde a este correo para escribirle directamente. El prospecto quedó en la hoja con estado <code>new</code>.</p>' +
-    '<p style="' + EMAIL_STYLE.small + '">— Formulario de DigitalStrike Solutions · ' + escapeHtml(context.leadId) + '</p>'
+      '<p><strong>' +
+      escapeHtml(lead.name) +
+      '</strong> dejó su idea en la página (' +
+      escapeHtml(labels.language) +
+      '). Estos son sus datos:</p>' +
+      '<table role="presentation" style="' +
+      EMAIL_STYLE.table +
+      '">' +
+      details
+        .map(function (d) {
+          var value =
+            d[0] === 'Correo'
+              ? '<a href="mailto:' +
+                escapeHtml(d[1]) +
+                '" style="' +
+                EMAIL_STYLE.link +
+                '">' +
+                escapeHtml(d[1]) +
+                '</a>'
+              : escapeHtml(d[1]);
+          return (
+            '<tr><th scope="row" style="' +
+            EMAIL_STYLE.th +
+            '">' +
+            escapeHtml(d[0]) +
+            '</th><td style="' +
+            EMAIL_STYLE.td +
+            '">' +
+            value +
+            '</td></tr>'
+          );
+        })
+        .join('') +
+      '</table>' +
+      '<p><strong>Su mensaje:</strong></p>' +
+      '<div style="' +
+      EMAIL_STYLE.quote +
+      '">' +
+      escapeHtmlMultiline_(lead.message) +
+      '</div>' +
+      '<p>Responde a este correo para escribirle directamente. El prospecto quedó en la hoja con estado <code>new</code>.</p>' +
+      '<p style="' +
+      EMAIL_STYLE.small +
+      '">— Formulario de DigitalStrike Solutions · ' +
+      escapeHtml(context.leadId) +
+      '</p>',
   );
 
   return {
@@ -144,13 +203,18 @@ var CONFIRMATION_COPY = {
       'Te escribimos en un máximo de 2 días hábiles.',
       'Si prefieres adelantar, agenda tu sesión 0: ',
     ],
-    closing: 'Nuestro trabajo es sencillo de explicar: sacar de circulación tus necesidades de software.',
+    closing:
+      'Nuestro trabajo es sencillo de explicar: sacar de circulación tus necesidades de software.',
     role: 'CEO, DigitalStrike Solutions',
     summaryTitle: 'Resumen de lo que nos enviaste:',
     quoteOpen: '«',
     quoteClose: '»',
     footer: function (siteUrl) {
-      return ['Recibiste este correo porque completaste el formulario en ', siteUrl, '. Si no fuiste tú, ignóralo o escríbenos para borrar tus datos.'];
+      return [
+        'Recibiste este correo porque completaste el formulario en ',
+        siteUrl,
+        '. Si no fuiste tú, ignóralo o escríbenos para borrar tus datos.',
+      ];
     },
   },
   en: {
@@ -158,7 +222,8 @@ var CONFIRMATION_COPY = {
     greeting: function (name) {
       return 'Hi ' + name + ',';
     },
-    thanks: "Thanks for telling us about your idea. We've received it and we're reviewing it carefully.",
+    thanks:
+      "Thanks for telling us about your idea. We've received it and we're reviewing it carefully.",
     planTitle: "Here's the game plan:",
     steps: [
       'We review what you shared and prepare specific questions.',
@@ -171,7 +236,11 @@ var CONFIRMATION_COPY = {
     quoteOpen: '"',
     quoteClose: '"',
     footer: function (siteUrl) {
-      return ['You received this email because you filled in the form at ', siteUrl, ". If it wasn't you, ignore it or write to us to delete your data."];
+      return [
+        'You received this email because you filled in the form at ',
+        siteUrl,
+        ". If it wasn't you, ignore it or write to us to delete your data.",
+      ];
     },
   },
 };
@@ -190,35 +259,89 @@ function composeConfirmationEmail(lead, context) {
   var footer = copy.footer(config.siteUrl);
 
   var text =
-    copy.greeting(name) + '\n\n' +
-    copy.thanks + '\n\n' +
-    copy.planTitle + '\n' +
-    '1. ' + copy.steps[0] + '\n' +
-    '2. ' + copy.steps[1] + '\n' +
-    '3. ' + copy.steps[2] + config.calendlyUrl + '\n\n' +
-    copy.closing + '\n\n' +
-    'Raul Casañas\n' + copy.role + '\n\n' +
+    copy.greeting(name) +
+    '\n\n' +
+    copy.thanks +
+    '\n\n' +
+    copy.planTitle +
+    '\n' +
+    '1. ' +
+    copy.steps[0] +
+    '\n' +
+    '2. ' +
+    copy.steps[1] +
+    '\n' +
+    '3. ' +
+    copy.steps[2] +
+    config.calendlyUrl +
+    '\n\n' +
+    copy.closing +
+    '\n\n' +
+    'Raul Casañas\n' +
+    copy.role +
+    '\n\n' +
     '---\n' +
-    copy.summaryTitle + ' ' + summary + '\n' +
-    copy.quoteOpen + lead.message + copy.quoteClose + '\n\n' +
-    footer.join('') + '\n';
+    copy.summaryTitle +
+    ' ' +
+    summary +
+    '\n' +
+    copy.quoteOpen +
+    lead.message +
+    copy.quoteClose +
+    '\n\n' +
+    footer.join('') +
+    '\n';
 
   var html = layoutHtml_(
-    '<p>' + escapeHtml(copy.greeting(name)) + '</p>' +
-    '<p>' + escapeHtml(copy.thanks) + '</p>' +
-    '<p><strong>' + escapeHtml(copy.planTitle) + '</strong></p>' +
-    '<ol>' +
-    '<li>' + escapeHtml(copy.steps[0]) + '</li>' +
-    '<li>' + escapeHtml(copy.steps[1]) + '</li>' +
-    '<li>' + escapeHtml(copy.steps[2]) + linkHtml_(config.calendlyUrl) + '</li>' +
-    '</ol>' +
-    '<p>' + escapeHtml(copy.closing) + '</p>' +
-    '<p>Raul Casañas<br>' + escapeHtml(copy.role) + '</p>' +
-    '<hr style="' + EMAIL_STYLE.hr + '">' +
-    '<p><strong>' + escapeHtml(copy.summaryTitle) + '</strong> ' + escapeHtml(summary) + '</p>' +
-    '<div style="' + EMAIL_STYLE.quote + '">' + escapeHtml(copy.quoteOpen) + escapeHtmlMultiline_(lead.message) +
-    escapeHtml(copy.quoteClose) + '</div>' +
-    '<p style="' + EMAIL_STYLE.small + '">' + escapeHtml(footer[0]) + linkHtml_(footer[1]) + escapeHtml(footer[2]) + '</p>'
+    '<p>' +
+      escapeHtml(copy.greeting(name)) +
+      '</p>' +
+      '<p>' +
+      escapeHtml(copy.thanks) +
+      '</p>' +
+      '<p><strong>' +
+      escapeHtml(copy.planTitle) +
+      '</strong></p>' +
+      '<ol>' +
+      '<li>' +
+      escapeHtml(copy.steps[0]) +
+      '</li>' +
+      '<li>' +
+      escapeHtml(copy.steps[1]) +
+      '</li>' +
+      '<li>' +
+      escapeHtml(copy.steps[2]) +
+      linkHtml_(config.calendlyUrl) +
+      '</li>' +
+      '</ol>' +
+      '<p>' +
+      escapeHtml(copy.closing) +
+      '</p>' +
+      '<p>Raul Casañas<br>' +
+      escapeHtml(copy.role) +
+      '</p>' +
+      '<hr style="' +
+      EMAIL_STYLE.hr +
+      '">' +
+      '<p><strong>' +
+      escapeHtml(copy.summaryTitle) +
+      '</strong> ' +
+      escapeHtml(summary) +
+      '</p>' +
+      '<div style="' +
+      EMAIL_STYLE.quote +
+      '">' +
+      escapeHtml(copy.quoteOpen) +
+      escapeHtmlMultiline_(lead.message) +
+      escapeHtml(copy.quoteClose) +
+      '</div>' +
+      '<p style="' +
+      EMAIL_STYLE.small +
+      '">' +
+      escapeHtml(footer[0]) +
+      linkHtml_(footer[1]) +
+      escapeHtml(footer[2]) +
+      '</p>',
   );
 
   var message = {

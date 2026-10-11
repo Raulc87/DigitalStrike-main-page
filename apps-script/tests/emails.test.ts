@@ -79,7 +79,9 @@ describe('owner notification — CONTENT §14.1 (US-011)', () => {
     expect(htmlBody).not.toContain('<script>');
     expect(htmlBody).not.toContain('<img');
     expect(htmlBody).not.toContain('<b>ACME');
-    expect(htmlBody).toContain('&lt;script&gt;alert(1)&lt;/script&gt;<br>Segunda línea &amp; &lt;img src=x onerror=alert(2)&gt;');
+    expect(htmlBody).toContain(
+      '&lt;script&gt;alert(1)&lt;/script&gt;<br>Segunda línea &amp; &lt;img src=x onerror=alert(2)&gt;',
+    );
     expect(htmlBody).toContain('&lt;b&gt;ACME&lt;/b&gt; &amp; &quot;Co&quot;');
     expect(htmlBody).toContain('Ana O&#39;Neil-Pérez');
     // Plain text is not HTML: values stay as typed.
@@ -122,7 +124,13 @@ describe('visitor confirmation — CONTENT §14.2 (US-012)', () => {
 
   it('English: subject and plain text', () => {
     const m = gs.composeConfirmationEmail(
-      lead({ language: 'en', name: 'John  Smith', project_type: 'not_sure', budget_range: 'over_25000', timeline: 'asap' }),
+      lead({
+        language: 'en',
+        name: 'John  Smith',
+        project_type: 'not_sure',
+        budget_range: 'over_25000',
+        timeline: 'asap',
+      }),
       context,
     );
     expect(m.subject).toBe('Your idea is in play · DigitalStrike Solutions');
@@ -158,13 +166,19 @@ describe('visitor confirmation — CONTENT §14.2 (US-012)', () => {
     expect(htmlBody).toContain('<strong>Así sigue el juego:</strong>');
     expect(htmlBody).toContain('<a href="https://calendly.com/rcasanas/1hr"');
     expect(htmlBody).toContain('<a href="https://digitalstrike-solutions.com"');
-    expect(htmlBody).toContain('«&lt;script&gt;alert(1)&lt;/script&gt;<br>Segunda línea &amp; &lt;img src=x onerror=alert(2)&gt;»');
+    expect(htmlBody).toContain(
+      '«&lt;script&gt;alert(1)&lt;/script&gt;<br>Segunda línea &amp; &lt;img src=x onerror=alert(2)&gt;»',
+    );
     expect(htmlBody).not.toContain('<script>');
     expect(htmlBody).not.toContain('<img');
   });
 
   it('uses the configured Calendly and site URLs, escaped in HTML', () => {
-    const custom = gs.readConfig({ ...SCRIPT_PROPERTIES, CALENDLY_URL: 'https://calendly.com/x?a=1&b="2"', SITE_URL: 'https://example.org' });
+    const custom = gs.readConfig({
+      ...SCRIPT_PROPERTIES,
+      CALENDLY_URL: 'https://calendly.com/x?a=1&b="2"',
+      SITE_URL: 'https://example.org',
+    });
     const m = gs.composeConfirmationEmail(lead(), { ...context, config: custom });
     expect(m.body).toContain('agenda tu sesión 0: https://calendly.com/x?a=1&b="2"');
     expect(m.htmlBody).toContain('href="https://calendly.com/x?a=1&amp;b=&quot;2&quot;"');
@@ -173,7 +187,9 @@ describe('visitor confirmation — CONTENT §14.2 (US-012)', () => {
 
   it('omits Reply-To when REPLY_TO_EMAIL is not set', () => {
     const noReply = gs.readConfig({ ...SCRIPT_PROPERTIES, REPLY_TO_EMAIL: '' });
-    expect('replyTo' in gs.composeConfirmationEmail(lead(), { ...context, config: noReply })).toBe(false);
+    expect('replyTo' in gs.composeConfirmationEmail(lead(), { ...context, config: noReply })).toBe(
+      false,
+    );
   });
 });
 

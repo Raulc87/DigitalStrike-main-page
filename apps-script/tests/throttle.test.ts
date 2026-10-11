@@ -6,7 +6,10 @@ const config = gs.readConfig({});
 const NOW = new Date('2026-10-14T18:00:00Z'); // 12:00:00 in Costa Rica
 
 function at(minutesAgo: number, email = 'other@example.com') {
-  return { submittedAt: gs.formatCostaRicaDateTime(new Date(NOW.getTime() - minutesAgo * 60000)), email };
+  return {
+    submittedAt: gs.formatCostaRicaDateTime(new Date(NOW.getTime() - minutesAgo * 60000)),
+    email,
+  };
 }
 
 describe('checkThrottles (contract §5.3)', () => {
@@ -15,8 +18,14 @@ describe('checkThrottles (contract §5.3)', () => {
   });
 
   it('allows when below every limit', () => {
-    expect(gs.checkThrottles([at(1, 'ana@example.com'), at(2, 'ana@example.com')], 'ana@example.com', NOW, config))
-      .toEqual({ limited: false });
+    expect(
+      gs.checkThrottles(
+        [at(1, 'ana@example.com'), at(2, 'ana@example.com')],
+        'ana@example.com',
+        NOW,
+        config,
+      ),
+    ).toEqual({ limited: false });
   });
 
   it('limits a 4th lead from the same email within 60 minutes', () => {
@@ -28,7 +37,12 @@ describe('checkThrottles (contract §5.3)', () => {
   });
 
   it('compares stored emails without a guard apostrophe and ignores other emails and older rows', () => {
-    const rows = [at(61, 'ana@example.com'), at(30, "'ana@example.com"), at(10, 'ana@example.com'), at(5)];
+    const rows = [
+      at(61, 'ana@example.com'),
+      at(30, "'ana@example.com"),
+      at(10, 'ana@example.com'),
+      at(5),
+    ];
     expect(gs.checkThrottles(rows, 'ana@example.com', NOW, config).limited).toBe(false);
     rows.push(at(1, 'ana@example.com'));
     expect(gs.checkThrottles(rows, 'ana@example.com', NOW, config).limited).toBe(true);
@@ -43,14 +57,19 @@ describe('checkThrottles (contract §5.3)', () => {
 
   it('limits the 41st lead of the Costa Rica calendar day until midnight', () => {
     // 40 leads today, spread so the hourly cap is not reached (one every 15 min since 01:00).
-    const rows = Array.from({ length: 40 }, (_, i) => at(660 - i * 15 - 15)).filter((r) => r.submittedAt.startsWith('2026-10-14'));
+    const rows = Array.from({ length: 40 }, (_, i) => at(660 - i * 15 - 15)).filter((r) =>
+      r.submittedAt.startsWith('2026-10-14'),
+    );
     expect(rows).toHaveLength(40);
     const r = gs.checkThrottles(rows, 'new@example.com', NOW, config);
     expect(r).toEqual({ limited: true, retryAfterSeconds: 12 * 3600 });
   });
 
   it('does not count yesterday (Costa Rica) toward the daily cap', () => {
-    const yesterday = Array.from({ length: 40 }, () => ({ submittedAt: '2026-10-13 23:59:59', email: 'x@example.com' }));
+    const yesterday = Array.from({ length: 40 }, () => ({
+      submittedAt: '2026-10-13 23:59:59',
+      email: 'x@example.com',
+    }));
     expect(gs.checkThrottles(yesterday, 'new@example.com', NOW, config).limited).toBe(false);
   });
 

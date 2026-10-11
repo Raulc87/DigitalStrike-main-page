@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { loadAppsScript, type AppsScriptContext } from './helpers/loadAppsScript';
-import { FakeLock, FakeMailer, FakeSpreadsheet, newDataValidation, type FakeSheet } from './helpers/fakes';
+import {
+  FakeLock,
+  FakeMailer,
+  FakeSpreadsheet,
+  newDataValidation,
+  type FakeSheet,
+} from './helpers/fakes';
 import { SCRIPT_PROPERTIES, uuid, validBody } from './helpers/fixtures';
 
 const gs = loadAppsScript();
@@ -64,7 +70,7 @@ describe('happy path (contract §5, US-010 AC1–AC2)', () => {
 
     const rows = dataRows(h);
     expect(rows).toHaveLength(1);
-    const row = rows[0];
+    const row = h.sheet.row(2);
     expect(row[COL.submitted_at - 1]).toBe('2026-10-14 10:00:00');
     expect(row[COL.status - 1]).toBe('new');
     expect(row[COL.lead_id - 1]).toBe(res.lead_id);
@@ -74,10 +80,10 @@ describe('happy path (contract §5, US-010 AC1–AC2)', () => {
     expect(row[COL.confirmation_email_status - 1]).toBe('sent');
     expect(row[COL.submission_id - 1]).toBe('8f14e45f-ceea-4e7a-9b1c-3f0a2d5c7e21');
     // Written with the formula guard; Sheets shows the value without the apostrophe.
-    expect(h.sheet.written[0][COL.phone - 1]).toBe("'+50688880000");
+    expect(h.sheet.written[0]?.[COL.phone - 1]).toBe("'+50688880000");
 
     expect(h.mailer.sent.map((m) => m.kind)).toEqual(['owner', 'confirmation']);
-    expect(h.mailer.sent[1].to).toBe('ana.perez@example.com');
+    expect(h.mailer.sent[1]?.to).toBe('ana.perez@example.com');
     expect(h.lock.held).toBe(false);
   });
 
@@ -87,8 +93,11 @@ describe('happy path (contract §5, US-010 AC1–AC2)', () => {
       getRemainingDailyQuota: () => 10,
       sendEmail: () => {
         if (statusesAtSend.length === 0) {
-          const row = dataRows(h)[0];
-          statusesAtSend = [row[COL.owner_email_status - 1], row[COL.confirmation_email_status - 1]];
+          const row = h.sheet.row(2);
+          statusesAtSend = [
+            row[COL.owner_email_status - 1],
+            row[COL.confirmation_email_status - 1],
+          ];
         }
       },
     };
@@ -100,7 +109,11 @@ describe('happy path (contract §5, US-010 AC1–AC2)', () => {
 describe('error responses (contract §7)', () => {
   it('payload_too_large', () => {
     const res = h.post(JSON.stringify(validBody({ message: 'm'.repeat(11000) })));
-    expect(res).toEqual({ ok: false, error_code: 'payload_too_large', message: expect.any(String) });
+    expect(res).toEqual({
+      ok: false,
+      error_code: 'payload_too_large',
+      message: expect.any(String),
+    });
     expect(dataRows(h)).toHaveLength(0);
   });
 
@@ -137,7 +150,9 @@ describe('error responses (contract §7)', () => {
     h = harness({ MAX_LEADS_PER_HOUR: '2' });
     h.post(validBody({ submission_id: uuid(), email: 'a@example.com' }));
     h.post(validBody({ submission_id: uuid(), email: 'b@example.com' }));
-    expect(h.post(validBody({ submission_id: uuid(), email: 'c@example.com' })).error_code).toBe('rate_limited');
+    expect(h.post(validBody({ submission_id: uuid(), email: 'c@example.com' })).error_code).toBe(
+      'rate_limited',
+    );
 
     h = harness({ MAX_LEADS_PER_DAY: '1' });
     h.post(validBody({ submission_id: uuid(), email: 'a@example.com' }));
@@ -212,8 +227,9 @@ describe('idempotency (contract §5.4)', () => {
   });
 
   it('two concurrent requests with the same submission_id produce exactly one row (serialized by the lock)', () => {
-    const results = [h.post(validBody()), h.post(validBody())];
-    expect(results[0].lead_id).toBe(results[1].lead_id);
+    const first = h.post(validBody());
+    const second = h.post(validBody());
+    expect(first.lead_id).toBe(second.lead_id);
     expect(dataRows(h)).toHaveLength(1);
     expect(h.lock.acquisitions).toBe(2);
   });
@@ -244,7 +260,9 @@ describe('idempotency (contract §5.4)', () => {
 
   it('recovery: a retry after a run interrupted after the append sends the pending emails once', () => {
     // Simulate the interrupted run: the row exists with both statuses pending.
-    const lead = gs.validateLead(validBody(), [SCRIPT_PROPERTIES.ACCEPTED_PRIVACY_NOTICE_VERSIONS]).lead;
+    const lead = gs.validateLead(validBody(), [
+      SCRIPT_PROPERTIES.ACCEPTED_PRIVACY_NOTICE_VERSIONS,
+    ]).lead;
     h.sheet.appendRow([...gs.buildLeadRow(lead, 'DS-20261014-AAAAAA', '2026-10-14 09:59:00')]);
 
     expect(h.post(validBody())).toEqual({ ok: true, lead_id: 'DS-20261014-AAAAAA' });
@@ -252,8 +270,11 @@ describe('idempotency (contract §5.4)', () => {
       ['owner', 'DS-20261014-AAAAAA'],
       ['confirmation', 'DS-20261014-AAAAAA'],
     ]);
-    const row = dataRows(h)[0];
-    expect([row[COL.owner_email_status - 1], row[COL.confirmation_email_status - 1]]).toEqual(['sent', 'sent']);
+    const row = h.sheet.row(2);
+    expect([row[COL.owner_email_status - 1], row[COL.confirmation_email_status - 1]]).toEqual([
+      'sent',
+      'sent',
+    ]);
 
     h.post(validBody());
     expect(h.mailer.sent).toHaveLength(2);
@@ -261,7 +282,9 @@ describe('idempotency (contract §5.4)', () => {
   });
 
   it('recovery sends only the email still pending; sent/failed/skipped/quota_exceeded are never resent', () => {
-    const lead = gs.validateLead(validBody(), [SCRIPT_PROPERTIES.ACCEPTED_PRIVACY_NOTICE_VERSIONS]).lead;
+    const lead = gs.validateLead(validBody(), [
+      SCRIPT_PROPERTIES.ACCEPTED_PRIVACY_NOTICE_VERSIONS,
+    ]).lead;
     for (const done of ['sent', 'failed', 'skipped', 'quota_exceeded']) {
       h = harness();
       const row = [...gs.buildLeadRow(lead, 'DS-20261014-BBBBBB', '2026-10-14 09:59:00')];
@@ -269,14 +292,14 @@ describe('idempotency (contract §5.4)', () => {
       h.sheet.appendRow(row);
       h.post(validBody());
       expect(h.mailer.sent.map((m) => m.kind)).toEqual(['confirmation']);
-      expect(dataRows(h)[0][COL.owner_email_status - 1]).toBe(done);
+      expect(h.sheet.row(2)[COL.owner_email_status - 1]).toBe(done);
     }
   });
 });
 
 describe('email statuses (contract §5 step 10, US-011 AC3, US-012 AC2–AC3)', () => {
   function statuses() {
-    const row = dataRows(h)[0];
+    const row = h.sheet.row(2);
     return [row[COL.owner_email_status - 1], row[COL.confirmation_email_status - 1]];
   }
 
@@ -323,7 +346,12 @@ describe('email statuses (contract §5 step 10, US-011 AC3, US-012 AC2–AC3)', 
 
   it('a failure to record the status does not change the response', () => {
     const store = h.deps.store;
-    h.deps.store = { ...store, setCell: () => { throw new Error('write'); } };
+    h.deps.store = {
+      ...store,
+      setCell: () => {
+        throw new Error('write');
+      },
+    };
     // Spread loses nothing: the store methods are own properties of a plain object.
     expect(h.post(validBody()).ok).toBe(true);
     expect(h.mailer.sent).toHaveLength(2);
@@ -339,7 +367,15 @@ describe('logging (US-010 AC4, NFR-006)', () => {
     h.mailer.failKinds.add('owner');
     h.post(validBody({ submission_id: uuid(), email: 'second@example.com' }));
     const text = JSON.stringify(h.logs);
-    for (const pii of ['Ana', 'ana.perez', 'second@example.com', '8888', 'Panadería', 'catálogo', '8f14e45f']) {
+    for (const pii of [
+      'Ana',
+      'ana.perez',
+      'second@example.com',
+      '8888',
+      'Panadería',
+      'catálogo',
+      '8f14e45f',
+    ]) {
       expect(text).not.toContain(pii);
     }
     expect(text).toContain('lead_stored');

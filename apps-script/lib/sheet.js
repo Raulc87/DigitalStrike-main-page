@@ -54,7 +54,10 @@ function createSheetStore(spreadsheet, formatDate) {
         .getRange(first, 1, lastRow - first + 1, COLUMN.email)
         .getValues()
         .map(function (row) {
-          return { submittedAt: cellText(row[COLUMN.submitted_at - 1]), email: cellText(row[COLUMN.email - 1]) };
+          return {
+            submittedAt: cellText(row[COLUMN.submitted_at - 1]),
+            email: cellText(row[COLUMN.email - 1]),
+          };
         });
     },
 
@@ -99,7 +102,10 @@ function setupLeadsSheet(spreadsheet, newDataValidation) {
   sheet.setFrozenRows(1);
 
   var maxRows = Math.max(sheet.getMaxRows(), 2);
-  var statusRule = newDataValidation().requireValueInList(LEAD_STATUSES, true).setAllowInvalid(false).build();
+  var statusRule = newDataValidation()
+    .requireValueInList(LEAD_STATUSES, true)
+    .setAllowInvalid(false)
+    .build();
   sheet.getRange(2, COLUMN.status, maxRows - 1, 1).setDataValidation(statusRule);
 
   // Plain text everywhere except `consent` (a boolean), so Sheets never turns a stored
@@ -109,5 +115,9 @@ function setupLeadsSheet(spreadsheet, newDataValidation) {
       sheet.getRange(2, COLUMN[column], maxRows - 1, 1).setNumberFormat('@');
     }
   });
-  return { sheetName: SHEET_NAME, columns: width, statusRange: columnLetter_(COLUMN.status) + '2:' + columnLetter_(COLUMN.status) };
+  return {
+    sheetName: SHEET_NAME,
+    columns: width,
+    statusRange: columnLetter_(COLUMN.status) + '2:' + columnLetter_(COLUMN.status),
+  };
 }

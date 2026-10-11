@@ -7,7 +7,11 @@
  * Only the Google services are replaced: an in-memory store instead of the sheet, no emails
  * (statuses `skipped`), no lock contention.
  *
- *   POST /exec       the contract endpoint (any Content-Type; CORS `*`; always HTTP 200)
+ *   POST /exec       the contract endpoint (CORS `*` on the response; always HTTP 200)
+ *   OPTIONS          refused (405, no CORS headers), like Apps Script, which cannot answer a
+ *                    CORS preflight: only a "simple request" works (contract §2:
+ *                    `Content-Type: text/plain;charset=utf-8`, no custom headers), so a client
+ *                    that sends `application/json` or a custom header fails here as in production
  *   GET  /exec       health check, like doGet
  *   GET  /__leads    stored rows as JSON objects keyed by column name (for tests)
  *   DELETE /__leads  clears the store (for tests)
@@ -91,11 +95,8 @@ export function createMockLeadEndpoint(env = process.env) {
     },
   };
 
-  const cors = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
+  // Only the simple-response header, as Apps Script's JSON responses carry.
+  const cors = { 'Access-Control-Allow-Origin': '*' };
 
   function send(res, body, status = 200) {
     res.writeHead(status, { ...cors, 'Content-Type': 'application/json; charset=utf-8' });
@@ -109,7 +110,8 @@ export function createMockLeadEndpoint(env = process.env) {
   return createServer((req, res) => {
     const path = new URL(req.url ?? '/', 'http://localhost').pathname;
     if (req.method === 'OPTIONS') {
-      res.writeHead(204, cors);
+      // No CORS headers: the browser's preflight fails, as it does against Apps Script.
+      res.writeHead(405, { Allow: 'GET, POST' });
       res.end();
       return;
     }

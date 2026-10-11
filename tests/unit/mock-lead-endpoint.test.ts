@@ -71,15 +71,23 @@ describe('mock lead endpoint (contract §9, US-015 AC1)', () => {
     });
   });
 
-  it('answers the health check and CORS preflight', async () => {
+  it('answers the health check and refuses CORS preflights like Apps Script (contract §2)', async () => {
     const base = await start();
     expect(await (await fetch(`${base}/exec`)).json()).toEqual({
       ok: true,
       service: 'ds-lead-endpoint',
     });
-    const pre = await fetch(`${base}/exec`, { method: 'OPTIONS' });
-    expect(pre.status).toBe(204);
-    expect(pre.headers.get('access-control-allow-origin')).toBe('*');
+    const pre = await fetch(`${base}/exec`, {
+      method: 'OPTIONS',
+      headers: {
+        Origin: 'http://127.0.0.1:4321',
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'content-type',
+      },
+    });
+    expect(pre.status).toBe(405);
+    expect(pre.headers.get('access-control-allow-origin')).toBeNull();
+    expect(pre.headers.get('access-control-allow-headers')).toBeNull();
   });
 
   it('validates like the server', async () => {
@@ -113,7 +121,11 @@ describe('mock lead endpoint (contract §9, US-015 AC1)', () => {
     const base = await start();
     for (let i = 0; i < 3; i++) expect((await post(base, body())).ok).toBe(true);
     const res = await post(base, body());
-    expect(res).toMatchObject({ ok: false, error_code: 'rate_limited', retry_after_seconds: 3600 });
+    expect(res).toMatchObject({ ok: false, error_code: 'rate_limited' });
+    // Whole-second timestamps: 3600 s minus however many seconds the test took. The exact
+    // value is covered with a fixed clock in apps-script/tests/throttle.test.ts.
+    expect(res.retry_after_seconds).toBeGreaterThanOrEqual(3590);
+    expect(res.retry_after_seconds).toBeLessThanOrEqual(3600);
   });
 
   it('accepts limit overrides from the environment', async () => {

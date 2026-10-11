@@ -1,12 +1,57 @@
 ---
-// Stub handed to Agent 2 (US-018). Rendered by the privacy pages (src/pages/*/privacidad|privacy).
+// Privacy notice v1 (US-018, CONTENT §13). Rendered by the privacy pages (h1) and inside the
+// form's dialog (h2). The version shown is PUBLIC_PRIVACY_NOTICE_VERSION (US-018 AC2).
 import type { Locale } from '../../i18n';
+import { contactEmail } from '../../lib/i18n/site';
+import { privacyNoticeVersion } from '../../lib/lead/config';
+import { formT } from '../../lib/lead/messages';
 
 interface Props {
   lang: Locale;
+  headingLevel?: 1 | 2;
+  titleId?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, headingLevel = 1, titleId } = Astro.props;
+const Heading = headingLevel === 1 ? 'h1' : 'h2';
+
+const sections = [
+  'controller',
+  'data',
+  'use',
+  'storage',
+  'retention',
+  'rights',
+  'consent',
+] as const;
+
+// `{contact_email}` becomes a mailto link; the rest of the sentence is the CONTENT text.
+const withEmail = (text: string) => text.split('{contact_email}');
 ---
 
-<article data-lang={lang}></article>
+<article data-lang={lang} class="text-off max-w-3xl">
+  <Heading id={titleId} class="text-off text-3xl md:text-4xl">
+    {formT(lang, 'privacy.title')}
+  </Heading>
+  <p class="text-text-2 mt-2 font-mono text-sm" data-privacy-version>
+    {formT(lang, 'privacy.version', { version: privacyNoticeVersion })}
+  </p>
+  {sections.map((section) => {
+    const parts = withEmail(formT(lang, `privacy.${section}.body`));
+    return (
+      <p class="mt-5">
+        <strong>{formT(lang, `privacy.${section}.title`)}</strong>{' '}
+        {parts.map((part, i) => (
+          <>
+            {part}
+            {i < parts.length - 1 && (
+              <a href={`mailto:${contactEmail}`} class="underline underline-offset-4">
+                {contactEmail}
+              </a>
+            )}
+          </>
+        ))}
+      </p>
+    );
+  })}
+</article>

@@ -58,4 +58,28 @@ export const enForm: Record<FormKey, string> = {
     "We can't take more messages here right now. Please try again later or email us directly at {email}.",
   'form.error.generic': "We couldn't send your message. Please try again or email us at {email}.",
   'form.error_summary': 'Please check the highlighted fields.',
+  'privacy.title': 'Privacy notice — DigitalStrike Solutions',
+  'privacy.version': 'Version {version}',
+  'privacy.controller.title': 'Who is responsible for your data.',
+  'privacy.controller.body':
+    'Raul Casañas, operating under the brand DigitalStrike Solutions in San José, Costa Rica. Contact: {contact_email}.',
+  'privacy.data.title': 'What we collect.',
+  'privacy.data.body':
+    "What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. The form doesn't store your IP address and our code doesn't use tracking cookies. On digitalstrike-solutions.com, as with any website, our hosting provider (GoDaddy) logs technical data about each visit, such as the IP address, for security and server operation. Its servers also add a performance monitoring script to every page, which sends GoDaddy technical data about the visit (for example, load times and browser data) and stores GoDaddy cookies in your browser: a visitor identifier that lasts up to one year and others that last for the visit. You can delete or block them in your browser and the site keeps working.",
+  'privacy.use.title': 'What we use it for.',
+  'privacy.use.body':
+    "We use the form data only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising. GoDaddy uses the technical visit data for the security, operation and performance monitoring of its hosting service.",
+  'privacy.storage.title': 'Where it is stored.',
+  'privacy.storage.body':
+    "In a private Google spreadsheet and in DigitalStrike Solutions' email. The Calendly calendar only loads when you open it (or after you submit the form); from then on Calendly receives technical data from your browser and may set its own cookies. If it loads after you submit the form, we pass it your name and email to prefill the booking. If you book, it processes the booking data. These services may store data outside Costa Rica.",
+  'privacy.retention.title': 'How long.',
+  'privacy.retention.body':
+    "Up to 24 months from our last contact, or until you ask us to delete it. When we delete your data, the Google spreadsheet's version history may still show it; we don't use that history for anything.",
+  'privacy.rights.title': 'Your rights.',
+  'privacy.rights.body':
+    "Under Costa Rica's Law 8968 you can request access to, correction or deletion of your data by writing to {contact_email}. We reply within 5 business days.",
+  'privacy.consent.title': 'Your consent.',
+  'privacy.consent.body':
+    "By ticking the form's checkbox you agree to this use. You can withdraw it at any time by writing to us.",
+  'privacy.close': 'Close',
 };

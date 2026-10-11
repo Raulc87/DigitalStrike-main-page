@@ -57,6 +57,30 @@ export const esForm = {
     'En este momento no podemos recibir más mensajes por aquí. Inténtalo más tarde o escríbenos directamente a {email}.',
   'form.error.generic': 'No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a {email}.',
   'form.error_summary': 'Revisa los campos marcados.',
+  'privacy.title': 'Aviso de privacidad — DigitalStrike Solutions',
+  'privacy.version': 'Versión {version}',
+  'privacy.controller.title': 'Quién es responsable de tus datos.',
+  'privacy.controller.body':
+    'Raul Casañas, quien opera bajo la marca DigitalStrike Solutions en San José, Costa Rica. Contacto: {contact_email}.',
+  'privacy.data.title': 'Qué datos recopilamos.',
+  'privacy.data.body':
+    'Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. El formulario no guarda tu dirección IP y nuestro código no usa cookies de seguimiento. En digitalstrike-solutions.com, como en cualquier sitio web, nuestro proveedor de alojamiento (GoDaddy) registra datos técnicos de cada visita, como la dirección IP, por seguridad y funcionamiento del servidor. Sus servidores también agregan a cada página un script de monitoreo de rendimiento que le envía a GoDaddy datos técnicos de la visita (por ejemplo, tiempos de carga y datos del navegador) y guarda cookies de GoDaddy en tu navegador: un identificador de visitante que dura hasta un año y otras que duran la visita. Puedes borrarlas o bloquearlas desde tu navegador sin que el sitio deje de funcionar.',
+  'privacy.use.title': 'Para qué los usamos.',
+  'privacy.use.body':
+    'Usamos los datos del formulario solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad. GoDaddy usa los datos técnicos de la visita para la seguridad, el funcionamiento y el monitoreo de rendimiento de su servicio de alojamiento.',
+  'privacy.storage.title': 'Dónde se guardan.',
+  'privacy.storage.body':
+    'En una hoja de cálculo privada de Google y en el correo de DigitalStrike Solutions. El calendario de Calendly solo se carga cuando tú lo abres (o después de enviar el formulario); desde ese momento Calendly recibe datos técnicos de tu navegador y puede usar sus propias cookies. Si se carga después de enviar el formulario, le pasamos tu nombre y correo para prellenar la cita. Si agendas, procesa los datos de la cita. Estos servicios pueden almacenar datos fuera de Costa Rica.',
+  'privacy.retention.title': 'Cuánto tiempo.',
+  'privacy.retention.body':
+    'Hasta 24 meses desde nuestro último contacto, o hasta que nos pidas borrarlos. Cuando borramos tus datos, el historial de versiones de la hoja de cálculo de Google puede seguir mostrándolos; no lo usamos para nada.',
+  'privacy.rights.title': 'Tus derechos.',
+  'privacy.rights.body':
+    'Conforme a la Ley 8968 puedes pedir acceso, corrección o eliminación de tus datos escribiendo a {contact_email}. Respondemos en un plazo máximo de 5 días hábiles.',
+  'privacy.consent.title': 'Tu consentimiento.',
+  'privacy.consent.body':
+    'Al marcar la casilla del formulario aceptas este uso. Puedes retirarlo en cualquier momento escribiéndonos.',
+  'privacy.close': 'Cerrar',
 } as const;
 
 export type FormKey = keyof typeof esForm;

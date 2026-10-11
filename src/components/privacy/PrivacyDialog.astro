@@ -1,0 +1,53 @@
+---
+// Privacy notice dialog opened from the lead form's consent link (US-009 AC7, US-018 AC1).
+// A modal <dialog>: the form stays in the page, so typed data is kept; Esc closes it and focus
+// returns to the link. Only Esc and the close button close it (a stray tap on the backdrop must
+// not close it mid-read on a phone). Without JS the link opens the privacy page in a new tab.
+import type { Locale } from '../../i18n';
+import { formT } from '../../lib/lead/messages';
+import PrivacyNotice from './PrivacyNotice.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<dialog
+  data-privacy-dialog
+  aria-labelledby="privacy-dialog-title"
+  class="bg-steel text-off border-border-strong m-auto max-h-[90vh] w-[calc(100%-2rem)] max-w-3xl rounded-xl border p-0 backdrop:bg-navy/80"
+>
+  <div class="p-5 md:p-8">
+    <PrivacyNotice lang={lang} headingLevel={2} titleId="privacy-dialog-title" />
+    <form method="dialog" class="mt-8">
+      <button
+        type="submit"
+        data-privacy-close
+        class="border-off text-off hover:border-cyan inline-flex min-h-12 items-center justify-center rounded-full border-2 px-7 font-semibold"
+      >
+        {formT(lang, 'privacy.close')}
+      </button>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-privacy-dialog]');
+  let opener: HTMLElement | null = null;
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-privacy-open]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (!dialog || typeof dialog.showModal !== 'function') return; // fall back to the page
+      event.preventDefault();
+      opener = link;
+      dialog.showModal();
+    });
+  });
+
+  dialog?.addEventListener('close', () => {
+    opener?.focus();
+    opener = null;
+  });
+</script>

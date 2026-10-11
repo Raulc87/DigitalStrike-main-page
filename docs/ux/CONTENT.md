@@ -211,7 +211,7 @@ Versión 2026-10-14-v1
 
 **Quién es responsable de tus datos.** Raul Casañas, quien opera bajo la marca DigitalStrike Solutions en San José, Costa Rica. Contacto: {contact_email}.
 
-**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. El formulario no guarda tu dirección IP y el sitio no usa cookies de seguimiento. Como en cualquier sitio web, nuestro proveedor de alojamiento (GoDaddy) registra datos técnicos de cada visita, como la dirección IP, por seguridad y funcionamiento del servidor.
+**Qué datos recopilamos.** Los que escribes en el formulario: nombre, correo, teléfono (opcional), empresa (opcional), tipo de proyecto, rango de inversión, plazo y tu mensaje. El formulario no guarda tu dirección IP y nuestro código no usa cookies de seguimiento. Como en cualquier sitio web, nuestro proveedor de alojamiento (GoDaddy) registra datos técnicos de cada visita, como la dirección IP, por seguridad y funcionamiento del servidor. Sus servidores también agregan a cada página un script de monitoreo de rendimiento que le envía a GoDaddy datos técnicos de la visita (por ejemplo, tiempos de carga y datos del navegador) y guarda cookies de GoDaddy en tu navegador: un identificador de visitante que dura hasta un año y otras que duran la visita. Puedes borrarlas o bloquearlas desde tu navegador sin que el sitio deje de funcionar.
 
 **Para qué los usamos.** Solo para responder a tu solicitud, preparar una propuesta y, si lo pides, agendar una sesión. No los vendemos ni los usamos para publicidad.
 
@@ -229,7 +229,7 @@ Version 2026-10-14-v1
 
 **Who is responsible for your data.** Raul Casañas, operating under the brand DigitalStrike Solutions in San José, Costa Rica. Contact: {contact_email}.
 
-**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. The form doesn't store your IP address and the site doesn't use tracking cookies. As with any website, our hosting provider (GoDaddy) logs technical data about each visit, such as the IP address, for security and server operation.
+**What we collect.** What you type in the form: name, email, phone (optional), company (optional), project type, investment range, timeline and your message. The form doesn't store your IP address and our code doesn't use tracking cookies. As with any website, our hosting provider (GoDaddy) logs technical data about each visit, such as the IP address, for security and server operation. Its servers also add a performance monitoring script to every page, which sends GoDaddy technical data about the visit (for example, load times and browser data) and stores GoDaddy cookies in your browser: a visitor identifier that lasts up to one year and others that last for the visit. You can delete or block them in your browser and the site keeps working.
 
 **What we use it for.** Only to answer your request, prepare a proposal and, if you ask, schedule a session. We don't sell it or use it for advertising.
 

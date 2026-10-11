@@ -119,18 +119,18 @@ As the owner, every lead lands in my Google Sheet.
   - both languages, over HTTPS;
   - submit a test lead, check the row and both emails, then mark the test row `rejected`;
   - Calendly visible;
-  - the served HTML contains no GoDaddy-injected script (`wsimg.com`, `secureserver.net`).
+  - the privacy notice in both languages mentions GoDaddy's access logs, monitoring script and cookies (ADR-001).
 
 ## US-017 — Release deployment to GoDaddy cPanel (production)
 - AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR`.
 - AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing. (For `v0.1.0` the owner sets them by Mon 2026-10-12, so the release does deploy.)
 - AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS (as the live holding page already does), disables directory listing, sets a 404 page, and does not break `/es/` and `/en/`.
-- AC5: The upload replaces the holding page: files that are no longer in `dist/` (the holding page's `index.html` and `assets/`) are removed from the target directory, and nothing outside it is touched (e.g. a state file or an explicit clean of the holding-page paths).
 - AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps and how to roll back (re-run the workflow on the previous release). Steps:
   - create a dedicated FTP account limited to `public_html`;
   - set the four secrets;
   - check that AutoSSL is active (already done 2026-10-10);
-  - ask GoDaddy support to disable their injected monitoring script.
+  - where to see visitor statistics (cPanel Metrics → Awstats / Visitors).
+- AC5: The upload replaces the holding page: files that are no longer in `dist/` (the holding page's `index.html` and `assets/`) are removed from the target directory, and nothing outside it is touched (e.g. a state file or an explicit clean of the holding-page paths).
 
 ## US-018 — Privacy notice
 - AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, including its version line (no other status text).

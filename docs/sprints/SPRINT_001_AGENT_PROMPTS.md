@@ -211,8 +211,8 @@ Order of work:
    Calendly and LinkedIn URLs).
 4. DS-016-pages-deploy — US-016: .github/workflows/pages.yml (push to main + manual), the preview,
    using repository variables for PUBLIC_* and PUBLIC_NOINDEX=true; docs/runbooks/RELEASE.md (enable Pages with source "GitHub
-   Actions", set repository variables, release smoke test on https://digitalstrike-solutions.com incl. the check for GoDaddy-injected
-   scripts, tagging v0.1.0) and
+   Actions", set repository variables, release smoke test on https://digitalstrike-solutions.com incl. the privacy-notice check
+   of US-016 AC3, tagging v0.1.0) and
    docs/runbooks/LOCAL_DEVELOPMENT.md (Windows and macOS notes: Node 22, OneDrive locks, ports).
 5. DS-017-cpanel-release — US-017 (Must, the production deploy, ADR-001): release-cpanel.yml on
    release published + manual, FTPS upload of dist/ built for https://digitalstrike-solutions.com
@@ -220,8 +220,8 @@ Order of work:
    they are missing; removes the holding-page files that are not in dist/ and touches nothing
    outside the target dir (AC5); public/.htaccess (HTTPS redirect as on the live holding page,
    Options -Indexes, 404, no breakage of /es/ and /en/); docs/runbooks/DEPLOYMENT.md (dedicated
-   FTP account limited to public_html, the four secrets, AutoSSL check, asking GoDaddy to disable
-   their injected script, rollback). Open it early enough for the owner to dry-run it on Monday.
+   FTP account limited to public_html, the four secrets, AutoSSL check, where to see visitor
+   statistics in cPanel Awstats, rollback). Open it early enough for the owner to dry-run it on Monday.
 ```
 
 ## Review-only agent (Opus 5.5, effort high)

@@ -14,7 +14,7 @@ Where does the site run for the first release on 2026-10-14, and how do releases
   - AutoSSL certificate active; HTTP → HTTPS forced in `.htaccess` (301 checked for `www.` and the bare domain).
   - The holding page (`holding-page/`) is live at `https://digitalstrike-solutions.com`.
   - GoDaddy support confirmed the plan offers cPanel "Setup Python App", so the Python roadmap of ADR-002 can run on this host.
-- GoDaddy's server injects its own monitoring script (`img1.wsimg.com/.../tccl.min.js`, beacons to `csp.secureserver.net`) into every HTML page. Its comment says to contact hosting support to opt out. This conflicts with NFR-005 (no third-party requests or analytics from the site) and with the privacy notice.
+- GoDaddy's server injects its own monitoring script (`img1.wsimg.com/.../tccl.min.js`, beacons to `csp.secureserver.net`) into every HTML page. On 2026-10-11 it set three GoDaddy cookies on the domain: `_tccl_visitor` (visitor ID, 1 year), `_tccl_visit` and `_scc_session`. Its comment says to contact hosting support to opt out. This conflicts with NFR-005 (no third-party requests or analytics from the site) and with the privacy notice.
 - The owner needs the public site by Wednesday 2026-10-14 (entrepreneur meet-up), and asked for releases to deploy automatically.
 - The repository is public, so GitHub Pages is free.
 - The site is static (ADR-002 keeps the backend on Apps Script), so it deploys as plain files.
@@ -45,7 +45,7 @@ Option B.
 - **Production:** publishing a GitHub Release (CI green on that commit) runs `release-cpanel.yml`. It builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL=https://digitalstrike-solutions.com`, then uploads `dist/` to `public_html` over FTPS with a dedicated FTP account restricted to that folder. The first release replaces the holding page.
 - **Preview:** every push to `main` runs `pages.yml` and deploys to `https://raulc87.github.io/DigitalStrike-main-page/`. It is never linked publicly and has `noindex`, so it cannot compete with production in search.
 - **Rollback:** re-run the release workflow on the previous release tag.
-- **Release gate:** GoDaddy's injected monitoring script must be switched off by GoDaddy support before `v0.1.0` (NFR-005). The release smoke test checks that the served HTML contains no `wsimg.com` / `secureserver.net` script.
+- **GoDaddy's injected monitoring script (owner decision 2026-10-11): kept and disclosed.** The owner keeps it and discloses it, including its cookies, in the privacy notice (CONTENT §13, PROJECT_SPEC §7) instead of asking GoDaddy to remove it. Trade-off accepted: a 1-year visitor-ID cookie without a consent banner fits Ley 8968 with disclosure, but EU visitors (GDPR) would require consent; revisit if the site targets the EU. Visitor statistics for the owner come from cPanel **Metrics → Awstats / Visitors** (server logs), not from that script.
 
 ## Rationale
 It meets the meet-up on the real domain, gives the owner release-driven deployment, keeps a safe preview of every merge, and leaves the Python runtime available for ADR-002 stage 1.
@@ -72,7 +72,7 @@ Release smoke test (`RELEASE.md`) on `https://digitalstrike-solutions.com` after
 - both languages and HTTPS;
 - form → sheet row + two emails;
 - Calendly;
-- no GoDaddy-injected script.
+- the privacy notice in both languages mentions GoDaddy's access logs, monitoring script and cookies.
 
 ## Review Trigger
-A server-side backend moves to the cPanel Python app (ADR-002 stage 1); GoDaddy cannot remove the injected script; hosting renewal (compare the renewal price with Option C).
+A server-side backend moves to the cPanel Python app (ADR-002 stage 1); the site starts targeting EU visitors, or the injected script collects more than technical visit data (then revisit the disclosure or ask GoDaddy to remove it); hosting renewal (compare the renewal price with Option C).

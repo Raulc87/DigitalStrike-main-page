@@ -1,6 +1,4 @@
 ---
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
 import { linkedinUrl } from '../../lib/i18n/site';
@@ -17,8 +15,9 @@ const { lang } = Astro.props;
 // replaces public/images/raul-casanas.jpg, raise this constant (US-007 AC2).
 const PHOTO_SIZE = 200;
 // Build-time check: if the photo file is missing the monogram is the only thing rendered, which also
-// works without JavaScript. (If the file is deleted after the build, `onerror` removes the <img>.)
-const hasPhoto = existsSync(join(process.cwd(), 'public/images/raul-casanas.jpg'));
+// works without JavaScript. The glob is resolved by Vite from the project root, whatever the working
+// directory. (If the file is deleted after the build, `onerror` removes the <img>.)
+const hasPhoto = Object.keys(import.meta.glob('/public/images/raul-casanas.jpg')).length > 0;
 const facts = t(lang, 'about.facts').split(' · ');
 ---
 

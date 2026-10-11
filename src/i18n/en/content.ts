@@ -18,6 +18,8 @@ export const en: Record<ContentKey, string> = {
   'lang.toggle_label': 'Change language',
   skip_link: 'Skip to content',
 
+  'footer.privacy': 'Privacy notice',
+
   'services.title': 'What we build',
   'process.title': 'How we work',
   'work.title': "Our team's work",

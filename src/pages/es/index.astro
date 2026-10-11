@@ -14,8 +14,8 @@ import Footer from '../../components/sections/Footer.astro';
 const lang = 'es';
 ---
 
-<BaseLayout lang={lang}>
-  <Header lang={lang} />
+<BaseLayout lang={lang} route="home">
+  <Header lang={lang} route="home" />
   <main id="contenido">
     <Hero lang={lang} />
     <Services lang={lang} />

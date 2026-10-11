@@ -2,19 +2,30 @@
 import '../styles/global.css';
 import { t } from '../i18n';
 import type { Locale } from '../i18n';
-import { withBase } from '../lib/i18n/url';
+import { otherLocale, routes } from '../lib/i18n/routes';
+import type { RouteName } from '../lib/i18n/routes';
+import { LOCALES, withBase } from '../lib/i18n/url';
 
 interface Props {
   lang: Locale;
-  title?: string;
-  description?: string;
+  route: RouteName;
 }
 
-const {
-  lang,
-  title = t(lang, 'meta.title'),
-  description = t(lang, 'meta.description'),
-} = Astro.props;
+const { lang, route } = Astro.props;
+
+// Home uses the CONTENT §1 metadata; the privacy page is titled after the footer link (CONTENT §12).
+const description = t(lang, 'meta.description');
+const title =
+  route === 'home'
+    ? t(lang, 'meta.title')
+    : `${t(lang, 'footer.privacy')} · DigitalStrike Solutions`;
+
+const abs = (path: string) => new URL(withBase(path), Astro.site).href;
+const canonical = abs(routes[route][lang]);
+const ogImage = abs('og-image.png');
+const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
+const ogLocale = { es: 'es_CR', en: 'en_US' } as const;
+const otherLang = otherLocale(lang);
 ---
 
 <!doctype html>
@@ -24,6 +35,25 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    {LOCALES.map((locale) => (
+      <link rel="alternate" hreflang={locale} href={abs(routes[route][locale])} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={abs('')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DigitalStrike Solutions" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    <meta property="og:locale:alternate" content={ogLocale[otherLang]} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t(lang, 'meta.og_alt')} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
   </head>
   <body>

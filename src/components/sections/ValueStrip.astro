@@ -1,0 +1,31 @@
+---
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const items = [
+  { n: '01', title: t(lang, 'value.1.title'), body: t(lang, 'value.1.body') },
+  { n: '02', title: t(lang, 'value.2.title'), body: t(lang, 'value.2.body') },
+  { n: '03', title: t(lang, 'value.3.title'), body: t(lang, 'value.3.body') },
+] as const;
+---
+
+<section class="bg-steel">
+  <div class="section-shell py-12">
+    <ul class="m-0 grid list-none gap-8 p-0 md:grid-cols-3">
+      {items.map((item) => (
+        <li class="border-cyan border-l-2 pl-5">
+          <p class="text-cyan font-mono text-sm" aria-hidden="true">
+            {item.n}
+          </p>
+          <h2 class="mt-1 text-xl font-bold md:text-xl">{item.title}</h2>
+          <p class="text-text-2 mt-2 text-base">{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

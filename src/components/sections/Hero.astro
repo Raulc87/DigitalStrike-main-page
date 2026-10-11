@@ -1,14 +1,59 @@
 ---
+import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
+import { withBase } from '../../lib/i18n/url';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+
+// The H1 italicises "tu negocio" / "your business" (UX §3) without altering the CONTENT string.
+const emphasis = { es: 'tu negocio', en: 'your business' } as const;
+const title = t(lang, 'hero.title');
+const at = title.indexOf(emphasis[lang]);
+const before = at < 0 ? title : title.slice(0, at);
+const em = at < 0 ? '' : emphasis[lang];
+const after = at < 0 ? '' : title.slice(at + em.length);
+
+const buttonBase =
+  'inline-flex min-h-12 items-center justify-center rounded-full px-7 font-semibold no-underline';
 ---
 
-<!-- Stub from the scaffold (DS-001); US-003 adds the hero and the value strip. -->
-<section id="inicio" data-lang={lang}>
-  <div class="section-shell py-16"></div>
+<section id="inicio" class="relative overflow-hidden">
+  <div class="section-shell grid items-center gap-10 py-12 min-[900px]:grid-cols-[1.15fr_1fr] min-[900px]:gap-14 min-[900px]:py-20">
+    <div>
+      <p class="eyebrow mb-5">
+        <span aria-hidden="true">&gt;_ </span>
+        {t(lang, 'hero.eyebrow')}
+      </p>
+      <!-- prettier-ignore -->
+      <h1 class="text-off">{before}<em class="font-extrabold italic">{em}</em>{after}</h1>
+      <p class="text-text-2 mt-6 max-w-xl">{t(lang, 'hero.subtitle')}</p>
+      <p class="text-sand mt-6 text-lg font-semibold italic">{t(lang, 'hero.slogan')}</p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="#contacto" class={`${buttonBase} bg-cyan text-navy hover:brightness-110`}>
+          {t(lang, 'hero.cta_primary')}
+        </a>
+        <a href="#agenda" class={`${buttonBase} border-off text-off hover:border-cyan border-2`}>
+          {t(lang, 'hero.cta_secondary')}
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="border-border bg-navy relative flex h-40 items-center justify-center overflow-hidden rounded-xl border min-[900px]:aspect-square min-[900px]:h-auto"
+      style="background-image: linear-gradient(var(--color-grid) 1px, transparent 1px), linear-gradient(90deg, var(--color-grid) 1px, transparent 1px); background-size: 32px 32px;"
+      aria-hidden="true"
+    >
+      <img
+        src={withBase('brand/logo-mark-on-dark.svg')}
+        alt=""
+        width="300"
+        height="300"
+        class="size-[150px] drop-shadow-2xl min-[900px]:size-[min(300px,70%)]"
+      />
+    </div>
+  </div>
 </section>

@@ -1,14 +1,46 @@
 ---
+import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
+import { routes } from '../../lib/i18n/routes';
+import { contactEmail, linkedinUrl } from '../../lib/i18n/site';
+import { withBase } from '../../lib/i18n/url';
+import Brand from './Brand.astro';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+const linkClass = 'text-cyan inline-flex min-h-11 items-center underline-offset-4 hover:underline';
 ---
 
-<!-- Stub from the scaffold (DS-001); US-003 adds the footer content. -->
-<footer class="bg-charcoal border-border border-t" data-lang={lang}>
-  <div class="section-shell py-10"></div>
+<footer class="bg-charcoal border-border border-t">
+  <div class="section-shell py-10">
+    <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+      <div>
+        <Brand href={withBase(routes.home[lang])} />
+        <p class="text-sand mt-3 italic">{t(lang, 'footer.slogan')}</p>
+      </div>
+      <ul class="m-0 flex list-none flex-col gap-1 p-0">
+        <li>
+          <span class="text-text-2">{t(lang, 'footer.email_label')}: </span>
+          <a href={`mailto:${contactEmail}`} class={linkClass}>
+            {contactEmail}
+          </a>
+        </li>
+        <li>
+          <a href={linkedinUrl} target="_blank" rel="noopener" class={linkClass}>
+            {t(lang, 'footer.linkedin')}
+          </a>
+        </li>
+        <li>
+          <a href={withBase(routes.privacy[lang])} class={linkClass}>
+            {t(lang, 'footer.privacy')}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p class="text-text-2 mt-8 text-sm">{t(lang, 'footer.location')}</p>
+    <p class="text-text-2 mt-1 text-sm">{t(lang, 'footer.copyright')}</p>
+  </div>
 </footer>

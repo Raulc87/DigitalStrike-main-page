@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
 import { linkedinUrl } from '../../lib/i18n/site';
@@ -14,6 +16,9 @@ const { lang } = Astro.props;
 // The provisional photo is 200×200 px: never render it wider than that. When the ≥ 800 px version
 // replaces public/images/raul-casanas.jpg, raise this constant (US-007 AC2).
 const PHOTO_SIZE = 200;
+// Build-time check: if the photo file is missing the monogram is the only thing rendered, which also
+// works without JavaScript. (If the file is deleted after the build, `onerror` removes the <img>.)
+const hasPhoto = existsSync(join(process.cwd(), 'public/images/raul-casanas.jpg'));
 const facts = t(lang, 'about.facts').split(' · ');
 ---
 
@@ -36,14 +41,16 @@ const facts = t(lang, 'about.facts').split(' · ');
           >
             RC
           </span>
-          <img
-            src={withBase('images/raul-casanas.jpg')}
-            alt={t(lang, 'about.photo_alt')}
-            width={PHOTO_SIZE}
-            height={PHOTO_SIZE}
-            class="relative size-full object-cover"
-            onerror="this.remove()"
-          />
+          {hasPhoto && (
+            <img
+              src={withBase('images/raul-casanas.jpg')}
+              alt={t(lang, 'about.photo_alt')}
+              width={PHOTO_SIZE}
+              height={PHOTO_SIZE}
+              class="relative size-full object-cover"
+              onerror="this.remove()"
+            />
+          )}
         </div>
         <PendingBadge lang={lang} />
       </div>

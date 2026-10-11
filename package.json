@@ -15,7 +15,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "mock:lead": "node scripts/mock-lead-endpoint.mjs",
-    "lhci": "lhci autorun"
+    "lhci": "cross-env PUBLIC_BASE_PATH=/ PUBLIC_NOINDEX=false astro build && lhci autorun"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -31,9 +31,11 @@
     "@eslint/js": "^10.0.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.64.0",
+    "cross-env": "^10.1.0",
     "eslint": "^10.12.0",
     "eslint-plugin-astro": "^1.7.0",
     "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.1",
     "prettier-plugin-tailwindcss": "^0.8.1",

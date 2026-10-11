@@ -104,7 +104,7 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 
 ## Sprint Definition of Done
 - Must stories meet their ACs; CI green on `main`.
-- Smoke test on `https://digitalstrike-solutions.com` passed with the real endpoint (row + 2 emails + Calendly, HTTPS, privacy notice discloses GoDaddy's logs, monitoring script and cookies).
+- Smoke test on `https://digitalstrike-solutions.com` passed with the real endpoint (row + 2 emails + Calendly, HTTPS, privacy notice discloses GoDaddy's logs, monitoring script and cookies, and the live cookies and injected script in a fresh browser profile still match that disclosure; production Lighthouse score recorded — US-016 AC3).
 - No known critical regression; owner approves; `v0.1.0` released.
 
 ## Owner checklist (outside the agents)

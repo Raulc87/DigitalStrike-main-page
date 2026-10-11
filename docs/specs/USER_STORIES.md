@@ -120,7 +120,8 @@ As the owner, every lead lands in my Google Sheet.
   - submit a test lead, check the row and both emails, then mark the test row `rejected`;
   - Calendly visible;
   - the privacy notice in both languages mentions GoDaddy's access logs, monitoring script and cookies (ADR-001);
-  - in a fresh browser profile, the cookies set on the domain and the injected script still match the disclosure (CONTENT §13, PROJECT_SPEC §7: `_tccl_visitor` up to 1 year, `_tccl_visit`, `_scc_session`, script from `img1.wsimg.com`). Any new cookie, a longer lifetime or a new third-party domain → update the notice before announcing the release (ADR-001 review trigger).
+  - in a fresh browser profile, the cookies set on the domain and the injected script still match the disclosure (CONTENT §13, PROJECT_SPEC §7: `_tccl_visitor` up to 1 year, `_tccl_visit`, `_scc_session`, script from `img1.wsimg.com`). Any new cookie, a longer lifetime or a new third-party domain → update the notice before announcing the release (ADR-001 review trigger);
+  - Lighthouse (PageSpeed Insights, mobile) on `https://digitalstrike-solutions.com/es/`: record the Performance and Accessibility scores; below 90 / 95 → owner decision per NFR-003.
 
 ## US-017 — Release deployment to GoDaddy cPanel (production)
 - AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR`.

@@ -1,4 +1,14 @@
 import { expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+
+/** A real mouse click on the language link: locator.click() would first scroll the sticky link into view. */
+async function clickToggle(page: Page, name: 'ES' | 'EN') {
+  const link = page
+    .getByRole('navigation', { name: /Cambiar idioma|Change language/ })
+    .getByRole('link', { name });
+  const box = await link.boundingBox();
+  await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2);
+}
 
 test.describe('root detection (US-002 AC1)', () => {
   test.describe('es-CR browser', () => {
@@ -41,7 +51,7 @@ test.describe('toggle (US-002 AC2)', () => {
     const box = await toggle.getByRole('link', { name: 'EN' }).boundingBox();
     expect(box?.height).toBeGreaterThanOrEqual(44);
     expect(box?.width).toBeGreaterThanOrEqual(44);
-    await toggle.getByRole('link', { name: 'EN' }).click();
+    await clickToggle(page, 'EN');
     await expect(page).toHaveURL(/\/en\/#servicios$/);
     expect(await page.evaluate(() => localStorage.getItem('ds_lang'))).toBe('en');
     await page.goto('/');
@@ -56,12 +66,7 @@ test.describe('toggle (US-002 AC2)', () => {
       document.getElementById('proyectos')?.scrollIntoView({ behavior: 'instant' });
     });
     expect(await page.evaluate(() => location.hash)).toBe('');
-    // A real mouse click: locator.click() would scroll the sticky header link into view first.
-    const box = await page
-      .getByRole('navigation', { name: 'Cambiar idioma' })
-      .getByRole('link', { name: 'EN' })
-      .boundingBox();
-    await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await clickToggle(page, 'EN');
     await expect(page).toHaveURL(/\/en\/#proyectos$/);
   });
 
@@ -72,11 +77,7 @@ test.describe('toggle (US-002 AC2)', () => {
       document.getElementById('nosotros')?.scrollIntoView({ behavior: 'instant' });
     });
     expect(await page.evaluate(() => location.hash)).toBe('#servicios');
-    const box = await page
-      .getByRole('navigation', { name: 'Cambiar idioma' })
-      .getByRole('link', { name: 'EN' })
-      .boundingBox();
-    await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await clickToggle(page, 'EN');
     await expect(page).toHaveURL(/\/en\/#nosotros$/);
   });
 

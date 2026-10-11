@@ -3,7 +3,7 @@ import { es } from '../../src/i18n/es/content';
 import { en } from '../../src/i18n/en/content';
 import { esForm } from '../../src/i18n/es/form';
 import { enForm } from '../../src/i18n/en/form';
-import { t } from '../../src/i18n';
+import { fill, t } from '../../src/i18n';
 import { withBase } from '../../src/lib/i18n/url';
 
 const placeholders = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort();
@@ -24,9 +24,18 @@ describe('dictionaries', () => {
     }
   });
 
-  it('t() returns the localized string and fills placeholders', () => {
+  it('t() returns the localized string', () => {
     expect(t('es', 'nav.services')).toBe('Servicios');
     expect(t('en', 'nav.services')).toBe('Services');
+  });
+
+  it('fill() replaces {placeholders} from vars and keeps unknown ones', () => {
+    expect(fill('Hola, {name} {other}', { name: 'Ana' })).toBe('Hola, Ana {other}');
+    expect(fill('sin variables', { name: 'Ana' })).toBe('sin variables');
+  });
+
+  it('t() applies vars through fill()', () => {
+    expect(t('es', 'nav.services', { name: 'Ana' })).toBe('Servicios');
   });
 });
 

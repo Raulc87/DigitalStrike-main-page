@@ -128,7 +128,9 @@ You are Implementation Agent 2: lead form, privacy notice, scheduling and the e2
 Stories: US-009, US-014 (client side), US-018, US-013, and the integration PR.
 Start only after DS-001-frontend-scaffold is merged into main. From then on you own
 src/components/lead/**, src/components/schedule/**, src/components/privacy/**, src/lib/lead/**,
-src/lib/schedule/**, src/i18n/{es,en}/form.ts and tests/e2e/**.
+src/lib/schedule/**, src/i18n/{es,en}/form.ts and tests/e2e/** except Agent 1's section specs
+(scaffold, i18n, header-hero-footer, services-process, work-about-clients .spec.ts; owner decision
+2026-10-11). The integration suite may exercise those sections from its own files.
 
 Order of work:
 1. DS-009-lead-form — US-009 + US-014 AC1:
@@ -138,7 +140,8 @@ Order of work:
      credentials "omit", 20 s timeout via AbortController) mapping every response of §7 plus
      network errors, timeouts and malformed bodies.
    - LeadForm: fields, order, labels, hints and option labels from CONTENT.md §10 and contract §4;
-     honeypot `website` (visually hidden, tabindex -1, autocomplete off, aria-hidden);
+     honeypot per UX §3 "Autofill and honeypot" (separate form outside the lead form, value sent
+     as `website`), visible fields with the autocomplete values of that table;
      elapsed_ms from performance.now() since first render; submission_id (crypto.randomUUID)
      kept across retries of an unchanged payload, renewed after success and whenever a field
      changes after a failed attempt (contract §5.4); privacy_notice_version

@@ -1,0 +1,3 @@
+# Local only: clasp project binding (owner-specific) and the temporary test install link.
+.clasp.json
+node_modules

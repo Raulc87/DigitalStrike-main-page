@@ -1,0 +1,5 @@
+# Push only the Apps Script runtime files; tests, docs and configs stay in the repo.
+**/**
+!appsscript.json
+!Code.js
+!lib/*.js

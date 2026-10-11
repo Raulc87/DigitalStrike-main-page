@@ -49,12 +49,8 @@ This was chosen over a CommonJS/ESM shim because the deployed files stay exactly
 Apps Script, with no export boilerplate. Fakes of the Google services are in
 `tests/helpers/fakes.ts`.
 
-The scaffold's root Vitest config includes `apps-script/tests/**`. Until it is merged, a
-temporary local config is kept here:
-
-```bash
-npx vitest run --config apps-script/vitest.config.mjs
-```
+The root Vitest config runs them as the `apps-script` project: `npm test` (or
+`npx vitest run --project apps-script`).
 
 ## Lint
 

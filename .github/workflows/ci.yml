@@ -14,7 +14,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Only superseded PR runs are cancelled; every main commit keeps a complete CI result
+  # (RELEASE.md: CI green on the commit being released).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   PUBLIC_LEAD_ENDPOINT_URL: http://127.0.0.1:8787/exec
@@ -91,8 +93,9 @@ jobs:
     # the suite is green on main; then this line is removed and the check made required.
     continue-on-error: true
     env:
-      # The specs navigate to root paths (`/es/`), so the e2e build uses base "/"; the Pages
-      # base path is covered by the `build` job. Pending badges stay off (a spec checks it).
+      # Some specs (the site sections) navigate to root paths such as `/es/`, so the e2e build
+      # uses base "/"; the Pages base path is covered by the `build` job. Pending badges stay
+      # off (a spec checks it).
       PUBLIC_BASE_PATH: /
     steps:
       - uses: actions/checkout@v4

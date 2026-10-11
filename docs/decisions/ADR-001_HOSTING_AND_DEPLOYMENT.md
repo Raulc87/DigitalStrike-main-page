@@ -1,7 +1,7 @@
 # ADR-001 — Hosting and deployment
 
-- Status: **Accepted** — effective when PR #1 is merged (revised 2026-10-10 after the hosting purchase)
-- Date: 2026-10-09 · revised 2026-10-10
+- Status: **Accepted** — effective when PR #1 is merged (revised 2026-10-10 after the hosting purchase; revised 2026-10-11: GoDaddy's injected script kept and disclosed)
+- Date: 2026-10-09 · revised 2026-10-10 · revised 2026-10-11
 - Decision owner: Raul Casañas
 - Related specs: PROJECT_SPEC §3, §9; TECH_STACK §2, §9; US-016, US-017
 

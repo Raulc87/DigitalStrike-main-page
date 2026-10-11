@@ -118,6 +118,8 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - [x] Buy the GoDaddy Deluxe plan and `digitalstrike-solutions.com`; SSL active, HTTPS forced, holding page live (2026-10-10).
 - [ ] Create a dedicated cPanel FTP account limited to `public_html`; set repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (runbook from DS-017) — by Mon.
 - [x] GoDaddy's injected monitoring script: keep and disclose it (decision 2026-10-11); visitor statistics in cPanel Metrics → Awstats.
+- [x] Holding page with the bilingual privacy line re-uploaded to `public_html`; verified live on `https://digitalstrike-solutions.com` (2026-10-11).
+- [ ] Main site: the privacy notice disclosure is verified on production in the release smoke test (US-016 AC3).
 - [ ] Tuesday: publish release `v0.1.0` (deploys to GoDaddy), smoke test on `https://digitalstrike-solutions.com`.
 
 Agent kickoff prompts and model recommendations: `docs/sprints/SPRINT_001_AGENT_PROMPTS.md`.

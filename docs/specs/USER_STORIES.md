@@ -113,7 +113,7 @@ As the owner, every lead lands in my Google Sheet.
 - AC4 (NFR-003): a CI job runs Lighthouse CI (`@lhci/cli`, mobile preset, 3 runs) against the built `/es/` and `/en/` pages served locally and fails below Performance 0.90 or Accessibility 0.95. Calendly is not loaded (click-to-load), so it does not affect the score.
 
 ## US-016 — Preview on GitHub Pages and release runbook
-- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*. The preview build sets `PUBLIC_NOINDEX=true` (US-002 AC4), so the preview never competes with `digitalstrike-solutions.com` in search (ADR-001).
+- AC1: A workflow deploys `main` to GitHub Pages with `PUBLIC_BASE_PATH=/DigitalStrike-main-page` and the public variables from repository *variables*. The preview is for review only and is never linked publicly; the privacy notice scopes the GoDaddy paragraph to `digitalstrike-solutions.com`. The preview build sets `PUBLIC_NOINDEX=true` (US-002 AC4), so the preview never competes with `digitalstrike-solutions.com` in search (ADR-001).
 - AC2: `https://raulc87.github.io/DigitalStrike-main-page/` serves the site; `/es/` and `/en/` work, assets load, and the form submits to the real Apps Script endpoint once `PUBLIC_LEAD_ENDPOINT_URL` is set.
 - AC3: `docs/runbooks/RELEASE.md` explains how to cut a release (tag `vX.Y.Z` + GitHub Release, which triggers US-017) and the smoke test on `https://digitalstrike-solutions.com`:
   - both languages, over HTTPS;

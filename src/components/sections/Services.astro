@@ -62,11 +62,10 @@ const home = withBase(routes.home[lang]);
       window.dispatchEvent(
         new CustomEvent(PRESELECT_EVENT, { detail: { code: link.dataset.projectType } }),
       );
-      const target = document.getElementById('contacto');
-      if (target) {
-        target.scrollIntoView();
-        history.pushState(null, '', '#contacto');
-      }
+      // Setting the hash is a native fragment navigation: it scrolls to the form and moves the
+      // sequential focus starting point there, so the next Tab continues inside #contacto.
+      if (location.hash === '#contacto') document.getElementById('contacto')?.scrollIntoView();
+      else location.hash = 'contacto';
     });
   });
 </script>

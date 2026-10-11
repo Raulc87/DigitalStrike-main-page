@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import { t } from '../i18n';
+import type { Locale } from '../i18n';
+import { withBase } from '../lib/i18n/url';
+
+interface Props {
+  lang: Locale;
+  title?: string;
+  description?: string;
+}
+
+const {
+  lang,
+  title = t(lang, 'meta.title'),
+  description = t(lang, 'meta.description'),
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">
+      {t(lang, 'skip_link')}
+    </a>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,14 @@
+---
+import type { Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<!-- Stub from the scaffold (DS-001); US-003 adds the footer content. -->
+<footer class="bg-charcoal border-border border-t" data-lang={lang}>
+  <div class="section-shell py-10"></div>
+</footer>

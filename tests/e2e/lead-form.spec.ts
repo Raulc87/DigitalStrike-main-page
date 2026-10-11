@@ -149,3 +149,10 @@ test('?tipo=<code> preselects the project type', async ({ page }) => {
   await page.goto('/es/?tipo=business_system#contacto');
   await expect(page.locator('select[name="project_type"]')).toHaveValue('business_system');
 });
+
+test('a service card CTA preselects the project type (DS-004 event)', async ({ page }) => {
+  await page.goto('/es/');
+  await page.locator('a[data-project-type="web_app"]').first().click();
+  await expect(page.locator('select[name="project_type"]')).toHaveValue('web_app');
+  await expect(page).toHaveURL(/#contacto$/);
+});

@@ -102,7 +102,7 @@ As the owner, every lead lands in my Google Sheet.
 - AC4: Playwright checks that no request to `*.calendly.com` happens before the click, the container after it, and the fallback (Calendly network blocked in tests).
 
 ## US-014 — Spam protection
-- AC1 (client, Agent 2): honeypot field per UX §3 and `elapsed_ms` sent.
+- AC1 (client, Agent 2): honeypot per UX §3 "Autofill and honeypot" (own form outside the lead form, non-autofill `id`/`name`, the four password-manager ignore attributes, off-screen, `tabindex="-1"`, `aria-hidden` wrapper, Enter in it never reloads), its value sent as `website`, and `elapsed_ms` sent. The visible fields carry the `autocomplete` values of that table. Tests assert this structure, and that a filled lead form (as autofill would leave it) submits with `website` empty and is stored.
 - AC2 (server, Agent 3): honeypot, minimum fill time, hourly/daily throttles and idempotency per contract §5.1–5.4 (counted from the stored rows under the script lock, contract §5.3–5.4; CacheService only as an optional optimisation); decoys return the normal success body and store nothing.
 - AC3: Tests cover each path, including that rate-limited requests are not stored and send no email.
 

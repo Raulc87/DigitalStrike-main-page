@@ -7,11 +7,54 @@ interface Props {
 }
 
 const { lang } = Astro.props;
+const steps = [
+  { n: '01', title: t(lang, 'process.1.title'), body: t(lang, 'process.1.body') },
+  { n: '02', title: t(lang, 'process.2.title'), body: t(lang, 'process.2.body') },
+  { n: '03', title: t(lang, 'process.3.title'), body: t(lang, 'process.3.body') },
+  { n: '04', title: t(lang, 'process.4.title'), body: t(lang, 'process.4.body') },
+] as const;
 ---
 
-<!-- Stub from the scaffold (DS-001); the section story fills it in. -->
 <section id="como-trabajamos" class="bg-steel">
-  <div class="section-shell py-16">
+  <div class="section-shell py-16 md:py-20">
     <h2>{t(lang, 'process.title')}</h2>
+    <p class="text-text-2 mt-4 max-w-3xl">{t(lang, 'process.intro')}</p>
+
+    <ol class="mt-10 grid list-none gap-8 p-0 min-[1024px]:grid-cols-4" data-process-steps>
+      {steps.map((step) => (
+        <li class="border-border-strong border-t-2 pt-5">
+          <p class="text-cyan font-mono text-2xl" aria-hidden="true">
+            {step.n}
+          </p>
+          <h3 class="mt-2 text-xl font-bold">{step.title}</h3>
+          <p class="text-text-2 mt-3">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div
+      class="bg-navy border-cyan mt-12 flex flex-col gap-5 rounded-xl border p-6 sm:flex-row sm:items-center md:p-8"
+      data-warranty
+    >
+      <svg
+        viewBox="0 0 48 56"
+        width="48"
+        height="56"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        class="text-cyan shrink-0"
+        aria-hidden="true"
+      >
+        <path d="M24 4 6 11v15c0 12 8 22 18 26 10-4 18-14 18-26V11L24 4Z"></path>
+        <path d="m16 28 6 6 11-12"></path>
+      </svg>
+      <div>
+        <h3 class="text-xl font-bold md:text-2xl">{t(lang, 'warranty.title')}</h3>
+        <p class="text-text-2 mt-2">{t(lang, 'warranty.body')}</p>
+      </div>
+    </div>
   </div>
 </section>

@@ -1,0 +1,17 @@
+---
+import { t } from '../../i18n';
+import type { Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<!-- Stub from the scaffold (DS-001); the section story fills it in. -->
+<section id="como-trabajamos" class="bg-steel">
+  <div class="section-shell py-16">
+    <h2>{t(lang, 'process.title')}</h2>
+  </div>
+</section>

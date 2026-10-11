@@ -1,0 +1,14 @@
+---
+// Stub handed to Agent 2 (US-013). Keep the #agenda anchor on the section.
+import type { Locale } from '../../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+---
+
+<section id="agenda" class="bg-steel" data-lang={lang}>
+  <div class="section-shell py-16"></div>
+</section>

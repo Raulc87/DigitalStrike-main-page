@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/sections/Header.astro';
+import Hero from '../../components/sections/Hero.astro';
+import Services from '../../components/sections/Services.astro';
+import Process from '../../components/sections/Process.astro';
+import Work from '../../components/sections/Work.astro';
+import About from '../../components/sections/About.astro';
+import Clients from '../../components/sections/Clients.astro';
+import LeadForm from '../../components/lead/LeadForm.astro';
+import Scheduling from '../../components/schedule/Scheduling.astro';
+import Footer from '../../components/sections/Footer.astro';
+
+const lang = 'en';
+---
+
+<BaseLayout lang={lang}>
+  <Header lang={lang} />
+  <main id="contenido">
+    <Hero lang={lang} />
+    <Services lang={lang} />
+    <Process lang={lang} />
+    <Work lang={lang} />
+    <About lang={lang} />
+    <Clients lang={lang} />
+    <LeadForm lang={lang} />
+    <Scheduling lang={lang} />
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

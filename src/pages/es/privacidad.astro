@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/sections/Header.astro';
+import Footer from '../../components/sections/Footer.astro';
+import PrivacyNotice from '../../components/privacy/PrivacyNotice.astro';
+
+const lang = 'es';
+---
+
+<BaseLayout lang={lang}>
+  <Header lang={lang} />
+  <main id="contenido" class="section-shell py-16">
+    <PrivacyNotice lang={lang} />
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

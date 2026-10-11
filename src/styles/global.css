@@ -1,0 +1,147 @@
+@import 'tailwindcss';
+
+@import '@fontsource/archivo/400.css';
+@import '@fontsource/archivo/400-italic.css';
+@import '@fontsource/archivo/500.css';
+@import '@fontsource/archivo/600.css';
+@import '@fontsource/archivo/700.css';
+@import '@fontsource/archivo/800.css';
+@import '@fontsource/archivo/800-italic.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* Approved identity (UX_UI_DIRECTION §2.1–2.2). Components use these tokens only. */
+@theme {
+  --color-navy: #0b132b;
+  --color-steel: #1c2541;
+  --color-cyan: #21c7d9;
+  --color-cyan-ink: #157d89;
+  --color-sand: #d9c7a3;
+  --color-off: #f5f7f8;
+  --color-charcoal: #111315;
+  /* derived (§2.1) */
+  --color-card: #131c36;
+  --color-border: #26314f;
+  --color-border-strong: #3a4870;
+  --color-text-2: #aeb8c9;
+  --color-grid: #18213d;
+  --color-error: #ff8a80;
+  /* logo only */
+  --color-logo-navy: #0b1f44;
+  --color-logo-teal: #0e8a9b;
+
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* type scale, mobile first; the desktop sizes are applied at 768px below */
+  --text-h1: 2.25rem;
+  --text-h2: 1.75rem;
+  --text-body: 1rem;
+  --leading-body: 1.6;
+
+  --breakpoint-nav: 75rem; /* 1200px: inline nav */
+}
+
+:root {
+  /* focus colour: cyan on dark surfaces, cyan-ink on light ones (.surface-light) */
+  --color-focus: var(--color-cyan);
+  --focus-ring-gap: var(--color-navy);
+  scroll-padding-top: 5rem;
+  scroll-behavior: smooth;
+}
+
+.surface-light {
+  --color-focus: var(--color-cyan-ink);
+  --focus-ring-gap: var(--color-off);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-h1: 3.6rem;
+    --text-h2: 2.5rem;
+    --text-body: 1.125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-navy);
+    color: var(--color-off);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background-color: var(--color-navy);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    overflow-x: hidden;
+  }
+  h1 {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  h2 {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  a {
+    color: var(--color-cyan);
+  }
+  /* 2 px focus outline + 2 px offset, plus a 2 px ring in the surface colour (UX §5) */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px var(--focus-ring-gap);
+  }
+}
+
+@layer components {
+  .section-shell {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-inline: 1rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-cyan);
+  }
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    z-index: 100;
+    transform: translateY(-120%);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-cyan);
+    color: var(--color-navy);
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    transform: translateY(0.5rem);
+  }
+}

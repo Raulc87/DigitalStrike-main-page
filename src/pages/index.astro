@@ -1,0 +1,21 @@
+---
+// Placeholder root (DS-001). DS-002 replaces it with language detection (ADR-003).
+import { withBase } from '../lib/i18n/url';
+
+const target = withBase('es/');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <title>DigitalStrike Solutions</title>
+  </head>
+  <body>
+    <p>
+      <a href={target}>Español</a> · <a href={withBase('en/')}>English</a>
+    </p>
+  </body>
+</html>

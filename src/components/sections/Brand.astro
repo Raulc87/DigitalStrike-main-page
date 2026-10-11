@@ -1,0 +1,18 @@
+---
+import { withBase } from '../../lib/i18n/url';
+
+interface Props {
+  href: string;
+  size?: number;
+}
+
+const { href, size = 44 } = Astro.props;
+---
+
+<!-- Logo mark + live wordmark (UX §2.1); below 420 px only "DigitalStrike" is shown. -->
+<a href={href} class="text-off flex min-h-11 items-center gap-2 no-underline min-[420px]:gap-3">
+  <img src={withBase('brand/logo-mark-on-dark.svg')} alt="" width={size} height={size} />
+  <span class="text-base leading-none min-[380px]:text-lg min-[420px]:text-xl font-extrabold">
+    DigitalStrike<span class="text-cyan max-[420px]:hidden">&nbsp;Solutions</span>
+  </span>
+</a>

@@ -17,6 +17,29 @@ export const es = {
   'lang.toggle_label': 'Cambiar idioma',
   skip_link: 'Saltar al contenido',
 
+  'hero.eyebrow': 'Software a la medida · Desde Costa Rica para el mundo',
+  'hero.title': 'Soluciones de software que se adaptan a tu negocio, no al revés.',
+  'hero.subtitle':
+    'Desde tu primera página web hasta el sistema que ordena tu empresa. Trabajamos cerca de ti y ajustamos el rumbo cuando tu negocio lo necesita.',
+  'hero.slogan': 'Sacamos de circulación tus necesidades de software.',
+  'hero.cta_primary': 'Cuéntanos tu idea',
+  'hero.cta_secondary': 'Agenda tu sesión 0',
+
+  'value.1.title': 'Cercanía real',
+  'value.1.body':
+    'Hablas directamente con quien construye tu solución. Participas en cada etapa y ves avances desde el inicio.',
+  'value.2.title': 'Nos adaptamos al cambio',
+  'value.2.body':
+    'Si tu negocio cambia mientras construimos, el software cambia con él. Ajustamos el plan contigo.',
+  'value.3.title': 'Experiencia probada',
+  'value.3.body':
+    'Más de 17 años construyendo plataformas para empresas como Google, Sephora, Experian y Wells Fargo, ahora al servicio de tu proyecto.',
+
+  'footer.slogan': 'Sacamos de circulación tus necesidades de software.',
+  'footer.location': 'San José, Costa Rica · Trabajamos con clientes en todo el mundo',
+  'footer.email_label': 'Escríbenos',
+  'footer.linkedin': 'LinkedIn',
+  'footer.copyright': '© 2026 DigitalStrike Solutions. Todos los derechos reservados.',
   'footer.privacy': 'Aviso de privacidad',
 
   'services.title': 'Lo que construimos',

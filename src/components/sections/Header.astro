@@ -1,8 +1,11 @@
 ---
-import type { Locale } from '../../i18n';
+import { t } from '../../i18n';
+import type { ContentKey, Locale } from '../../i18n';
+import { routes } from '../../lib/i18n/routes';
 import type { RouteName } from '../../lib/i18n/routes';
-import LangToggle from './LangToggle.astro';
 import { withBase } from '../../lib/i18n/url';
+import Brand from './Brand.astro';
+import LangToggle from './LangToggle.astro';
 
 interface Props {
   lang: Locale;
@@ -10,19 +13,138 @@ interface Props {
 }
 
 const { lang, route = 'home' } = Astro.props;
+
+// Links always target the home page of the current language, so they also work from the privacy page.
+const home = withBase(routes.home[lang]);
+const links: { id: string; label: ContentKey }[] = [
+  { id: 'servicios', label: 'nav.services' },
+  { id: 'como-trabajamos', label: 'nav.process' },
+  { id: 'proyectos', label: 'nav.work' },
+  { id: 'nosotros', label: 'nav.about' },
+  { id: 'contacto', label: 'nav.contact' },
+];
+const linkClass =
+  'text-off hover:text-cyan flex min-h-12 items-center rounded-full no-underline nav:min-h-11 nav:px-3 nav:text-[0.95rem]';
+const ctaClass =
+  'bg-cyan text-navy items-center justify-center rounded-full px-5 font-semibold no-underline min-h-11 hover:brightness-110';
 ---
 
-<!-- Logo mark + live wordmark (US-001 AC5), language toggle (US-002). US-003 adds nav and CTA. -->
-<header class="border-border bg-navy/90 sticky top-0 z-50 border-b backdrop-blur" data-lang={lang}>
-  <div class="section-shell flex min-h-16 items-center">
-    <a href={withBase(`${lang}/`)} class="text-off flex items-center gap-3 no-underline">
-      <img src={withBase('brand/logo-mark-on-dark.svg')} alt="" width="44" height="44" />
-      <span class="text-xl font-extrabold">
-        DigitalStrike<span class="text-cyan max-[420px]:hidden">&nbsp;Solutions</span>
-      </span>
-    </a>
-    <div class="ml-auto">
+<header
+  class="border-border bg-navy/90 sticky top-0 z-50 border-b backdrop-blur"
+  data-site-header
+  data-label-open={t(lang, 'nav.menu_open')}
+  data-label-close={t(lang, 'nav.menu_close')}
+>
+  <div class="section-shell flex min-h-16 items-center gap-2 px-3 min-[380px]:px-4 nav:gap-4">
+    <Brand href={home} />
+
+    <nav
+      id="site-menu"
+      class="border-border bg-navy absolute inset-x-0 top-full hidden border-b px-4 pt-2 pb-6 nav:static nav:ml-auto nav:flex nav:items-center nav:border-0 nav:bg-transparent nav:p-0"
+    >
+      {links.map((link) => (
+        <a href={`${home}#${link.id}`} class={linkClass} data-menu-link>
+          {t(lang, link.label)}
+        </a>
+      ))}
+      <a
+        href={`${home}#agenda`}
+        class={`${ctaClass} mt-3 flex min-h-12 w-full nav:hidden`}
+        data-menu-link
+      >
+        {t(lang, 'nav.cta')}
+      </a>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-0 min-[380px]:gap-1 nav:ml-0 nav:gap-3">
       <LangToggle lang={lang} route={route} />
+      <a href={`${home}#agenda`} class={`${ctaClass} hidden nav:inline-flex`}>
+        {t(lang, 'nav.cta')}
+      </a>
+      <button
+        type="button"
+        class="text-off hover:text-cyan flex size-11 items-center justify-center rounded-full nav:hidden"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label={t(lang, 'nav.menu_open')}
+        data-menu-button
+      >
+        <svg
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path data-icon-open d="M4 7h16M4 12h16M4 17h16"></path>
+          <path data-icon-close class="hidden" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
     </div>
   </div>
 </header>
+
+<script>
+  // Mobile menu (US-003 AC1): focus-trapped while open, closes on Esc and on link click.
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const button = header?.querySelector<HTMLButtonElement>('[data-menu-button]');
+  const menu = header?.querySelector<HTMLElement>('#site-menu');
+
+  if (header && button && menu) {
+    const desktop = window.matchMedia('(min-width: 75rem)');
+    const iconOpen = button.querySelector('[data-icon-open]');
+    const iconClose = button.querySelector('[data-icon-close]');
+
+    const isOpen = () => button.getAttribute('aria-expanded') === 'true';
+
+    const setOpen = (open: boolean, restoreFocus = false) => {
+      button.setAttribute('aria-expanded', String(open));
+      button.setAttribute(
+        'aria-label',
+        (open ? header.dataset.labelClose : header.dataset.labelOpen) ?? '',
+      );
+      menu.classList.toggle('hidden', !open);
+      iconOpen?.classList.toggle('hidden', open);
+      iconClose?.classList.toggle('hidden', !open);
+      if (restoreFocus) button.focus();
+    };
+
+    const focusables = () =>
+      Array.from(header.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')).filter(
+        (el) => el.getClientRects().length > 0,
+      );
+
+    button.addEventListener('click', () => setOpen(!isOpen()));
+
+    menu.querySelectorAll('[data-menu-link]').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    header.addEventListener('keydown', (event) => {
+      if (!isOpen()) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false, true);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Crossing into the inline layout leaves no open sheet behind.
+    desktop.addEventListener('change', () => setOpen(false));
+  }
+</script>

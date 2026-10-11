@@ -10,22 +10,26 @@ interface Props {
 
 const { lang } = Astro.props;
 
-// `screenshot`: path under public/ once a 1200×750 capture exists; until then the card header shows
-// the project initials (CONTENT §7, provisional). `repo`: null = private case study, no link.
+// Screenshots: drop a 1200×750 `public/images/work/<id>.jpg` (gaby, cami, poliart) and the card shows
+// it; without the file the card header shows the project initials (CONTENT §7, provisional).
+// `repo`: null = private case study, no link.
+const available = new Set(Object.keys(import.meta.glob('/public/images/work/*.jpg')));
+const shot = (id: string) =>
+  available.has(`/public/images/work/${id}.jpg`) ? `images/work/${id}.jpg` : null;
 const projects = [
   {
     n: 1,
     initials: 'GM',
     repo: 'https://github.com/Raulc87/gaby-main-page',
-    screenshot: null as string | null,
+    screenshot: shot('gaby'),
   },
   {
     n: 2,
     initials: 'CM',
     repo: 'https://github.com/Raulc87/cami-main-page',
-    screenshot: null as string | null,
+    screenshot: shot('cami'),
   },
-  { n: 3, initials: 'PI', repo: null, screenshot: null as string | null },
+  { n: 3, initials: 'PI', repo: null, screenshot: shot('poliart') },
 ] as const;
 const key = (n: number, part: string) => `work.${n}.${part}` as ContentKey;
 ---

@@ -1,3 +1,7 @@
+// OWNER: Agent 1 (site shell, content sections, i18n and SEO). The owner approved these e2e specs as
+// Agent 1's files (2026-10-11), an exception to the SPRINT_001 ownership map. Agent 2's lead-form,
+// scheduling and privacy flows have their own specs: do not duplicate the scope below.
+// SCOPE: US-004/US-005: service cards, preselect event and ?tipo=, process steps, warranty.
 import { expect, test } from '@playwright/test';
 
 const codes = ['website', 'web_app', 'business_system', 'custom_solution', 'custom_solution'];

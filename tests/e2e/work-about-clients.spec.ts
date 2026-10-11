@@ -1,3 +1,7 @@
+// OWNER: Agent 1 (site shell, content sections, i18n and SEO). The owner approved these e2e specs as
+// Agent 1's files (2026-10-11), an exception to the SPRINT_001 ownership map. Agent 2's lead-form,
+// scheduling and privacy flows have their own specs: do not duplicate the scope below.
+// SCOPE: US-006/US-007/US-008: showroom, CEO section and photo fallback, clients placeholder.
 import { expect, test } from '@playwright/test';
 
 for (const lang of ['es', 'en'] as const) {
@@ -30,7 +34,20 @@ for (const lang of ['es', 'en'] as const) {
         lang === 'es' ? 'Caso de estudio · código privado' : 'Case study · private code',
       );
       await expect(cards.nth(2)).toContainText('Poliart Impresores');
-      await expect(page.locator('[data-initials]')).toHaveText(['GM', 'CM', 'PI']);
+      // real screenshots for the two public projects, the initials placeholder for the private one
+      const shots = page.locator('[data-project-card] img');
+      await expect(shots).toHaveCount(2);
+      await expect(shots.nth(0)).toHaveAttribute('src', /images\/work\/gaby\.jpg$/);
+      await expect(shots.nth(1)).toHaveAttribute('src', /images\/work\/cami\.jpg$/);
+      for (const i of [0, 1]) {
+        await shots.nth(i).scrollIntoViewIfNeeded();
+        await expect
+          .poll(() => shots.nth(i).evaluate((img: HTMLImageElement) => img.naturalWidth))
+          .toBe(1200);
+        const box = await shots.nth(i).boundingBox();
+        expect(box!.width / box!.height).toBeCloseTo(1.6, 1);
+      }
+      await expect(page.locator('[data-initials]')).toHaveText(['PI']);
     });
 
     test('about: facts chips, LinkedIn button, photo at most 200 px (US-007)', async ({ page }) => {

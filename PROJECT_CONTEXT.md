@@ -53,6 +53,5 @@
 - Logo lockups: convert the wordmark text to outlines before printing / trademark filing (owner)
 - Raul's photo ≥ 800×800 px (provisional 200 px in use)
 - Sanitized screenshot of the Poliart platform for the showroom
-- GoDaddy support to disable their injected monitoring script before `v0.1.0` (release gate)
 - Cami's sign-off on the approved identity (Origo governance; does not block the build)
 - Legal review of privacy notice v1 (Cinthia)

@@ -40,12 +40,12 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 4. Contracts and integrations | Contract v1.0 complete (endpoint, CORS, body, enums, processing order, sheet columns, responses, config, mock); failure behaviour defined for Sheets, email and Calendly; credentials rule stated (TECH_STACK §11). **OK — locks on merge.** |
 | 5. Data, legal, security | Jurisdiction Costa Rica (Ley 8968); consent checkbox; privacy notice v1 `2026-10-14-v1` decided by the owner (retention 24 months confirmed; Calendly loading disclosed; Cinthia's review to follow); the version the visitor saw is stored per lead; spam protection and idempotency in scope (US-014). **OK.** |
 | 5.1 UI | Visual identity **approved** 2026-10-10: proposal A v3, Palette 1 and the ball logo (UX §2; tokens mandatory). Go-live assets: logo kit (vector) ✅; photo ✅ provisional 200 px (≥ 800 px version: Raul, Sprint 002); final copy — all [CONFIRMAR] items answered 2026-10-10, **approved by merging this PR**. |
-| 6. Stack and environment | GoDaddy Deluxe cPanel + `digitalstrike-solutions.com` bought 2026-10-10, AutoSSL active and HTTPS forced, Python apps supported (ADR-001/002); GitHub Pages for previews (public repo); local run defined (dev + mock); test/lint/CI/CD named. **OK.** Open for the deliverable (not blocking kickoff): FTP account + `CPANEL_*` secrets, GoDaddy injected script removal (owner, Mon). |
+| 6. Stack and environment | GoDaddy Deluxe cPanel + `digitalstrike-solutions.com` bought 2026-10-10, AutoSSL active and HTTPS forced, Python apps supported (ADR-001/002); GitHub Pages for previews (public repo); local run defined (dev + mock); test/lint/CI/CD named. **OK.** Open for the deliverable (not blocking kickoff): FTP account + `CPANEL_*` secrets (owner, Mon). GoDaddy's injected script kept and disclosed (owner decision 2026-10-11, ADR-001). |
 | 7. Parallelization | 3 agents assigned; ownership map, scaffold-first order, integration PR owner (Agent 2), conflict rule below. **OK.** |
 | 7.1 Merge control | Every prompt in `SPRINT_001_AGENT_PROMPTS.md` states "never merge/approve"; review-only agent runs in its own session with the independence rule. **OK.** `main` protection: owner. |
 | 8. Go-ahead | **Open** (after gates 2 and 3b). |
 
-**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 3b (merge PR #2 after this one, so the approved visual reference is on `main` before Agent 1 starts), gate 6 (go-ahead). Not blocking but needed for the deliverable, by Mon 2026-10-12 EOD (owner): Apps Script deployed + repository variables set; Pages enabled; cPanel FTP account + `CPANEL_*` secrets; GoDaddy's injected script disabled.
+**Blocking items remaining:** gate 2 (merge this PR = approve specs, copy, privacy notice v1 and contract), gate 3b (merge PR #2 after this one, so the approved visual reference is on `main` before Agent 1 starts), gate 6 (go-ahead). Not blocking but needed for the deliverable, by Mon 2026-10-12 EOD (owner): Apps Script deployed + repository variables set; Pages enabled; cPanel FTP account + `CPANEL_*` secrets.
 
 ## Planned Stories
 
@@ -81,7 +81,8 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 | `src/components/lead/**`, `src/components/schedule/**`, `src/components/privacy/**`, `src/lib/lead/**`, `src/lib/schedule/**`, `src/i18n/{es,en}/form.ts`, `tests/e2e/**` | Agent 2 (stubs created by Agent 1 in Phase 0 are handed over on merge; Agent 1 renders `PrivacyNotice` inside the privacy pages) |
 | `apps-script/**`, `scripts/**`, `.github/workflows/**`, `.env.example`, `public/.htaccess`, `docs/runbooks/**` | Agent 3 |
 | `tests/unit/**` | Owner of the code under test |
-| `docs/specs/**`, `docs/ux/**`, `docs/plans/**`, `docs/sprints/**`, `docs/decisions/**`, `docs/assets/**`, `AGENTS.md`, `PROJECT_CONTEXT.md`, `README.md` | Human owner (changes via `DS-DOCS-*` PRs) |
+| `docs/specs/**`, `docs/ux/**`, `docs/plans/**`, `docs/sprints/**`, `docs/decisions/**`, `docs/assets/**`, `AGENTS.md`, `PROJECT_CONTEXT.md`, `README.md`, `TECH_STACK.md` | Human owner (changes via `DS-DOCS-*` PRs) |
+| `holding-page/**` (temporary page live until `v0.1.0`) | Human owner (changes via `DS-CHORE-*` or `DS-DOCS-*` PRs) |
 
 ## Integration Contract
 `docs/specs/LEAD_ENDPOINT_CONTRACT.md` v1.0 — locked for this sprint. Enum labels are duplicated on purpose (Agent 2's `form.ts` for the form, Agent 3's email templates); both copy them verbatim from contract §4.
@@ -104,7 +105,7 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 
 ## Sprint Definition of Done
 - Must stories meet their ACs; CI green on `main`.
-- Smoke test on `https://digitalstrike-solutions.com` passed with the real endpoint (row + 2 emails + Calendly, HTTPS, no GoDaddy-injected script).
+- Smoke test on `https://digitalstrike-solutions.com` passed with the real endpoint (row + 2 emails + Calendly, HTTPS, privacy notice discloses GoDaddy's logs, monitoring script and cookies, and the live cookies and injected script in a fresh browser profile still match that disclosure; production Lighthouse score recorded — US-016 AC3).
 - No known critical regression; owner approves; `v0.1.0` released.
 
 ## Owner checklist (outside the agents)
@@ -116,7 +117,9 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - [x] Provisional photo supplied (200 px). A ≥ 800×800 px version later.
 - [x] Buy the GoDaddy Deluxe plan and `digitalstrike-solutions.com`; SSL active, HTTPS forced, holding page live (2026-10-10).
 - [ ] Create a dedicated cPanel FTP account limited to `public_html`; set repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (runbook from DS-017) — by Mon.
-- [ ] Ask GoDaddy support to disable the monitoring script they inject into HTML pages — by Mon.
+- [x] GoDaddy's injected monitoring script: keep and disclose it (decision 2026-10-11); visitor statistics in cPanel Metrics → Awstats.
+- [x] Holding page with the bilingual privacy line re-uploaded to `public_html`; verified live on `https://digitalstrike-solutions.com` (2026-10-11).
+- [ ] Main site: the privacy notice disclosure is verified on production in the release smoke test (US-016 AC3).
 - [ ] Tuesday: publish release `v0.1.0` (deploys to GoDaddy), smoke test on `https://digitalstrike-solutions.com`.
 
 Agent kickoff prompts and model recommendations: `docs/sprints/SPRINT_001_AGENT_PROMPTS.md`.

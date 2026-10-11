@@ -48,7 +48,7 @@ The page must:
 
 ### Out of scope (now)
 - Prices on the page; refunds/devolution policy (pending legal review).
-- Analytics, tracking pixels, cookie banner (no cookies set by the site itself).
+- Client-side analytics added by our code (e.g. Google Analytics), tracking pixels, cookie banner. Visit statistics from the server logs (cPanel Awstats, §8) are in scope. (The site's own code sets no cookies; GoDaddy's injected script sets its own, disclosed in the privacy notice, ADR-001). A consent banner is reconsidered if the site targets EU visitors (GDPR) or GoDaddy's script changes.
 - WhatsApp button, Instagram link (accounts do not exist yet), company LinkedIn page.
 - Real client logos (none available yet), testimonials.
 - Blog, accounts/login, payments, CMS.
@@ -101,9 +101,9 @@ The page must:
 |---|---|
 | NFR-001 | Mobile-first. No horizontal scroll at 360, 390, 768, 1024 and 1440 px; touch targets ≥ 44×44 px. |
 | NFR-002 | Accessibility: WCAG 2.1 AA contrast for all text, keyboard-operable navigation, form and dialog, visible focus, labelled fields, `lang` attribute per page. |
-| NFR-003 | Performance: static HTML; Lighthouse Performance ≥ 90 and Accessibility ≥ 95 on mobile for `/es/` (Calendly is not loaded until the visitor clicks "Ver horarios disponibles" or submits the form, FR-016, so it does not affect the score). |
+| NFR-003 | Performance: static HTML; Lighthouse Performance ≥ 90 and Accessibility ≥ 95 on mobile for `/es/` (Calendly is not loaded until the visitor clicks "Ver horarios disponibles" or submits the form, FR-016, so it does not affect the score). The **gate** is the CI run on the site's own build (US-015 AC4). Production also carries GoDaddy's injected script (ADR-001), outside our code: the release smoke test runs Lighthouse (PageSpeed Insights, mobile) on `https://digitalstrike-solutions.com/es/` and records the score; if it falls below 90 because of that script, the owner decides between accepting it and asking GoDaddy to remove the script. |
 | NFR-004 | SEO: unique title and description per language, `hreflang` alternates (`es`, `en`, `x-default`), canonical URLs, Open Graph image, `sitemap.xml`, `robots.txt`. |
-| NFR-005 | Privacy: no analytics, no third-party cookies from the site itself; fonts self-hosted; Calendly is loaded only after an explicit visitor action (FR-016) and disclosed in the privacy notice. |
+| NFR-005 | Privacy: the site's own code adds no analytics and no third-party cookies; fonts self-hosted; the hosting provider's server-injected performance monitoring script (GoDaddy) is accepted and disclosed in the privacy notice (ADR-001); Calendly is loaded only after an explicit visitor action (FR-016) and disclosed in the privacy notice. |
 | NFR-006 | Security: no secrets in the repository or the client bundle; the Apps Script endpoint validates everything server-side; personal data is never logged. |
 | NFR-007 | Theming: all colours and fonts are theme tokens (UX §2.1, approved identity) — no literals in components. |
 
@@ -112,7 +112,7 @@ The page must:
 - Jurisdiction: **Costa Rica, Ley 8968** (Protección de la Persona frente al Tratamiento de sus Datos Personales).
 - Data controller: Raul Casañas, operating as DigitalStrike Solutions (natural person until incorporation).
 - Data collected: the lead form fields; the form stores no IP address. The hosting provider (GoDaddy) keeps standard server access logs (IP, user agent) for security and operation; the privacy notice says so.
-- Storage and processors: GoDaddy (hosting: server access logs of every visit); Google (Sheets, Apps Script, Gmail) for every lead; Calendly from the moment its calendar loads (after the visitor clicks "Ver horarios disponibles" or submits the form, FR-016): it receives technical browser data and may set its own cookies; when it loads after a successful submission it also receives the visitor's name and email to prefill the booking (FR-015); if the visitor books, it processes the booking data. Both may process data outside Costa Rica; the privacy notice says so.
+- Storage and processors: GoDaddy (hosting: server access logs of every visit, and a performance monitoring script its servers add to every page, which sends technical visit data to GoDaddy and sets GoDaddy cookies on the domain: `_tccl_visitor` (visitor ID, 1 year), `_tccl_visit` and `_scc_session` (checked 2026-10-11)); Google (Sheets, Apps Script, Gmail) for every lead; Calendly from the moment its calendar loads (after the visitor clicks "Ver horarios disponibles" or submits the form, FR-016): it receives technical browser data and may set its own cookies; when it loads after a successful submission it also receives the visitor's name and email to prefill the booking (FR-015); if the visitor books, it processes the booking data. Both may process data outside Costa Rica; the privacy notice says so.
 - Consent: an explicit, unchecked checkbox linked to the privacy notice; version `privacy_notice_version` stored with each lead.
 - Rights: access, rectification, deletion by email to the contact address.
 - Retention: 24 months from the last contact, or until deletion is requested (confirmed by the owner 2026-10-10). Operated through sheet column S `last_contact_at` (contract §6) and the owner procedure in `docs/runbooks/APPS_SCRIPT_SETUP.md` (US-010 AC6): a monthly review deletes rows whose `last_contact_at` (or `submitted_at` when empty) is older than 24 months, and deletion requests are handled within 5 business days. Deletion covers every copy the controller holds: the sheet row, the owner notification in the owner's mailbox (found by `lead_id` in the subject), the visitor confirmation in Sent (found by the visitor's address), and both emptied from Trash. Apps Script logs hold only `lead_id` (NFR-006).
@@ -124,6 +124,7 @@ The page must:
 |---|---|---|
 | Qualified leads | **20 to 40 leads in 90 days** from the first public release (2026-10-14 → 2027-01-12); ≥ 20 is success, 40 is the stretch goal | Rows in the leads sheet, excluding test rows and `rejected` spam |
 | Session 0 bookings | Tracked, no target yet | Calendly dashboard |
+| Visits | Tracked, no target yet | cPanel Metrics → Awstats / Visitors (server logs) |
 | First release | Public page with working form and Calendly before **Wednesday 2026-10-14** (entrepreneur meet-up) | `https://digitalstrike-solutions.com` live from release `v0.1.0`, smoke test passed |
 
 ## 9. Constraints
@@ -142,5 +143,4 @@ Still open (non-blocking for Sprint 001):
 1. Convert the logo lockups' wordmark text to outlines before printing or the trademark filing (owner).
 2. A ≥ 800×800 px photo to replace the provisional 200 px one.
 3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
-4. GoDaddy support to disable the monitoring script their server injects into HTML pages (NFR-005; release gate, ADR-001).
-5. Cami's sign-off on the approved identity (Origo governance; does not block the build).
+4. Cami's sign-off on the approved identity (Origo governance; does not block the build).

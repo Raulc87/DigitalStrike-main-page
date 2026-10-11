@@ -81,7 +81,7 @@ See ADR-001 and `docs/runbooks/RELEASE.md`, `docs/runbooks/DEPLOYMENT.md`.
 - Apps Script cold start can take 1–3 s: the form shows "Enviando…"; 20 s client timeout.
 - Response always HTTP 200: clients must read `ok` (contract §1).
 - Emails are sent as `manager@digitalstrike-solutions.com` (Google Workspace; SPF, DKIM and DMARC published): the Apps Script project and the sheet must be created under that account (ADR-005). A Workspace sharing restriction could block the web app's "Anyone" access — checked in the runbook.
-- GoDaddy injects a monitoring script into served HTML; it must be disabled by GoDaddy support before the first release (NFR-005, ADR-001 release gate).
+- GoDaddy injects a performance monitoring script into served HTML; the owner keeps it and it is disclosed in the privacy notice (NFR-005, ADR-001). It may cost a little on the Lighthouse score in production; the CI Lighthouse gate runs on the local build, without it, and the release smoke test records the production score (NFR-003).
 
 ## 14. Upgrade / Scaling Path
 Change the backend (ADR-002 §Future) when any of these appear: authenticated users, payments, a client portal, more than one form/endpoint with shared logic, need for a real database or CRM, email volume beyond Gmail quotas, or the need to run AI features server-side.

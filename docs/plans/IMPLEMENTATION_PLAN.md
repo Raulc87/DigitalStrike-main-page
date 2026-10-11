@@ -49,7 +49,7 @@ docs/runbooks/LOCAL_DEVELOPMENT.md  APPS_SCRIPT_SETUP.md  RELEASE.md  DEPLOYMENT
 
 1. **Phase 0 (foundation, merged first):** `DS-001-frontend-scaffold` (Agent 1). Agent 3 starts at the same time on `apps-script/` and the mock, which do not depend on the scaffold.
 2. **Phase 1 (parallel):** Agent 1 sections; Agent 2 form → privacy → Calendly (after the scaffold merges); Agent 3 endpoint → emails → CI → Pages preview → cPanel production release.
-3. **Human owner (in parallel, by Mon 2026-10-12 EOD):** signed in as `manager@digitalstrike-solutions.com`, create the sheet and the Apps Script project from `apps-script/`, deploy, set Script Properties, set repository variables, enable Pages (source: GitHub Actions), protect `main` (runbook `APPS_SCRIPT_SETUP.md`); create the dedicated cPanel FTP account and set the `CPANEL_*` repository secrets; ask GoDaddy support to disable their injected monitoring script (runbook `DEPLOYMENT.md`).
+3. **Human owner (in parallel, by Mon 2026-10-12 EOD):** signed in as `manager@digitalstrike-solutions.com`, create the sheet and the Apps Script project from `apps-script/`, deploy, set Script Properties, set repository variables, enable Pages (source: GitHub Actions), protect `main` (runbook `APPS_SCRIPT_SETUP.md`); create the dedicated cPanel FTP account and set the `CPANEL_*` repository secrets (runbook `DEPLOYMENT.md`).
 4. **Integration (Tue 2026-10-13):** Agent 2 `DS-009-integration-e2e` against the mock; owner checks the Pages preview with the real endpoint; review fixes.
 5. **Release:** owner tags `v0.1.0` and publishes the GitHub Release; `release-cpanel.yml` deploys it to `https://digitalstrike-solutions.com` (replacing the holding page), then the owner runs the release smoke test there (`RELEASE.md`).
 
@@ -71,4 +71,3 @@ The kit's sprint length is 7 business days. Sprint 001 is shortened to meet the 
 | No photo by Tuesday | Monogram placeholder (US-007 AC2) |
 | Base-path bugs on Pages | CI builds with the Pages base path; e2e runs against that build |
 | Production deploy fails on release day (FTP secrets, network) | Secrets set and a manual dry run of `release-cpanel.yml` by Mon 2026-10-12; the holding page stays live until the first successful upload; rollback = re-run on the previous tag |
-| GoDaddy's injected monitoring script is still on | Requested from GoDaddy support by the owner on Mon; the smoke test checks for it; if it can't be removed, the owner decides with a privacy-notice update (ADR-001 review trigger) |

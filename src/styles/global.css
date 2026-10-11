@@ -91,7 +91,6 @@
     background-color: var(--color-navy);
     font-size: var(--text-body);
     line-height: var(--leading-body);
-    overflow-x: hidden;
   }
   h1 {
     font-size: var(--text-h1);

@@ -6,6 +6,7 @@ import { routes } from '../../lib/i18n/routes';
 import { withBase } from '../../lib/i18n/url';
 import { formT, optionLabel } from '../../lib/lead/messages';
 import { BUDGET_RANGES, PROJECT_TYPES, TIMELINES } from '../../lib/lead/types';
+import PrivacyDialog from '../privacy/PrivacyDialog.astro';
 
 interface Props {
   lang: Locale;
@@ -213,6 +214,8 @@ const controlClass =
           </form>
         </div>
       </div>
+
+      <PrivacyDialog lang={lang} />
 
       <div
         data-lead-success

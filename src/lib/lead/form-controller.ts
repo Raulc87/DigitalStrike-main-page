@@ -37,6 +37,7 @@ function renderWithEmail(el: HTMLElement, text: string, email: string): void {
   if (rest.length > 0) {
     const link = document.createElement('a');
     link.href = `mailto:${email}`;
+    link.className = 'underline underline-offset-4';
     link.textContent = email;
     el.append(link, rest.join('{email}'));
   }

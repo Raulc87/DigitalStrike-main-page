@@ -1,14 +1,88 @@
 ---
-// Stub handed to Agent 2 (US-013). Keep the #agenda anchor on the section.
+// Scheduling (US-013, FR-016, UX §3). Click-to-load: a preview card until the visitor clicks
+// "Ver horarios disponibles" or submits the lead form; then the official Calendly inline widget.
 import type { Locale } from '../../i18n';
+import { formT } from '../../lib/lead/messages';
+import { calendlyUrl } from '../../lib/schedule/config';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+const fallbackLink = 'inline-flex min-h-11 items-center underline underline-offset-4';
 ---
 
 <section id="agenda" class="bg-steel" data-lang={lang}>
-  <div class="section-shell py-16"></div>
+  <div class="section-shell py-16">
+    <h2 class="text-off">{formT(lang, 'schedule.title')}</h2>
+    <p class="text-text-2 mt-4 max-w-2xl">{formT(lang, 'schedule.body')}</p>
+
+    <div class="mt-8" data-schedule-root data-calendly-url={calendlyUrl}>
+      <div
+        data-schedule-preview
+        class="border-border-strong flex min-h-[1000px] flex-col items-center justify-center gap-5 rounded-xl border-2 border-dashed p-6 text-center md:min-h-[700px]"
+      >
+        <button
+          type="button"
+          data-schedule-open
+          class="bg-cyan text-navy inline-flex min-h-12 items-center justify-center rounded-full px-8 font-semibold hover:brightness-110"
+        >
+          {formT(lang, 'schedule.open')}
+        </button>
+        <p class="text-text-2 max-w-md text-sm">{formT(lang, 'schedule.notice')}</p>
+        <noscript>
+          <a href={calendlyUrl} target="_blank" rel="noopener" class={fallbackLink}>
+            {formT(lang, 'schedule.fallback')}
+          </a>
+        </noscript>
+      </div>
+
+      <div data-schedule-widget tabindex="-1" hidden>
+        <p data-schedule-loading class="text-text-2" role="status">
+          {formT(lang, 'schedule.loading')}
+        </p>
+        <div data-schedule-container class="min-h-[1000px] md:min-h-[700px]"></div>
+        <p data-schedule-fallback class="mt-4" hidden>
+          <a href={calendlyUrl} target="_blank" rel="noopener" class={fallbackLink}>
+            {formT(lang, 'schedule.fallback')}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
+
+<script>
+  import { LEAD_SUBMITTED_EVENT } from '../../lib/lead/events';
+  import type { LeadSubmittedDetail } from '../../lib/lead/events';
+  import { createCalendlyEmbed } from '../../lib/schedule/calendly';
+
+  const root = document.querySelector<HTMLElement>('[data-schedule-root]');
+  const get = (name: string) => root?.querySelector<HTMLElement>(`[data-schedule-${name}]`);
+  const preview = get('preview');
+  const widget = get('widget');
+  const container = get('container');
+  const loading = get('loading');
+  const fallback = get('fallback');
+  const button = get('open');
+
+  if (root && preview && widget && container && loading && fallback && button) {
+    const embed = createCalendlyEmbed(root.dataset.calendlyUrl ?? '', {
+      preview,
+      widget,
+      container,
+      loading,
+      fallback,
+    });
+    button.addEventListener('click', () => {
+      void embed.open();
+      widget.focus(); // the button is gone; keep focus in the section
+    });
+    // After a successful lead: (re)initialize with name and email prefilled (US-013 AC2).
+    window.addEventListener(LEAD_SUBMITTED_EVENT, (event) => {
+      const { name, email } = (event as CustomEvent<LeadSubmittedDetail>).detail;
+      void embed.open({ name, email });
+    });
+  }
+</script>

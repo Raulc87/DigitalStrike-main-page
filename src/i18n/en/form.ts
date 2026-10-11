@@ -58,6 +58,15 @@ export const enForm: Record<FormKey, string> = {
     "We can't take more messages here right now. Please try again later or email us directly at {email}.",
   'form.error.generic': "We couldn't send your message. Please try again or email us at {email}.",
   'form.error_summary': 'Please check the highlighted fields.',
+  'schedule.title': 'Book your session 0',
+  'schedule.body':
+    "A one-hour conversation to understand your problem and see if we're the right team to solve it.",
+  'schedule.fallback': "Can't see the calendar? Open it in a new tab.",
+  'schedule.loading': 'Loading the calendar…',
+  'schedule.open': 'See available times',
+  'schedule.notice':
+    'Opening the calendar loads Calendly, an external service. More details in the privacy notice.',
+
   'privacy.title': 'Privacy notice — DigitalStrike Solutions',
   'privacy.version': 'Version {version}',
   'privacy.controller.title': 'Who is responsible for your data.',

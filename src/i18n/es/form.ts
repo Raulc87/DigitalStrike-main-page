@@ -57,6 +57,15 @@ export const esForm = {
     'En este momento no podemos recibir más mensajes por aquí. Inténtalo más tarde o escríbenos directamente a {email}.',
   'form.error.generic': 'No pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a {email}.',
   'form.error_summary': 'Revisa los campos marcados.',
+  'schedule.title': 'Agenda tu sesión 0',
+  'schedule.body':
+    'Una conversación de una hora para entender tu problema y ver si somos el equipo indicado para resolverlo.',
+  'schedule.fallback': '¿No ves el calendario? Ábrelo en una pestaña nueva.',
+  'schedule.loading': 'Cargando el calendario…',
+  'schedule.open': 'Ver horarios disponibles',
+  'schedule.notice':
+    'Al abrir el calendario se carga Calendly, un servicio externo. Más detalles en el aviso de privacidad.',
+
   'privacy.title': 'Aviso de privacidad — DigitalStrike Solutions',
   'privacy.version': 'Versión {version}',
   'privacy.controller.title': 'Quién es responsable de tus datos.',

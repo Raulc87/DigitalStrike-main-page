@@ -8,10 +8,12 @@ import { esForm } from '../../src/i18n/es/form';
 
 const CALENDLY = /^https:\/\/([a-z0-9-]+\.)*calendly\.com\//;
 
-// Stand-in for widget.js: the official API shape, rendering an iframe for the given URL.
+// Stand-in for widget.js: the official API shape, rendering an iframe for the given URL with the
+// official sizing (width/height 100% of the container, no resize).
 const FAKE_WIDGET = `window.Calendly = { initInlineWidget: function (o) {
   var f = document.createElement('iframe');
   f.title = 'calendly'; f.src = 'about:blank'; f.dataset.url = o.url;
+  f.width = '100%'; f.height = '100%'; f.setAttribute('frameborder', '0');
   f.dataset.prefill = JSON.stringify(o.prefill || null);
   o.parentElement.appendChild(f);
 } };`;
@@ -42,6 +44,11 @@ test('no request to Calendly before the click; the widget loads in place after i
   const iframe = page.locator('[data-schedule-container] iframe');
   await expect(iframe).toHaveCount(1);
   await expect(iframe).toHaveAttribute('data-url', 'https://calendly.com/rcasanas/1hr');
+  // UX §3: the widget is at least 700 px tall on desktop and 1000 px below 768 px.
+  const width = page.viewportSize()!.width;
+  const height = (await iframe.boundingBox())!.height;
+  expect(height).toBeGreaterThanOrEqual(width < 768 ? 1000 : 700);
+  await expect(page.locator('#agenda-title')).toBeFocused();
   await expect(page.locator('[data-schedule-preview]')).toBeHidden();
   await expect(page.locator('[data-schedule-loading]')).toBeHidden();
   expect(requests).toEqual(['https://assets.calendly.com/assets/external/widget.js']);

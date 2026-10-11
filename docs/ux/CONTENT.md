@@ -18,6 +18,7 @@ Implementation: every visitor-facing string lives in `src/i18n/{es,en}/*.ts`, co
 | `meta.title` | DigitalStrike Solutions · Software a la medida para tu negocio | DigitalStrike Solutions · Custom software for your business |
 | `meta.description` | Páginas web, aplicaciones y sistemas a la medida para personas emprendedoras y empresas. Trabajamos cerca de ti, desde Costa Rica para el mundo. | Websites, web apps and custom systems for entrepreneurs and companies. We work close to you, from Costa Rica to the world. |
 | `meta.og_alt` | Logo de DigitalStrike Solutions: una bola de béisbol con un cursor de terminal | DigitalStrike Solutions logo: a baseball with a terminal cursor |
+| `meta.privacy_title` | Aviso de privacidad · DigitalStrike Solutions | Privacy notice · DigitalStrike Solutions |
 
 ## 2. Header
 

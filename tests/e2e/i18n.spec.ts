@@ -65,6 +65,21 @@ test.describe('toggle (US-002 AC2)', () => {
     await expect(page).toHaveURL(/\/en\/#proyectos$/);
   });
 
+  test('a stale hash does not win over the section the visitor scrolled to', async ({ page }) => {
+    await page.goto('/es/#servicios');
+    await page.evaluate(() => {
+      document.body.style.paddingBottom = '3000px';
+      document.getElementById('nosotros')?.scrollIntoView({ behavior: 'instant' });
+    });
+    expect(await page.evaluate(() => location.hash)).toBe('#servicios');
+    const box = await page
+      .getByRole('navigation', { name: 'Cambiar idioma' })
+      .getByRole('link', { name: 'EN' })
+      .boundingBox();
+    await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await expect(page).toHaveURL(/\/en\/#nosotros$/);
+  });
+
   test('at the top of the page the toggle goes to the plain page', async ({ page }) => {
     await page.goto('/es/');
     await page

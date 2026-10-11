@@ -131,6 +131,13 @@ test.describe('SEO (US-002 AC3, AC4)', () => {
     });
   }
 
+  test('privacy pages use the CONTENT §1 meta.privacy_title', async ({ page }) => {
+    await page.goto('/es/privacidad/');
+    await expect(page).toHaveTitle('Aviso de privacidad · DigitalStrike Solutions');
+    await page.goto('/en/privacy/');
+    await expect(page).toHaveTitle('Privacy notice · DigitalStrike Solutions');
+  });
+
   test('titles and descriptions differ per language', async ({ page }) => {
     await page.goto('/es/');
     const es = [

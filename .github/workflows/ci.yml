@@ -1,0 +1,140 @@
+# CI for every pull request and every push to main (US-015 AC2–AC4, TECH_STACK §9).
+# Job names are stable: they are the check names the main ruleset requires.
+# CI never calls Google: every build points the lead form at the local mock URL
+# (contract §8), and the e2e suite starts its own in-process mock (scripts/mock-lead-endpoint.mjs).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Only superseded PR runs are cancelled; every main commit keeps a complete CI result
+  # (RELEASE.md: CI green on the commit being released).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PUBLIC_LEAD_ENDPOINT_URL: http://127.0.0.1:8787/exec
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Frontend tests and the Apps Script logic (Vitest projects `unit` and `apps-script`).
+      - run: npm test
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # The GitHub Pages preview build (US-016 AC1, ADR-001).
+      PUBLIC_SITE_URL: https://raulc87.github.io
+      PUBLIC_BASE_PATH: /DigitalStrike-main-page
+      PUBLIC_NOINDEX: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Check the base path and noindex in the output
+        run: |
+          grep -q 'href="/DigitalStrike-main-page/' dist/es/index.html
+          grep -q 'href="/DigitalStrike-main-page/' dist/en/index.html
+          grep -q '<meta name="robots" content="noindex' dist/es/index.html
+
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Allowed to fail until Agent 2's integration PR (DS-009-integration-e2e, #18) is merged and
+    # the suite is green on main; then this line is removed and the check made required.
+    continue-on-error: true
+    env:
+      # Some specs (the site sections) navigate to root paths such as `/es/`, so the e2e build
+      # uses base "/"; the Pages base path is covered by the `build` job. Pending badges stay
+      # off (a spec checks it).
+      PUBLIC_BASE_PATH: /
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:e2e
+      - name: Upload the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  lighthouse:
+    name: lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Its own job: `npm run lhci` rebuilds dist/ with base "/" (US-015 AC4: mobile preset, 3 runs
+    # on /es/ and /en/, Performance ≥ 0.90, Accessibility ≥ 0.95; lighthouserc.json). Nothing is
+    # uploaded to a third party; the reports stay as a workflow artifact.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lhci
+      - name: Upload the Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 7
+          if-no-files-found: ignore

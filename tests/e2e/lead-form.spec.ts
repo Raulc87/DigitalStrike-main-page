@@ -11,7 +11,7 @@ for (const lang of ['es', 'en'] as const) {
   const t = dictionaries[lang];
 
   test(`/${lang}/ lead form: fields, order, labels and autofill hints`, async ({ page }) => {
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const form = page.locator('form[data-lead-form]');
     await expect(page.locator('#lead-title')).toHaveText(t['form.title']);
 
@@ -65,7 +65,7 @@ for (const lang of ['es', 'en'] as const) {
   });
 
   test(`/${lang}/ honeypot is isolated from autofill (UX §3)`, async ({ page }) => {
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const hp = page.locator('#lead-hp');
     await expect(hp).toHaveCount(1);
     // Not inside the lead form; in its own form without a submit button.
@@ -107,7 +107,7 @@ for (const lang of ['es', 'en'] as const) {
   test(`/${lang}/ submit with errors focuses the summary and keeps typed data`, async ({
     page,
   }) => {
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const requests: string[] = [];
     page.on('request', (r) => {
       if (r.method() === 'POST') requests.push(r.url());
@@ -133,7 +133,7 @@ for (const lang of ['es', 'en'] as const) {
   });
 
   test(`/${lang}/ errors show on blur`, async ({ page }) => {
-    await page.goto(`/${lang}/`);
+    await page.goto(`${lang}/`);
     const phone = page.locator('input[name="phone"]');
     await phone.fill('12');
     await phone.blur();
@@ -146,12 +146,12 @@ for (const lang of ['es', 'en'] as const) {
 }
 
 test('?tipo=<code> preselects the project type', async ({ page }) => {
-  await page.goto('/es/?tipo=business_system#contacto');
+  await page.goto('es/?tipo=business_system#contacto');
   await expect(page.locator('select[name="project_type"]')).toHaveValue('business_system');
 });
 
 test('a service card CTA preselects the project type (DS-004 event)', async ({ page }) => {
-  await page.goto('/es/');
+  await page.goto('es/');
   await page.locator('a[data-project-type="web_app"]').first().click();
   await expect(page.locator('select[name="project_type"]')).toHaveValue('web_app');
   await expect(page).toHaveURL(/#contacto$/);

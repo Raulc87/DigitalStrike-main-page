@@ -43,18 +43,6 @@ const { lang, route } = Astro.props;
 
   // Keep the visitor on the same section: the anchors are shared by both pages (ADR-003).
   // The choice is saved before navigating; storage failures are ignored.
-  // Document order of the page anchors (UX §1); both languages share them.
-  const SECTION_IDS = [
-    'inicio',
-    'servicios',
-    'como-trabajamos',
-    'proyectos',
-    'nosotros',
-    'clientes',
-    'contacto',
-    'agenda',
-  ];
-
   document.querySelectorAll<HTMLAnchorElement>('[data-lang-toggle] a[hreflang]').forEach((link) => {
     link.addEventListener('click', () => {
       const target = link.getAttribute('hreflang');
@@ -65,16 +53,21 @@ const { lang, route } = Astro.props;
           // storage blocked
         }
       }
-      // Same section on the other page: the URL hash if there is one, otherwise the section the
-      // visitor has scrolled to (the last one whose top has passed the sticky header).
-      if (location.hash) {
+      // Same section on the other page. Keep the URL hash while its section is still on screen;
+      // otherwise use the section the visitor has scrolled to (the last one whose top has passed
+      // the sticky header; the hero maps to the plain page). Sections come from the DOM, so a new
+      // section needs no change here.
+      const hashed = location.hash ? document.querySelector(location.hash) : null;
+      const onScreen = (el: Element) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+      };
+      if (hashed && onScreen(hashed)) {
         link.hash = location.hash;
       } else {
-        const current = SECTION_IDS.filter((id) => {
-          const el = document.getElementById(id);
-          return el !== null && el.getBoundingClientRect().top <= 96;
-        }).pop();
-        if (current && current !== 'inicio') link.hash = current;
+        const sections = Array.from(document.querySelectorAll<HTMLElement>('main section[id]'));
+        const current = sections.filter((el) => el.getBoundingClientRect().top <= 96).pop();
+        if (current && current.id !== 'inicio') link.hash = current.id;
       }
     });
   });

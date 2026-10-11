@@ -45,6 +45,26 @@ for (const lang of ['es', 'en'] as const) {
       expect(events).toEqual([{ code: 'web_app' }]);
     });
 
+    test('keyboard: after activating a card CTA the next Tab continues after #contacto', async ({
+      page,
+    }) => {
+      await page.goto(`/${lang}/`);
+      await page.locator('a[data-project-type="web_app"]').focus();
+      await page.keyboard.press('Enter');
+      await expect(page).toHaveURL(/#contacto$/);
+      await page.keyboard.press('Tab');
+      const followsContact = await page.evaluate(() => {
+        const contact = document.getElementById('contacto')!;
+        const active = document.activeElement!;
+        return (
+          !active.matches('a[data-project-type]') &&
+          (contact.contains(active) ||
+            !!(contact.compareDocumentPosition(active) & Node.DOCUMENT_POSITION_FOLLOWING))
+        );
+      });
+      expect(followsContact).toBe(true);
+    });
+
     test.describe('without JavaScript', () => {
       test.use({ javaScriptEnabled: false });
       test('the CTA still jumps to the form with ?tipo=', async ({ page }) => {

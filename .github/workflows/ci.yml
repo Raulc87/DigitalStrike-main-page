@@ -89,9 +89,6 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Allowed to fail until Agent 2's integration PR (DS-009-integration-e2e, #18) is merged and
-    # the suite is green on main; then this line is removed and the check made required.
-    continue-on-error: true
     env:
       # Some specs (the site sections) navigate to root paths such as `/es/`, so the e2e build
       # uses base "/"; the Pages base path is covered by the `build` job. Pending badges stay

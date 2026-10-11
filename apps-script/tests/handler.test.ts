@@ -226,7 +226,10 @@ describe('idempotency (contract §5.4)', () => {
     expect(h.mailer.sent).toHaveLength(2);
   });
 
-  it('two concurrent requests with the same submission_id produce exactly one row (serialized by the lock)', () => {
+  // Contract §5.4 "two concurrent requests": in Apps Script the script lock around steps 7–10
+  // serializes them; a synchronous fake can only run them one after the other, so this proves
+  // that the second one, once it holds the lock, finds the first row and stores nothing.
+  it('two requests with the same submission_id, each under the lock, produce exactly one row', () => {
     const first = h.post(validBody());
     const second = h.post(validBody());
     expect(first.lead_id).toBe(second.lead_id);

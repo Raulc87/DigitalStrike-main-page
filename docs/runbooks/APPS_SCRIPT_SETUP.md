@@ -223,7 +223,8 @@ Deletion covers every copy you hold:
 The Apps Script execution logs contain only `lead_id` and codes, never personal data, so they
 need no action.
 
-**Known limit to decide on (owner):** Google Sheets keeps a **version history**
-(File → Version history) that still shows deleted rows, and individual versions cannot be
-deleted. If a full deletion must also cover the history, the option is to copy the remaining
-rows to a new sheet and update `SHEET_ID`. This runbook does not do that by default.
+**Sheets version history (owner decision 2026-10-11: accepted, no extra step).** Google
+Sheets keeps an automatic version history (File → Version history) that can still show a
+deleted row in older versions; individual versions cannot be deleted. Only people with edit
+access to the sheet (you) can see it. Deleting the row as above is the deletion procedure; the
+sheet is not copied to a new file.

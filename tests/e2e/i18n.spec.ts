@@ -48,6 +48,32 @@ test.describe('toggle (US-002 AC2)', () => {
     await expect(page).toHaveURL(/\/en\/$/);
   });
 
+  test('keeps the section the visitor scrolled to even without a hash (AC2)', async ({ page }) => {
+    await page.goto('/es/');
+    // make sure the page is long enough to scroll the section to the top of the viewport
+    await page.evaluate(() => {
+      document.body.style.paddingBottom = '3000px';
+      document.getElementById('proyectos')?.scrollIntoView({ behavior: 'instant' });
+    });
+    expect(await page.evaluate(() => location.hash)).toBe('');
+    // A real mouse click: locator.click() would scroll the sticky header link into view first.
+    const box = await page
+      .getByRole('navigation', { name: 'Cambiar idioma' })
+      .getByRole('link', { name: 'EN' })
+      .boundingBox();
+    await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await expect(page).toHaveURL(/\/en\/#proyectos$/);
+  });
+
+  test('at the top of the page the toggle goes to the plain page', async ({ page }) => {
+    await page.goto('/es/');
+    await page
+      .getByRole('navigation', { name: 'Cambiar idioma' })
+      .getByRole('link', { name: 'EN' })
+      .click();
+    await expect(page).toHaveURL(/\/en\/$/);
+  });
+
   test('privacy pages link to each other', async ({ page }) => {
     await page.goto('/es/privacidad/');
     await page

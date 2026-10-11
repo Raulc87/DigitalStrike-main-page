@@ -6,6 +6,7 @@ export const en: Record<ContentKey, string> = {
   'meta.description':
     'Websites, web apps and custom systems for entrepreneurs and companies. We work close to you, from Costa Rica to the world.',
   'meta.og_alt': 'DigitalStrike Solutions logo: a baseball with a terminal cursor',
+  'meta.privacy_title': 'Privacy notice · DigitalStrike Solutions',
 
   'nav.services': 'Services',
   'nav.process': 'How we work',

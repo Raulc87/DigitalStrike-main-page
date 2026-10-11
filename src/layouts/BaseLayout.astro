@@ -13,12 +13,9 @@ interface Props {
 
 const { lang, route } = Astro.props;
 
-// Home uses the CONTENT §1 metadata; the privacy page is titled after the footer link (CONTENT §12).
+// Home and privacy pages take their title from CONTENT §1 (`meta.title`, `meta.privacy_title`).
 const description = t(lang, 'meta.description');
-const title =
-  route === 'home'
-    ? t(lang, 'meta.title')
-    : `${t(lang, 'footer.privacy')} · DigitalStrike Solutions`;
+const title = route === 'home' ? t(lang, 'meta.title') : t(lang, 'meta.privacy_title');
 
 const abs = (path: string) => new URL(withBase(path), Astro.site).href;
 const canonical = abs(routes[route][lang]);

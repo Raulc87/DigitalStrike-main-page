@@ -1,0 +1,160 @@
+# Production deploy to GoDaddy cPanel (US-017, ADR-001): https://digitalstrike-solutions.com
+# - Publishing a GitHub Release deploys that release's tag.
+# - Run by hand (Actions → Release to cPanel → Run workflow) for the dry run (default: changes
+#   nothing on the server) or to redeploy any tag, e.g. a rollback to the previous release.
+# Upload over explicit FTPS with lftp, using the dedicated FTP account limited to public_html
+# (secrets CPANEL_HOST, CPANEL_USERNAME, CPANEL_PASSWORD, CPANEL_TARGET_DIR). Nothing outside
+# CPANEL_TARGET_DIR is touched. Runbook: docs/runbooks/DEPLOYMENT.md.
+name: Release to cPanel
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Tag or branch to deploy (e.g. v0.1.0). Empty = the branch selected above.
+        required: false
+        default: ''
+      dry_run:
+        description: Dry run (connect, list and show the changes; upload and delete nothing)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-cpanel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+    steps:
+      - name: Check the cPanel secrets
+        id: secrets
+        env:
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+          CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
+          CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
+        run: |
+          missing=""
+          for name in CPANEL_HOST CPANEL_USERNAME CPANEL_PASSWORD CPANEL_TARGET_DIR; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice title=Deploy skipped::Repository secrets not set:$missing. Nothing was deployed (US-017 AC2; see docs/runbooks/DEPLOYMENT.md)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the release
+        if: steps.secrets.outputs.ready == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.ref || github.ref }}
+
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Build for https://digitalstrike-solutions.com
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          PUBLIC_SITE_URL: https://digitalstrike-solutions.com
+          PUBLIC_BASE_PATH: /
+          PUBLIC_NOINDEX: 'false'
+          PUBLIC_SHOW_PENDING_BADGES: 'false'
+          PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL }}
+          PUBLIC_CALENDLY_URL: ${{ vars.PUBLIC_CALENDLY_URL }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          PUBLIC_LINKEDIN_URL: ${{ vars.PUBLIC_LINKEDIN_URL }}
+          PUBLIC_PRIVACY_NOTICE_VERSION: ${{ vars.PUBLIC_PRIVACY_NOTICE_VERSION }}
+          PUBLIC_SHOW_CLIENT_LOGOS: ${{ vars.PUBLIC_SHOW_CLIENT_LOGOS }}
+        run: |
+          npm ci
+          npm run build
+          test -f dist/index.html && test -f dist/es/index.html && test -f dist/en/index.html
+          test -f dist/.htaccess
+          if grep -q 'name="robots" content="noindex' dist/es/index.html; then
+            echo "::error::The production build has noindex."; exit 1
+          fi
+          if [ -z "$PUBLIC_LEAD_ENDPOINT_URL" ]; then
+            echo "::warning::Repository variable PUBLIC_LEAD_ENDPOINT_URL is not set: the form will show its error with the email fallback."
+          fi
+
+      - name: Install lftp
+        if: steps.secrets.outputs.ready == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Upload over FTPS
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+          CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
+          CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
+          # Repository variable; "false" only if the FTP server's certificate does not match the
+          # host name (DEPLOYMENT.md §7). The connection is encrypted either way.
+          TLS_VERIFY: ${{ vars.CPANEL_TLS_VERIFY || 'true' }}
+        run: |
+          set -euo pipefail
+          case "$CPANEL_TARGET_DIR" in *..*) echo "::error::CPANEL_TARGET_DIR must not contain '..'"; exit 1 ;; esac
+
+          # Holding-page files the new site does not replace (US-017 AC5): every file of
+          # holding-page/ in the repository whose path is not in dist/. Only these are deleted.
+          stale=""
+          while IFS= read -r f; do
+            rel="${f#holding-page/}"
+            [ -e "dist/$rel" ] || stale="$stale $rel"
+          done < <(git ls-files holding-page)
+
+          {
+            echo "set ftp:ssl-force true"
+            echo "set ftp:ssl-protect-data true"
+            echo "set ssl:verify-certificate $TLS_VERIFY"
+            echo "set net:max-retries 2"
+            echo "set net:timeout 30"
+            echo "set cmd:fail-exit true"
+            echo "open --env-password -u \"$CPANEL_USERNAME\" \"ftp://$CPANEL_HOST\""
+            echo "cd \"$CPANEL_TARGET_DIR\""
+            echo "echo '--- Target directory before the deploy:'"
+            echo "cls -la"
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "echo '--- Dry run: what would be uploaded:'"
+              echo "mirror --reverse --dry-run dist/ ./"
+              echo "echo '--- Dry run: holding-page files that would be deleted if present:$stale'"
+            else
+              echo "mirror --reverse --verbose --parallel=4 dist/ ./"
+              # Hashed build files of earlier releases; _astro/ belongs to the site only.
+              echo "mirror --reverse --delete --verbose dist/_astro/ ./_astro/"
+              echo "set cmd:fail-exit false"
+              for rel in $stale; do echo "rm -f \"$rel\""; done
+              echo "rmdir assets/fonts"
+              echo "rmdir assets"
+              echo "set cmd:fail-exit true"
+              echo "echo '--- Target directory after the deploy:'"
+              echo "cls -la"
+            fi
+          } > "$RUNNER_TEMP/deploy.lftp"
+          lftp -f "$RUNNER_TEMP/deploy.lftp"
+
+      - name: Check the live site
+        if: steps.secrets.outputs.ready == 'true' && env.DRY_RUN != 'true'
+        run: |
+          for path in / /es/ /en/; do
+            curl -fsS -o /dev/null -w "%{http_code} https://digitalstrike-solutions.com$path\n" "https://digitalstrike-solutions.com$path"
+          done
+          curl -fsS https://digitalstrike-solutions.com/es/ | grep -q 'DigitalStrike Solutions'
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://digitalstrike-solutions.com/es/)
+          [ "$code" = "301" ] || { echo "::error::http:// returned $code, expected a 301 to https://"; exit 1; }
+          echo "::notice title=Deployed::$(git rev-parse --short HEAD) is live. Run the smoke test in docs/runbooks/RELEASE.md §4."

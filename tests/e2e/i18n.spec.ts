@@ -45,6 +45,14 @@ test.describe('root detection (US-002 AC1)', () => {
 test.describe('toggle (US-002 AC2)', () => {
   test('is visible, keeps the section and saves ds_lang', async ({ page }) => {
     await page.goto('/es/#servicios');
+    // wait for the (smooth) scroll to the hashed section to finish, as a real visitor would
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          Math.round(document.getElementById('servicios')!.getBoundingClientRect().top),
+        ),
+      )
+      .toBeLessThanOrEqual(96);
     const toggle = page.getByRole('navigation', { name: 'Cambiar idioma' });
     await expect(toggle).toBeVisible();
     await expect(toggle.locator('[aria-current="true"]')).toHaveText('ES');

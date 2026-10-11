@@ -1,7 +1,8 @@
 ---
 // Privacy notice dialog opened from the lead form's consent link (US-009 AC7, US-018 AC1).
 // A modal <dialog>: the form stays in the page, so typed data is kept; Esc closes it and focus
-// returns to the link. Without JS the link opens the privacy page in a new tab.
+// returns to the link. Only Esc and the close button close it (a stray tap on the backdrop must
+// not close it mid-read on a phone). Without JS the link opens the privacy page in a new tab.
 import type { Locale } from '../../i18n';
 import { formT } from '../../lib/lead/messages';
 import PrivacyNotice from './PrivacyNotice.astro';
@@ -48,9 +49,5 @@ const { lang } = Astro.props;
   dialog?.addEventListener('close', () => {
     opener?.focus();
     opener = null;
-  });
-  // A click on the backdrop (outside the content box) closes it too.
-  dialog?.addEventListener('click', (event) => {
-    if (event.target === dialog) dialog.close();
   });
 </script>

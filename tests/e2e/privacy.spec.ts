@@ -38,6 +38,10 @@ for (const { lang, page: path, t } of cases) {
       .analyze();
     expect(axe.violations).toEqual([]);
 
+    // A stray tap on the backdrop does not close it (review nit on #15).
+    await page.mouse.click(2, 2);
+    await expect(dialog).toBeVisible();
+
     await page.keyboard.press('Escape');
     await expect(dialog).toBeHidden();
     await expect(link).toBeFocused();

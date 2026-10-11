@@ -1,17 +1,30 @@
 ---
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
+import { showClientLogos } from '../../lib/i18n/site';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+const slots = [1, 2, 3, 4];
 ---
 
-<!-- Stub from the scaffold (DS-001); the section story fills it in. -->
-<section id="clientes" class="">
-  <div class="section-shell py-16">
-    <h2>{t(lang, 'clients.title')}</h2>
-  </div>
-</section>
+{showClientLogos && (
+  <section id="clientes">
+    <div class="section-shell py-16 md:py-20">
+      <h2>{t(lang, 'clients.title')}</h2>
+      <ul class="mt-10 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-4">
+        {slots.map(() => (
+          <li
+            data-client-slot
+            class="border-border-strong text-text-2 flex min-h-32 items-center justify-center rounded-xl border-2 border-dashed p-4 text-center text-sm"
+          >
+            {t(lang, 'clients.slot')}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

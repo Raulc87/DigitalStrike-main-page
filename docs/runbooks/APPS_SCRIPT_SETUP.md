@@ -43,8 +43,8 @@ Choose **one** of the two ways.
    `apps-script/appsscript.json` from the repository.
 4. Open `Code.gs` and replace its whole content with `apps-script/Code.js`.
 5. For each file in `apps-script/lib/` add a script file (**+ → Script**) named with its path
-   without the extension (`lib/config`, `lib/constants`, `lib/handler`, `lib/lead`,
-   `lib/sheet`, `lib/throttle`, `lib/validation`, plus `lib/emails` once DS-011 is merged)
+   without the extension (`lib/config`, `lib/constants`, `lib/emails`, `lib/handler`,
+   `lib/lead`, `lib/sheet`, `lib/throttle`, `lib/validation`)
    and paste the file's content.
 6. **Save** (Ctrl/Cmd + S).
 
@@ -120,8 +120,6 @@ keep the dropdown and the plain-text format.
 4. Put it in GitHub: **Settings → Secrets and variables → Actions → Variables → New repository
    variable** `PUBLIC_LEAD_ENDPOINT_URL` = that URL. It is public by design (contract §2), so it
    is a *variable*, not a secret.
-
-Do this only after DS-010 and DS-011 are merged, so the deployed code includes the emails.
 
 ## 7. Smoke test with curl
 

@@ -107,7 +107,27 @@ Corner radius: 12 px cards, 999 px buttons. No shadows on dark surfaces except t
 
 **Clients.** Navy. Title + 4 dashed slots (`--color-border-strong`) with the slot text, 2×2 mobile / 4 in a row desktop.
 
-**Lead form.** Navy background, form on a steel card, max width 720 px. Field order: name, email, phone, company, project type (select), budget range (select), timeline (select), message (textarea), consent checkbox with privacy link, honeypot (visually hidden, `tabindex="-1"`, `autocomplete="off"`, `aria-hidden="true"`), submit. Validation on blur and on submit; on submit errors, focus the error summary and link each error to its field (`aria-describedby`). Submit disabled + "Enviando…" while pending. On success: replace the form with the thank-you block (focus its heading), set the Calendly prefill (name, email) and offer the "Agendar mi sesión 0" button → `#agenda`. On error: keep data, show the localized message (`role="alert"`), re-enable submit.
+**Lead form.** Navy background, form on a steel card, max width 720 px. Field order: name, email, phone, company, project type (select), budget range (select), timeline (select), message (textarea), consent checkbox with privacy link, submit; the honeypot sits outside the lead form (see "Autofill and honeypot" below). Validation on blur and on submit; on submit errors, focus the error summary and link each error to its field (`aria-describedby`). Submit disabled + "Enviando…" while pending. On success: replace the form with the thank-you block (focus its heading), set the Calendly prefill (name, email) and offer the "Agendar mi sesión 0" button → `#agenda`. On error: keep data, show the localized message (`role="alert"`), re-enable submit.
+
+**Autofill and honeypot (owner decision 2026-10-11).** Autofill stays a supported way to fill the form. The visible fields keep their autofill hints and stay inside the lead form, so a browser or password manager can fill them in one step:
+
+| Field | `autocomplete` |
+|---|---|
+| `name` | `name` |
+| `email` (`type="email"`) | `email` |
+| `phone` (`type="tel"`) | `tel` |
+| `company` | `organization` |
+| `project_type`, `budget_range`, `timeline` (selects) | `off` |
+| `message` (textarea) | `off` |
+| `consent` (checkbox) | none; unchecked by default |
+
+Browser autofill and password managers ignore `autocomplete="off"` and fill hidden fields they recognize. On the Gaby pilot (2026-09-30) this filled a `name="website"` field inside the lead form, and a real lead was silently dropped. The honeypot (ADR-004, contract §5.1) therefore:
+- is a `type="text"` input inside **its own separate `<form>`, outside the lead form** (autofill fills one form at a time). That form has no submit button, and its `submit` event is always prevented, so pressing Enter in it never reloads the page;
+- has a DOM `id`/`name` that autofill heuristics do not recognize. It contains none of the words website, url, homepage, company, name, email, phone, tel, address or city (e.g. `id="lead-hp" name="hp_field"`), and has no label, placeholder or `title`;
+- carries `autocomplete="off"` plus `data-1p-ignore`, `data-lpignore="true"`, `data-bwignore="true"` and `data-form-type="other"`;
+- stays off-screen (not `display: none`, not `type="hidden"`), with `tabindex="-1"` and `aria-hidden="true"` on its wrapper.
+
+On submit, the lead form's script reads that input and sends its value as the JSON field `website`; the contract is unchanged. The fix isolates the honeypot from autofill. It never disables autofill for the visible fields.
 
 **Scheduling.** Steel band. Title, body, then a preview card the size of the widget with the button "Ver horarios disponibles" and the one-line Calendly notice (CONTENT §11). **Nothing is requested from Calendly until** the visitor clicks the button or submits the form successfully; then the official inline widget (min-height 700 px desktop, 1000 px mobile) replaces the card, prefilled with name and email after a submission. If the script fails or nothing renders in 10 s: show the fallback link (always present in `<noscript>`).
 

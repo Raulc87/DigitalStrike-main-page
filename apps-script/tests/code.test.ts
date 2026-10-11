@@ -97,7 +97,6 @@ describe('doPost wiring', () => {
   it('stores a lead through the real services and returns JSON', () => {
     const services = googleServices();
     services.gs.setupSheet();
-    // Until DS-011 adds the templates, emails are recorded as failed; the lead is stored.
     const out = services.gs.doPost({ postData: { contents: JSON.stringify(validBody()) } });
     expect(out.mime).toBe('application/json');
     const body = JSON.parse(out.text);
@@ -105,6 +104,11 @@ describe('doPost wiring', () => {
     const sheet = services.spreadsheet.getSheetByName('leads') as FakeSheet;
     expect(sheet.rows).toHaveLength(2);
     expect(sheet.row(2)[2]).toBe(body.lead_id);
+    expect(sheet.row(2).slice(14, 16)).toEqual(['sent', 'sent']);
+    expect(services.mailer.sent.map((m) => m.to)).toEqual([
+      'owner@example.com',
+      'ana.perez@example.com',
+    ]);
     expect(services.lock.held).toBe(false);
     for (const line of services.logs) expect(line).not.toMatch(/ana|Ana|8888/);
   });

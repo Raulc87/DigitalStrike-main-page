@@ -69,10 +69,9 @@ function doPost(e) {
           MailApp.sendEmail(message);
         },
       },
-      composeEmail: function () {
-        // The CONTENT §14 templates come with DS-011 (US-011, US-012); until then each email
-        // is recorded as `failed` and the lead is still stored.
-        throw new Error('Email templates are not installed.');
+      composeEmail: function (kind, lead, context) {
+        // CONTENT §14 templates (lib/emails.js).
+        return composeLeadEmail(kind, lead, context);
       },
       log: logEvent_,
     });

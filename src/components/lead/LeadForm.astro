@@ -1,14 +1,255 @@
 ---
-// Stub handed to Agent 2 (US-009). Keep the #contacto anchor on the section.
+// Lead form (US-009, US-014 AC1, UX §3). Copy from src/i18n/{es,en}/form.ts (CONTENT §10, contract
+// §4). Behaviour lives in src/lib/lead/form-controller.ts.
 import type { Locale } from '../../i18n';
+import { routes } from '../../lib/i18n/routes';
+import { withBase } from '../../lib/i18n/url';
+import { formT, optionLabel } from '../../lib/lead/messages';
+import { BUDGET_RANGES, PROJECT_TYPES, TIMELINES } from '../../lib/lead/types';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
+
+const id = (field: string) => `lead-${field.replace(/_/g, '-')}`;
+
+// Visible text fields with their autofill hints (UX §3 "Autofill and honeypot").
+const textFields = [
+  { name: 'name', type: 'text', autocomplete: 'name', required: true },
+  { name: 'email', type: 'email', autocomplete: 'email', required: true },
+  { name: 'phone', type: 'tel', autocomplete: 'tel', required: false, hint: 'form.phone.hint' },
+  { name: 'company', type: 'text', autocomplete: 'organization', required: false },
+] as const;
+
+const selects = [
+  { name: 'project_type', options: PROJECT_TYPES },
+  { name: 'budget_range', options: BUDGET_RANGES, hint: 'form.budget_range.hint' },
+  { name: 'timeline', options: TIMELINES },
+] as const;
+
+const labelClass = 'block font-semibold';
+const hintClass = 'text-text-2 mt-1 text-sm';
+const errorClass = 'text-error mt-1 text-sm font-medium';
+const controlClass =
+  'bg-navy text-off border-border-strong mt-2 block min-h-12 w-full rounded-lg border px-3 py-2';
 ---
 
-<section id="contacto" data-lang={lang}>
-  <div class="section-shell py-16"></div>
+<section id="contacto" class="bg-navy">
+  <div class="section-shell py-16">
+    <div class="mx-auto max-w-[720px]" data-lead-root data-lang={lang}>
+      <div data-lead-form-view>
+        <h2 id="lead-title" class="text-off">
+          {formT(lang, 'form.title')}
+        </h2>
+        <p class="text-text-2 mt-4">{formT(lang, 'form.intro')}</p>
+
+        <form
+          data-lead-form
+          class="bg-steel border-border-strong mt-8 rounded-xl border p-5 md:p-8"
+          method="post"
+          novalidate
+          aria-labelledby="lead-title"
+        >
+          <p class="text-text-2 text-sm">{formT(lang, 'form.required_note')}</p>
+
+          <div
+            data-lead-error-summary
+            class="border-error mt-4 rounded-lg border-2 p-4"
+            tabindex="-1"
+            hidden
+          >
+            <p class="text-error font-semibold">{formT(lang, 'form.error_summary')}</p>
+            <ul data-lead-error-list class="mt-2 list-disc pl-5"></ul>
+          </div>
+
+          <div class="mt-6 grid gap-6">
+            {textFields.map((field) => {
+              const hint = 'hint' in field ? field.hint : undefined;
+              return (
+                <div>
+                  <label for={id(field.name)} class={labelClass} data-lead-label={field.name}>
+                    {formT(lang, `form.${field.name}.label`)}
+                  </label>
+                  <input
+                    id={id(field.name)}
+                    name={field.name}
+                    type={field.type}
+                    autocomplete={field.autocomplete}
+                    aria-required={field.required ? 'true' : undefined}
+                    aria-describedby={hint ? `${id(field.name)}-hint` : undefined}
+                    data-hint-id={hint ? `${id(field.name)}-hint` : undefined}
+                    class={controlClass}
+                  />
+                  {hint && (
+                    <p id={`${id(field.name)}-hint`} class={hintClass}>
+                      {formT(lang, hint)}
+                    </p>
+                  )}
+                  <p
+                    id={`${id(field.name)}-error`}
+                    class={errorClass}
+                    data-lead-error={field.name}
+                    hidden
+                  />
+                </div>
+              );
+            })}
+
+            {selects.map((field) => {
+              const hint = 'hint' in field ? field.hint : undefined;
+              return (
+                <div>
+                  <label for={id(field.name)} class={labelClass} data-lead-label={field.name}>
+                    {formT(lang, `form.${field.name}.label`)}
+                  </label>
+                  <select
+                    id={id(field.name)}
+                    name={field.name}
+                    autocomplete="off"
+                    aria-required="true"
+                    aria-describedby={hint ? `${id(field.name)}-hint` : undefined}
+                    data-hint-id={hint ? `${id(field.name)}-hint` : undefined}
+                    class={controlClass}
+                  >
+                    <option value="" selected>
+                      {formT(lang, 'form.select_placeholder')}
+                    </option>
+                    {field.options.map((code) => (
+                      <option value={code}>{optionLabel(lang, field.name, code)}</option>
+                    ))}
+                  </select>
+                  {hint && (
+                    <p id={`${id(field.name)}-hint`} class={hintClass}>
+                      {formT(lang, hint)}
+                    </p>
+                  )}
+                  <p
+                    id={`${id(field.name)}-error`}
+                    class={errorClass}
+                    data-lead-error={field.name}
+                    hidden
+                  />
+                </div>
+              );
+            })}
+
+            <div>
+              <label for="lead-message" class={labelClass} data-lead-label="message">
+                {formT(lang, 'form.message.label')}
+              </label>
+              <textarea
+                id="lead-message"
+                name="message"
+                rows="6"
+                autocomplete="off"
+                aria-required="true"
+                aria-describedby="lead-message-hint"
+                data-hint-id="lead-message-hint"
+                class={controlClass}
+              ></textarea>
+              <p id="lead-message-hint" class={hintClass}>
+                {formT(lang, 'form.message.hint')}
+              </p>
+              <p id="lead-message-error" class={errorClass} data-lead-error="message" hidden></p>
+            </div>
+
+            <div>
+              <div class="flex items-start gap-3">
+                <input
+                  id="lead-consent"
+                  name="consent"
+                  type="checkbox"
+                  aria-required="true"
+                  class="accent-cyan mt-1 size-6 shrink-0"
+                />
+                <label for="lead-consent" data-lead-label="consent">
+                  {formT(lang, 'form.consent.label')}
+                </label>
+              </div>
+              <p class="mt-2 pl-9">
+                <a
+                  href={withBase(routes.privacy[lang])}
+                  target="_blank"
+                  rel="noopener"
+                  data-privacy-open
+                  class="inline-flex min-h-11 items-center underline underline-offset-4"
+                >
+                  {formT(lang, 'form.consent.link')}
+                </a>
+              </p>
+              <p id="lead-consent-error" class={errorClass} data-lead-error="consent" hidden></p>
+            </div>
+          </div>
+
+          <div data-lead-status role="alert" class="text-error mt-6 font-medium" hidden></div>
+
+          <button
+            type="submit"
+            data-lead-submit
+            class="bg-cyan text-navy mt-6 inline-flex min-h-12 items-center justify-center rounded-full px-8 font-semibold hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {formT(lang, 'form.submit')}
+          </button>
+        </form>
+
+        {/* Honeypot (ADR-004, UX §3 "Autofill and honeypot"): its own form outside the lead form,
+            non-autofill id/name, no label/placeholder/title, off-screen; sent as `website`. */}
+        <div class="lead-hp" aria-hidden="true">
+          <form data-lead-hp-form onsubmit="return false">
+            <input
+              id="lead-hp"
+              name="hp_field"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+              data-1p-ignore
+              data-lpignore="true"
+              data-bwignore="true"
+              data-form-type="other"
+              data-lead-hp
+            />
+          </form>
+        </div>
+      </div>
+
+      <div
+        data-lead-success
+        class="bg-steel border-border-strong rounded-xl border p-5 md:p-8"
+        hidden
+      >
+        <h2 data-lead-success-title tabindex="-1" class="text-off"></h2>
+        <p class="text-text-2 mt-4">{formT(lang, 'form.success.body')}</p>
+        <a
+          href="#agenda"
+          class="bg-cyan text-navy mt-6 inline-flex min-h-12 items-center justify-center rounded-full px-8 font-semibold no-underline hover:brightness-110"
+        >
+          {formT(lang, 'form.success.cta')}
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
+
+<style>
+  /* Off-screen, never display:none or type=hidden (UX §3). */
+  .lead-hp {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  [data-lead-root] {
+    position: relative;
+  }
+</style>
+
+<script>
+  import { initLeadForm } from '../../lib/lead/form-controller';
+
+  const root = document.querySelector<HTMLElement>('[data-lead-root]');
+  if (root) initLeadForm(root);
+</script>

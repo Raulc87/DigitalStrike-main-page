@@ -5,6 +5,7 @@ export const es = {
   'meta.description':
     'Páginas web, aplicaciones y sistemas a la medida para personas emprendedoras y empresas. Trabajamos cerca de ti, desde Costa Rica para el mundo.',
   'meta.og_alt': 'Logo de DigitalStrike Solutions: una bola de béisbol con un cursor de terminal',
+  'meta.privacy_title': 'Aviso de privacidad · DigitalStrike Solutions',
 
   'nav.services': 'Servicios',
   'nav.process': 'Cómo trabajamos',

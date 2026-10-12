@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2
-- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. 2026-10-12: `form.success.body` points to the confirmation email and the spam folder without claiming it was sent (US-009 AC6) (owner decision; a new domain's mail can land in spam, notably at Outlook/Hotmail). Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
 - Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.
@@ -158,7 +158,7 @@ Four dashed placeholder slots, each with `clients.slot` as text. No real names o
 | `form.submit` | Enviar mi idea | Send my idea |
 | `form.submitting` | Enviando… | Sending… |
 | `form.success.title` | ¡Recibido, {first_name}! | Got it, {first_name}! |
-| `form.success.body` | Ya tenemos tu idea. Te escribiremos en un máximo de 2 días hábiles. Si quieres adelantar, agenda tu sesión 0 aquí abajo. | We have your idea. We'll write to you within 2 business days. If you'd like to move faster, book your session 0 below. |
+| `form.success.body` | Ya tenemos tu idea. Si no ves nuestro correo de confirmación, revisa la carpeta de spam. Te escribiremos en un máximo de 2 días hábiles. Si quieres adelantar, agenda tu sesión 0 aquí abajo. | We have your idea. If you don't see our confirmation email, check your spam folder. We'll write to you within 2 business days. If you'd like to move faster, book your session 0 below. |
 | `form.success.cta` | Agendar mi sesión 0 | Book my session 0 |
 
 Option labels: exactly as `docs/specs/LEAD_ENDPOINT_CONTRACT.md` §4.

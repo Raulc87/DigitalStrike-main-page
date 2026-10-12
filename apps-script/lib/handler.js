@@ -10,8 +10,8 @@
  *                   readRecentRows(n) → [{ submittedAt, email }],
  *                   appendRow(values) → rowNumber,
  *                   setCell(rowNumber, columnNumber, value) }        (the `leads` sheet)
- *   deps.mailer   { getRemainingDailyQuota() → number, sendEmail(message) }   (MailApp)
- *   deps.composeEmail(kind, lead, context) → MailApp message; kind 'owner' | 'confirmation'
+ *   deps.mailer   { getRemainingDailyQuota() → number, sendEmail(message) }   (MailApp quota, GmailApp send)
+ *   deps.composeEmail(kind, lead, context) → message (lib/emails.js); kind 'owner' | 'confirmation'
  *   deps.log(entry)  entries hold only event names, lead_id and error codes (NFR-006)
  */
 

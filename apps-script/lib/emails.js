@@ -1,6 +1,7 @@
 /**
  * Owner notification ("cover letter") and visitor confirmation (CONTENT §14, ADR-005,
- * US-011, US-012). Pure functions: they return MailApp.sendEmail message objects.
+ * US-011, US-012). Pure functions: they return message objects
+ * ({ to, replyTo, name, subject, body, htmlBody }) that lib/gmail.js maps to GmailApp.sendEmail.
  * Every visitor value is HTML-escaped in the HTML body.
  */
 

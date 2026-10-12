@@ -53,7 +53,9 @@ Preconditions:
 - CI is green on the `main` commit you are releasing (**Actions → CI**).
 - The preview of that commit looks right (section 2).
 - The Apps Script is deployed with the current code, and its `ACCEPTED_PRIVACY_NOTICE_VERSIONS`
-  includes the version the site shows.
+  includes the version the site shows. "Current code" includes the Gmail sending change
+  (`lib/gmail` and the `gmail.send` scope, authorized once). Redeploy it as a **new version of
+  the same deployment** (APPS_SCRIPT_SETUP.md §8), so the `/exec` URL does not change.
 - The four `CPANEL_*` secrets are set (DEPLOYMENT.md).
 
 Steps (first release: `v0.1.0`):

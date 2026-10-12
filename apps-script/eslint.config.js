@@ -28,6 +28,7 @@ for (const file of sources) {
 const appsScriptServices = Object.fromEntries(
   [
     'ContentService',
+    'GmailApp',
     'LockService',
     'MailApp',
     'PropertiesService',

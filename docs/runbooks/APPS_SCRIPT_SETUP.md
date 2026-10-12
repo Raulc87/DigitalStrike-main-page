@@ -43,8 +43,8 @@ Choose **one** of the two ways.
    `apps-script/appsscript.json` from the repository.
 4. Open `Code.gs` and replace its whole content with `apps-script/Code.js`.
 5. For each file in `apps-script/lib/` add a script file (**+ → Script**) named with its path
-   without the extension (`lib/config`, `lib/constants`, `lib/emails`, `lib/handler`,
-   `lib/lead`, `lib/sheet`, `lib/throttle`, `lib/validation`)
+   without the extension (`lib/config`, `lib/constants`, `lib/emails`, `lib/gmail`,
+   `lib/handler`, `lib/lead`, `lib/sheet`, `lib/throttle`, `lib/validation`)
    and paste the file's content.
 6. **Save** (Ctrl/Cmd + S).
 
@@ -103,7 +103,8 @@ Notes:
    Run only runs the health check, and the sheet does not change.
 2. Click **Run**. The first run asks for permissions: **Review permissions** → choose
    `manager@digitalstrike-solutions.com` → allow "See, edit, create and delete your
-   spreadsheets" and "Send email as you". (If Google shows "app isn't verified", it is your
+   spreadsheets", "Send email as you" and "Send email on your behalf" (the Gmail permission
+   that `GmailApp` uses to send). (If Google shows "app isn't verified", it is your
    own script: **Advanced → Go to DigitalStrike Lead Endpoint**.) After you allow access, check
    that the dropdown still shows `setupSheet` and click **Run** again if the run was interrupted.
 3. **Success looks like this:**
@@ -200,6 +201,10 @@ If something looks wrong:
 - **An HTML page instead of JSON:** the deployment is not "Anyone", or the URL is not the
   `/exec` one.
 - **`storage_unavailable`:** check `SHEET_ID`, and that the tab is named `leads`.
+- **The row shows `failed` for an email:** open **Executions** for the error. If the
+  confirmation was rejected by Gmail ("Message rejected"), make sure the deployed version
+  includes the Gmail sending change (`lib/gmail`, the `gmail.send` scope) and that you
+  authorized it (step 8, item 2).
 - **`zsh: no matches found` or `parse error`:** a placeholder from 7.1 still has its `<` `>`, or
   a quote is missing; paste 7.1 again.
 - **Error details:** they appear in **Executions** (left menu) and contain only `lead_id` and
@@ -214,9 +219,17 @@ If something looks wrong:
 ## 8. Redeploy after a code change (the URL stays the same)
 
 1. Update the project code (Option A: paste the changed files; Option B: `clasp push --force`).
-2. **Deploy → Manage deployments** → select the existing web-app deployment → **Edit** (pencil)
+   Paste `appsscript.json` too when it changed (Project Settings must show the manifest, step 3).
+2. **If the update adds a permission** (for example the Gmail sending change, which adds the
+   `gmail.send` scope), authorize it before deploying. In the function dropdown select
+   `setupSheet`, then click **Run** and allow the new permission ("Send email on your behalf").
+   Re-running `setupSheet` is harmless. Without this step, the deployed web app cannot send
+   email, and both email statuses become `failed`.
+3. **Deploy → Manage deployments** → select the existing web-app deployment → **Edit** (pencil)
    → **Version: New version** → description (e.g. `v2 — <change>`) → **Deploy**.
-3. Run the smoke test of step 7 again.
+4. Run the smoke test of step 7 again. After the Gmail sending change, also check that the
+   visitor confirmation reaches an **external** inbox (for example a personal Gmail), not
+   only `manager@`.
 
 Never use **New deployment** for an update: it creates a different URL, and the site keeps
 calling the old one until `PUBLIC_LEAD_ENDPOINT_URL` is changed and the site rebuilt.

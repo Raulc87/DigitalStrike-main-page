@@ -71,7 +71,7 @@ As a visitor, I can describe my need and send it.
 - AC3: The request is exactly as contract §2–3 (`text/plain` JSON body, `redirect: follow`, `credentials: omit`, 20 s timeout), including `language`, `privacy_notice_version` (from `PUBLIC_PRIVACY_NOTICE_VERSION`), `website` (honeypot), `elapsed_ms` (monotonic time since first render) and `submission_id` (UUID v4 kept across retries of an unchanged payload, renewed after a success or when a field changes after a failed attempt, contract §5.4).
 - AC4: Every `error_code` of contract §7, network errors, timeouts and malformed responses map to the right message; data and `submission_id` are kept on any error, so an unchanged retry cannot create a duplicate lead; editing any field after an error renews `submission_id` (contract §5.4).
 - AC5: Submit disabled with "Enviando…" while pending; double submission impossible.
-- AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name; the copy confirms receipt only, never that an email was sent.
+- AC6: On `ok: true` the form is replaced by the thank-you block (focus moves to it) with the visitor's first name; the copy confirms receipt; it may point to the confirmation email and the spam folder, but never states that an email was sent (sending can be `skipped`, `failed` or `quota_exceeded` while the lead is saved).
 - AC7: Consent checkbox unchecked by default and required; the privacy dialog opens without losing typed data and closes with Esc.
 - AC8: Vitest: a valid and an invalid case per rule; the client maps every response type. Playwright (against the mock): happy path ES and EN at 390 px and desktop, validation errors, `storage_unavailable`, `rate_limited`, network failure.
 

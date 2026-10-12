@@ -126,8 +126,10 @@ export const es = {
     '17+ años de experiencia · Equipos de hasta 8 personas liderados · Java · Python · React · TypeScript · AWS · IA aplicada · Scrum Master certificado (PSM I) · Español e inglés',
   'about.linkedin': 'Ver perfil en LinkedIn',
   'about.photo_alt': 'Raul Casañas, CEO de DigitalStrike Solutions',
-  'clients.title': 'Empresas que confían en nosotros',
-  'clients.slot': 'Este espacio está reservado para tu marca',
+  'clients.title': 'Empresas con las que he trabajado',
+  'clients.note':
+    'Experiencia de Raul como desarrollador y consultor, antes de fundar DigitalStrike.',
+  'clients.logo_alt': 'Logo de {company}',
   'pending.badge': 'Contenido provisional',
 } as const;
 

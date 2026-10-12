@@ -1,7 +1,7 @@
 # SPRINT 001 — First release
 
 ## Metadata
-- Status: **PLANNED — not started.** Starts only after this docs PR is merged and the human owner gives an explicit go-ahead (AGENTS.md).
+- Status: **DONE** — `v0.1.0` released and deployed to `https://digitalstrike-solutions.com` on 2026-10-12; production smoke test passed (owner, 11:06 CR). Follow-ups: `SPRINT_002.md`.
 - Duration: short release sprint (exception, IMPLEMENTATION_PLAN §6)
 - Start: on go-ahead (target Saturday 2026-10-10)
 - Release cut: Tuesday 2026-10-13, 18:00 America/Costa_Rica

@@ -29,7 +29,7 @@ variables, and are never written in any file.
 
 | Secret | Value |
 |---|---|
-| `CPANEL_HOST` | The server's **full host name** (below), not the `ftp.digitalstrike-solutions.com` name cPanel suggests |
+| `CPANEL_HOST` | The server's **full host name** (below), not the `ftp.digitalstrike-solutions.com` name cPanel suggests. Host name only (no `ftp://`, no trailing `/`), because the workflow adds the scheme |
 | `CPANEL_USERNAME` | The full FTP login, e.g. `deploy@digitalstrike-solutions.com` |
 | `CPANEL_PASSWORD` | That account's password |
 | `CPANEL_TARGET_DIR` | `/` (the account's root is already `public_html`) |

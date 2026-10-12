@@ -123,7 +123,7 @@ export const en: Record<ContentKey, string> = {
   'about.linkedin': 'View LinkedIn profile',
   'about.photo_alt': 'Raul Casañas, CEO of DigitalStrike Solutions',
   'clients.title': "Companies I've worked with",
-  'clients.note': "Raul's experience as a developer and consultant, before founding DigitalStrike.",
+  'clients.note': 'My experience as a developer and consultant, before founding DigitalStrike.',
   'clients.logo_alt': '{company} logo',
   'pending.badge': 'Provisional content',
 };

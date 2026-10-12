@@ -93,8 +93,8 @@ for (const lang of ['es', 'en'] as const) {
       );
       await expect(section.locator('p')).toHaveText(
         lang === 'es'
-          ? 'Experiencia de Raul como desarrollador y consultor, antes de fundar DigitalStrike.'
-          : "Raul's experience as a developer and consultant, before founding DigitalStrike.",
+          ? 'Mi experiencia como desarrollador y consultor, antes de fundar DigitalStrike.'
+          : 'My experience as a developer and consultant, before founding DigitalStrike.',
       );
       const logos = section.locator('[data-client-logo] img');
       await expect(logos).toHaveCount(4);

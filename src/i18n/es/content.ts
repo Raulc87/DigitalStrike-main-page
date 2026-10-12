@@ -127,8 +127,7 @@ export const es = {
   'about.linkedin': 'Ver perfil en LinkedIn',
   'about.photo_alt': 'Raul Casañas, CEO de DigitalStrike Solutions',
   'clients.title': 'Empresas con las que he trabajado',
-  'clients.note':
-    'Experiencia de Raul como desarrollador y consultor, antes de fundar DigitalStrike.',
+  'clients.note': 'Mi experiencia como desarrollador y consultor, antes de fundar DigitalStrike.',
   'clients.logo_alt': 'Logo de {company}',
   'pending.badge': 'Contenido provisional',
 } as const;

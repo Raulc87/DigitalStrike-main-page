@@ -6,8 +6,9 @@ the smoke test: `docs/runbooks/RELEASE.md`.
 
 **State on 2026-10-11 (done by the owner):** a dedicated FTP account limited to `public_html`
 exists, and the four `CPANEL_*` repository secrets are set (`CPANEL_TARGET_DIR` is `/`, because that
-account's root is `public_html`). AutoSSL is active and HTTPS is forced (2026-10-10). Next step:
-the **dry run** in §4.
+account's root is `public_html`). AutoSSL is active and HTTPS is forced (2026-10-10). The **dry
+run** in §4 passed on 2026-10-12, with `CPANEL_HOST` set to the server's full host name (§2). Next
+step: the release (RELEASE.md §3).
 
 ---
 
@@ -28,16 +29,37 @@ variables, and are never written in any file.
 
 | Secret | Value |
 |---|---|
-| `CPANEL_HOST` | The FTP server name from **cPanel → FTP Accounts → (the account) → Configure FTP Client → FTP Server**. Use exactly that name, so the server's TLS certificate matches (§7) |
+| `CPANEL_HOST` | The server's **full host name** (below), not the `ftp.digitalstrike-solutions.com` name cPanel suggests |
 | `CPANEL_USERNAME` | The full FTP login, e.g. `deploy@digitalstrike-solutions.com` |
 | `CPANEL_PASSWORD` | That account's password |
 | `CPANEL_TARGET_DIR` | `/` (the account's root is already `public_html`) |
+
+**Finding the full host name for `CPANEL_HOST`.** cPanel's **FTP Accounts → Configure FTP Client →
+FTP Server** shows `ftp.digitalstrike-solutions.com`. That name has no DNS record (checked on
+2026-10-12: NXDOMAIN), so the workflow fails with "Name or service not known" (§7). Use the
+server's own name instead:
+
+1. **cPanel → General Information → Server Information**: copy the **Server Name** (it looks like
+   `p3plzcpnlNNNNNN`) and the **Shared IP Address**.
+2. Add the suffix `.prod.phx3.secureserver.net`, for example
+   `p3plzcpnlNNNNNN.prod.phx3.secureserver.net`.
+3. Check it on your machine: `nslookup p3plzcpnlNNNNNN.prod.phx3.secureserver.net` (macOS, Linux,
+   Windows) must answer the **Shared IP Address** from step 1. If it does not resolve, or answers
+   another address, ask GoDaddy support for the FTP host name of the account's server.
+
+That host name also matches the server's TLS certificate, so `CPANEL_TLS_VERIFY` stays unset.
 
 If any of them is missing, the workflow does not fail. It ends with the notice **"Deploy skipped —
 Repository secrets not set: …"** and deploys nothing (US-017 AC2).
 
 Optional repository **variable** (not a secret): `CPANEL_TLS_VERIFY`. It is unset by default,
 which means the certificate is checked. Only see §7 if the dry run reports a certificate problem.
+
+**Masked values in the logs.** GitHub replaces every secret's value with `***` in the run's log.
+The host name therefore shows as `***` (for example `open: ***: …`), and, because
+`CPANEL_TARGET_DIR` is `/`, **every `/` in the log also shows as `***`** (a path such as
+`_astro/…` shows as `_astro***…`). This is expected and hides nothing that matters; the listings
+are still readable.
 
 ## 3. AutoSSL (check once; active since 2026-10-10)
 
@@ -120,8 +142,9 @@ them in cPanel **File Manager** if needed. To go back to the holding page itself
 | What the run shows | What to do |
 |---|---|
 | Notice "Deploy skipped — Repository secrets not set: …" | Add the named secrets (§2) and run again |
+| `open: ***: Name or service not known` | `CPANEL_HOST` is a name with no DNS record, usually `ftp.digitalstrike-solutions.com`. Set it to the server's full host name (§2) and run again |
 | `Login failed: 530` | Wrong `CPANEL_USERNAME` (use the full `deploy@digitalstrike-solutions.com`) or wrong `CPANEL_PASSWORD`. Reset the password in cPanel → FTP Accounts → **Change Password**, then update the secret |
-| `Certificate verification: … NOT trusted` or a host-name mismatch | `CPANEL_HOST` must be exactly the **FTP Server** name from §2. If it still fails, set the repository **variable** `CPANEL_TLS_VERIFY` to `false` and run again. The connection stays encrypted but the server's identity is not checked. Ask GoDaddy support which host name matches the certificate, then delete the variable |
+| `Certificate verification: … NOT trusted` or a host-name mismatch | `CPANEL_HOST` must be exactly the server's full host name from §2. If it still fails, set the repository **variable** `CPANEL_TLS_VERIFY` to `false` and run again. The connection stays encrypted but the server's identity is not checked. Ask GoDaddy support which host name matches the certificate, then delete the variable |
 | `cd: Access failed` | `CPANEL_TARGET_DIR` does not exist for that account; it should be `/` |
 | Timeouts / `Connection refused` | GoDaddy FTP briefly unavailable or blocking passive connections; run again. If it persists, ask GoDaddy support whether FTPS (port 21, passive mode) is allowed for the account |
 | Step "Check the live site" fails | The upload worked but the site does not answer as expected; open it, check `.htaccess` in File Manager, and roll back (§6) if needed |

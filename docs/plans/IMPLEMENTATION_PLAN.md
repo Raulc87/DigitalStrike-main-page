@@ -3,7 +3,7 @@
 ## Metadata
 - Version: 0.1
 - Status: **Approved** by Raul Casañas — effective when PR #1 is merged
-- Related: PROJECT_SPEC, USER_STORIES, LEAD_ENDPOINT_CONTRACT, UX_UI_DIRECTION, CONTENT, TECH_STACK, ADR-001…005
+- Related: PROJECT_SPEC, USER_STORIES, LEAD_ENDPOINT_CONTRACT, UX_UI_DIRECTION, CONTENT, TECH_STACK, ADR-001…006
 
 ## 1. Delivery strategy
 

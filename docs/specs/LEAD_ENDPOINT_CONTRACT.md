@@ -1,7 +1,8 @@
 # LEAD_ENDPOINT_CONTRACT — Save Lead (Google Apps Script)
 
 ## Metadata
-- Version: 1.0
+- Version: 1.0.1
+- Revision 1.0.1 (2026-10-12): §8 adds the preview build variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` and marks `PUBLIC_LEAD_ENDPOINT_URL` as production (ADR-006, US-026). Configuration only: request, responses, processing order and sheet columns are unchanged; no change for either owning agent's interface.
 - Status: **LOCKED for Sprint 001** — approved by Raul Casañas; effective when PR #1 is merged
 - Pre-lock revisions (2026-10-10, reviews of PR #1): `elapsed_ms` replaces `form_started_at` (clock skew), `submission_id` idempotency, daily cap and Gmail-quota check, `privacy_notice_version` sent by the client; throttles and idempotency read from the sheet (durable), not from CacheService; column S `last_contact_at` for retention
 - Related spec: `docs/specs/PROJECT_SPEC.md` (FR-010 to FR-018, BR-007 to BR-009, NFR-006)
@@ -218,7 +219,8 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 ### Frontend — build-time variables (`.env`, GitHub repository *variables*, not secrets)
 | Variable | Example |
 |---|---|
-| `PUBLIC_LEAD_ENDPOINT_URL` | Apps Script `/exec` URL; locally `http://127.0.0.1:8787/exec` (mock, §9) |
+| `PUBLIC_LEAD_ENDPOINT_URL` | Apps Script `/exec` URL of the **production** deployment, used by the release build; locally `http://127.0.0.1:8787/exec` (mock, §9) |
+| `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` | `/exec` URL of the **staging** Apps Script project (its own sheet and Script Properties), used by the Pages preview build (ADR-006, US-026). Unset → the preview form shows its error with the email fallback; the preview never posts to production |
 | `PUBLIC_CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` |
 | `PUBLIC_CONTACT_EMAIL` | `manager@digitalstrike-solutions.com` |
 | `PUBLIC_LINKEDIN_URL` | `https://www.linkedin.com/in/raul-casanas/` |

@@ -27,9 +27,11 @@ Polish the live site after `v0.1.0`: complete the showroom (Poliart screenshot),
 | US-023 Mobile performance: main-thread and render-blocking CSS | Agent 1 | US-022 | `DS-023-mobile-performance` | Should |
 | US-024 Reliable lead-flow e2e (`elapsed_ms` check) | Agent 2 | — | `DS-024-lead-flow-e2e-stability` | Must |
 | US-025 Readable deploy logs (`CPANEL_TARGET_DIR` as a variable) | Agent 3 | — | `DS-025-deploy-log-masking` | Could |
+| US-026 Staging lead endpoint for the preview (ADR-006) | Agent 3 + owner (console steps) | — | `DS-026-staging-endpoint` | Must |
+| US-027 Urgent-fix procedure in RELEASE.md (ADR-006) | Agent 3 | — | `DS-027-urgent-fix-runbook` | Should |
 | Meet-up feedback | Owner → docs PR | Meet-up 2026-10-14 | `DS-DOCS-meetup-feedback` | Added by change management |
 
-Stories and acceptance criteria: `docs/specs/USER_STORIES.md` (US-021 … US-025).
+Stories and acceptance criteria: `docs/specs/USER_STORIES.md` (US-021 … US-027). Branching and release model: ADR-006 (trunk-based on `main`, production = release tags, `release/vX.Y.x` only for urgent fixes).
 
 ## Release plan
 - **US-021 first.** When the owner supplies the Poliart screenshot, Agent 1 adds it in a one-file PR; the owner merges it and publishes **`v0.1.1`**. If the file is ready before Wednesday 2026-10-14 noon (CR), it may be released before the meet-up, because it only adds an image (the card already switches from initials to the screenshot when the file exists, and the provisional badge disappears on the preview). Otherwise it ships with the rest of the sprint; the card keeps the "PI" initials meanwhile, which is acceptable in production.
@@ -47,13 +49,15 @@ Stories and acceptance criteria: `docs/specs/USER_STORIES.md` (US-021 … US-025
 | 6 | Email reputation: keep normal sending from `manager@` (replies help); optionally register the domain in Google Postmaster Tools; recheck whether Outlook/Hotmail still sends the confirmation to spam | **Done** (2026-10-12): set up; keep normal sending and recheck Outlook/Hotmail placement at sprint end |
 | 7 | Legal review of privacy notice v1 by Cinthia; any change goes through CONTENT §13 with a new notice version (US-018 AC2 order: Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` first) | When available |
 | 8 | `holding-page/`: **kept as the emergency fallback** (owner decision 2026-10-12). If a release breaks production and no earlier tag fixes it, re-upload `holding-page/holding-page.zip` through cPanel File Manager (DEPLOYMENT.md §6 and `holding-page/README.md`) | **Done** (2026-10-12) |
+| 9 | Add `release/*` to the branch ruleset (PR required, the six required checks with **"Require branches to be up to date before merging"** on, no force push or deletion), so an urgent-fix branch is protected like `main` (ADR-006) | Any time |
+| 10 | US-026 console steps: create the staging sheet and Apps Script project as `manager@`, deploy it, set repository variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` (runbook from DS-026) | During the sprint |
 
 ## File Ownership Map
 Unchanged from Sprint 001 (`SPRINT_001.md`, "File Ownership Map"). In short: Agent 1 owns `src/layouts/**`, `src/pages/**`, `src/components/sections/**`, `src/styles/**`, `public/**` except `public/.htaccess`, and its section e2e specs; Agent 2 owns the lead/schedule/privacy components and the other e2e specs; Agent 3 owns `apps-script/**`, `scripts/**`, `.github/workflows/**`, `public/.htaccess` and `docs/runbooks/**`; docs and `holding-page/**` belong to the owner (via `DS-DOCS-*` PRs).
 
 ## Merge / Integration Order
 1. `DS-021-poliart-screenshot` as soon as it exists → release `v0.1.1`.
-2. After the meet-up, in any order with green CI: DS-024, DS-022, DS-025; then DS-023 (it measures against DS-022).
+2. After the meet-up, in any order with green CI: DS-024, DS-022, DS-025, DS-026, DS-027; then DS-023 (it measures against DS-022). DS-026 needs the owner's console steps (staging Apps Script + `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW`) before its AC3 check.
 3. Meet-up feedback stories, if any, after their docs PR is merged.
 4. Release, smoke test (RELEASE.md §4), record the production PageSpeed scores.
 

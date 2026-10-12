@@ -7,5 +7,6 @@
 | [ADR-003](ADR-003_I18N_ROUTING.md) | Language routing `/es/` `/en/` | Accepted |
 | [ADR-004](ADR-004_SPAM_PROTECTION.md) | Spam protection | Accepted |
 | [ADR-005](ADR-005_TRANSACTIONAL_EMAIL.md) | Transactional email | Accepted |
+| [ADR-006](ADR-006_BRANCHING_AND_RELEASE_MODEL.md) | Branching and release model | Accepted |
 
 New ADRs: copy `ADR_TEMPLATE.md`.

@@ -50,7 +50,7 @@ The page must:
 - Prices on the page; refunds/devolution policy (pending legal review).
 - Client-side analytics added by our code (e.g. Google Analytics), tracking pixels, cookie banner. Visit statistics from the server logs (cPanel Awstats, §8) are in scope. (The site's own code sets no cookies; GoDaddy's injected script sets its own, disclosed in the privacy notice, ADR-001). A consent banner is reconsidered if the site targets EU visitors (GDPR) or GoDaddy's script changes.
 - WhatsApp button, Instagram link (accounts do not exist yet), company LinkedIn page.
-- Real client logos (none available yet), testimonials.
+- Testimonials, and logos of DigitalStrike clients (none yet). Logos of companies Raul worked with before DigitalStrike are in scope (FR-009, owner decision 2026-10-12).
 - Blog, accounts/login, payments, CMS.
 - Python/Java backend (future path recorded in ADR-002).
 - A reply bot/assistant for leads (owner idea for the future; would follow ADR-002's roadmap).
@@ -66,8 +66,8 @@ The page must:
 | FR-005 | The services section shows the tiers A–D plus "customisations" as cards, without prices, each with who it is for and what it typically includes. |
 | FR-006 | The "how we work" section shows the process and states the 6-month bug-fix warranty as a feature of every project. Refunds are not mentioned. |
 | FR-007 | The showroom shows the projects listed in CONTENT.md with title, short description, stack tags and, when public, a link to the repository. |
-| FR-008 | The about section presents Raul Casañas as CEO, with photo (provisional until the real one arrives), career brief based on his CV, and a link to his LinkedIn profile. |
-| FR-009 | The clients section shows placeholder slots for logos; no real client name or logo is shown until the owner provides files and permission. It can be hidden with one configuration flag. |
+| FR-008 | The about section presents Raul Casañas as CEO, with photo (the current 200 px photo is final for v0.1.0, owner decision 2026-10-12; a ≥ 800×800 px version may replace it later), career brief based on his CV, and a link to his LinkedIn profile. |
+| FR-009 | The clients section shows the logos of companies Raul worked with before DigitalStrike (CONTENT §9), with wording that does not present them as DigitalStrike clients. A logo is shown only with the owner's permission (given 2026-10-12 for the four listed). It can be hidden with one configuration flag. |
 | FR-010 | The lead form collects the fields in the contract (name, email, optional phone, optional company, project type, budget range, timeline, message, consent) with client-side validation and localized errors. |
 | FR-011 | A lead is stored as one row in the Google Sheet with `submitted_at` (America/Costa_Rica), `status = new` and every submitted field. Allowed statuses: `new`, `contacting`, `accepted`, `rejected`. |
 | FR-012 | After a lead is stored, the owner receives a "cover letter" email with all the lead's data, with `Reply-To` set to the visitor. |
@@ -84,7 +84,7 @@ The page must:
 | ID | Rule |
 |---|---|
 | BR-001 | No prices are shown anywhere on the site. Budget ranges in the form are a screening question, not a price list. |
-| BR-002 | No invented testimonials, client logos, numbers or outcomes. Figures about Raul come only from his CV. Provisional content is visibly marked in non-production builds and listed in CONTENT.md. |
+| BR-002 | No invented testimonials, client logos, numbers or outcomes. A real company's logo appears only with the owner's permission and with honest wording about the relationship (CONTENT §9). Figures about Raul come only from his CV. Provisional content is visibly marked in non-production builds and listed in CONTENT.md. |
 | BR-003 | Refunds/devolution are not mentioned until the legal review (Cinthia) is done. The warranty mentioned is only the 6-month bug-fix warranty. |
 | BR-004 | Lifetools is not presented as a DigitalStrike client (that work was done by Origo). Showroom items are presented as "work by our team", not as client endorsements. |
 | BR-005 | Spanish is the source language for all copy; English is a translation of the approved Spanish. |
@@ -141,6 +141,6 @@ Resolved 2026-10-10: GoDaddy Deluxe cPanel hosting and `digitalstrike-solutions.
 
 Still open (non-blocking for Sprint 001):
 1. Convert the logo lockups' wordmark text to outlines before printing or the trademark filing (owner).
-2. A ≥ 800×800 px photo to replace the provisional 200 px one.
+2. A ≥ 800×800 px photo to replace the current 200 px one (final for v0.1.0; an upgrade, not a blocker).
 3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
 4. Cami's sign-off on the approved identity (Origo governance; does not block the build).

@@ -59,8 +59,8 @@ As a visitor, I see the page in my language and can switch it.
 - AC3: LinkedIn button opens `PUBLIC_LINKEDIN_URL` in a new tab.
 - AC-UI.
 
-## US-008 — Clients placeholder section
-- AC1: Four dashed slots with the slot text; no client names or logos (BR-002, BR-004).
+## US-008 — Clients section (companies Raul has worked with)
+- AC1: The section shows `clients.title`, `clients.note` and the four logos listed in CONTENT §9, in that order, each with `clients.logo_alt` as alt text. The logo files are self-hosted under `public/images/clients/` (no third-party request, NFR-005), shown in one light/monochrome treatment, not linked. No wording presents them as DigitalStrike clients (BR-002, BR-004). (Revised 2026-10-12; it was four placeholder slots.)
 - AC2: `PUBLIC_SHOW_CLIENT_LOGOS=false` removes the section and its nav entry (if any) from the build.
 - AC-UI.
 

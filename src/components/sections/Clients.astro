@@ -2,26 +2,42 @@
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
 import { showClientLogos } from '../../lib/i18n/site';
+import { withBase } from '../../lib/i18n/url';
 
 interface Props {
   lang: Locale;
 }
 
 const { lang } = Astro.props;
-const slots = [1, 2, 3, 4];
+
+// Companies Raul worked with before DigitalStrike (CONTENT §9), in this order. Names are written as
+// each company's own website writes them. Files are self-hosted (no third-party requests);
+// `width`/`height` are the intrinsic pixel sizes, used to reserve space and keep the aspect ratio.
+const companies = [
+  { name: 'HNM Systems', file: 'hnm-systems.svg', width: 125, height: 71 },
+  { name: 'QAT Global', file: 'qat-global.png', width: 1000, height: 183 },
+  { name: 'Bristlecone', file: 'bristlecone.png', width: 2333, height: 265 },
+  { name: 'Stateside', file: 'stateside.svg', width: 140, height: 26 },
+] as const;
 ---
 
 {showClientLogos && (
   <section id="clientes">
     <div class="section-shell py-16 md:py-20">
       <h2>{t(lang, 'clients.title')}</h2>
-      <ul class="mt-10 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-4">
-        {slots.map(() => (
-          <li
-            data-client-slot
-            class="border-border-strong text-text-2 flex min-h-32 items-center justify-center rounded-xl border-2 border-dashed p-4 text-center text-sm"
-          >
-            {t(lang, 'clients.slot')}
+      <p class="text-text-2 mt-4 max-w-3xl">{t(lang, 'clients.note')}</p>
+      <ul class="mt-10 grid list-none grid-cols-2 items-center gap-x-8 gap-y-10 p-0 md:grid-cols-4">
+        {companies.map((company) => (
+          <li data-client-logo class="flex min-h-12 items-center justify-center">
+            <img
+              src={withBase(`images/clients/${company.file}`)}
+              alt={t(lang, 'clients.logo_alt', { company: company.name })}
+              width={company.width}
+              height={company.height}
+              loading="lazy"
+              decoding="async"
+              class="h-auto max-h-12 w-auto max-w-40 object-contain opacity-70 brightness-0 invert"
+            />
           </li>
         ))}
       </ul>

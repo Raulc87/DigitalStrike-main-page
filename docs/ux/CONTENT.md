@@ -2,7 +2,7 @@
 
 ## Metadata
 - Version: 0.2
-- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. 2026-10-12: `form.success.body` points to the confirmation email and the spam folder without claiming it was sent (US-009 AC6) (owner decision; a new domain's mail can land in spam, notably at Outlook/Hotmail). Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
+- Status: **Approved** by Raul Casañas — effective when PR #1 is merged (the privacy notice is published as v1 and still gets Cinthia's legal review). v0.2 (2026-10-10): owner answers applied (session 0 free, 2-business-day reply, 24-month retention, Poliart named), success copy and Calendly disclosure fixed after review. 2026-10-12: CEO photo accepted as final for v0.1.0; §9 shows four logos of companies Raul worked with before DigitalStrike (owner decision and permission). 2026-10-12: `form.success.body` points to the confirmation email and the spam folder without claiming it was sent (US-009 AC6) (owner decision; a new domain's mail can land in spam, notably at Outlook/Hotmail). Spanish is the source (BR-005); the English column was re-synced with the Spanish on 2026-10-10 and is approved with it. Later changes start in Spanish and are translated in the same PR.
 - Owner: Raul Casañas · Drafted by Claude from the Drive material and the CV (2026-10-09)
 - Rules: tone sober and approachable; baseball only in the name, logo, slogan and the confirmation email (PROJECT_SPEC §2); no prices (BR-001); no invented proof (BR-002); no refunds (BR-003); inclusive language (BR-006).
 - Markers: **[PROVISIONAL]** = shown with a pending badge in preview builds.
@@ -123,16 +123,29 @@ Images: a screenshot per project if available (Agent 1 may build the public repo
 | `about.linkedin` | Ver perfil en LinkedIn | View LinkedIn profile |
 | `about.photo_alt` | Raul Casañas, CEO de DigitalStrike Solutions | Raul Casañas, CEO of DigitalStrike Solutions |
 
-Photo: **[PROVISIONAL]** `docs/assets/photos/raul-casanas-200.jpg` (200×200 px, supplied by Raul 2026-10-10). Display it at most 200 CSS px wide until a ≥ 800×800 px version replaces it; the monogram "RC" is the fallback if the file is missing.
+Photo: `docs/assets/photos/raul-casanas-200.jpg` (200×200 px, supplied by Raul 2026-10-10; accepted as final for v0.1.0 by the owner on 2026-10-12, so no pending badge). Display it at most 200 CSS px wide until a ≥ 800×800 px version replaces it; the monogram "RC" is the fallback if the file is missing.
 
 ## 9. Clients (`#clientes`, behind `PUBLIC_SHOW_CLIENT_LOGOS`)
 
 | Key | ES | EN |
 |---|---|---|
-| `clients.title` | Empresas que confían en nosotros | Companies that trust us |
-| `clients.slot` | Este espacio está reservado para tu marca | This space is reserved for your brand |
+| `clients.title` | Empresas con las que he trabajado | Companies I've worked with |
+| `clients.note` | Mi experiencia como desarrollador y consultor, antes de fundar DigitalStrike. | My experience as a developer and consultant, before founding DigitalStrike. |
+| `clients.logo_alt` | Logo de {company} | {company} logo |
 
-Four dashed placeholder slots, each with `clients.slot` as text. No real names or logos (BR-002, BR-004).
+Four logos, in this order (owner decision 2026-10-12; the owner confirmed permission to show them):
+
+| Company | Website (source of the logo file) |
+|---|---|
+| HNM Systems | https://hnmsystems.com/ |
+| QAT Global | https://qat.com/ |
+| Bristlecone | https://www.bristlecone.com/ |
+| Stateside | https://stateside.agency/ |
+
+- These are companies Raul worked for or through **before DigitalStrike**, not DigitalStrike clients (BR-002, BR-004): the title is first person singular and `clients.note` says so. Use each company's name exactly as its website writes it (check while taking the logo).
+- Logo files are taken from each company's own website, stored in the repository (`public/images/clients/`, SVG preferred, PNG otherwise) and served from our domain: no hotlinking (NFR-005).
+- Logos are shown in a single light/monochrome treatment so they sit evenly on the navy background; they are not links.
+- The old slot text (`clients.slot`, "Este espacio está reservado para tu marca") is removed.
 
 ## 10. Lead form (`#contacto`)
 

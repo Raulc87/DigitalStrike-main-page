@@ -39,7 +39,7 @@ Publish the first public, bilingual DigitalStrike Solutions page that explains t
 | 3. User stories | Every sprint story has testable ACs ("widths" defined); every story has an owner below. **OK.** |
 | 4. Contracts and integrations | Contract v1.0 complete (endpoint, CORS, body, enums, processing order, sheet columns, responses, config, mock); failure behaviour defined for Sheets, email and Calendly; credentials rule stated (TECH_STACK §11). **OK — locks on merge.** |
 | 5. Data, legal, security | Jurisdiction Costa Rica (Ley 8968); consent checkbox; privacy notice v1 `2026-10-14-v1` decided by the owner (retention 24 months confirmed; Calendly loading disclosed; Cinthia's review to follow); the version the visitor saw is stored per lead; spam protection and idempotency in scope (US-014). **OK.** |
-| 5.1 UI | Visual identity **approved** 2026-10-10: proposal A v3, Palette 1 and the ball logo (UX §2; tokens mandatory). Go-live assets: logo kit (vector) ✅; photo ✅ provisional 200 px (≥ 800 px version: Raul, Sprint 002); final copy — all [CONFIRMAR] items answered 2026-10-10, **approved by merging this PR**. |
+| 5.1 UI | Visual identity **approved** 2026-10-10: proposal A v3, Palette 1 and the ball logo (UX §2; tokens mandatory). Go-live assets: logo kit (vector) ✅; photo ✅ 200 px, final for v0.1.0 (owner 2026-10-12; ≥ 800 px version: Raul, Sprint 002); final copy — all [CONFIRMAR] items answered 2026-10-10, **approved by merging this PR**. |
 | 6. Stack and environment | GoDaddy Deluxe cPanel + `digitalstrike-solutions.com` bought 2026-10-10, AutoSSL active and HTTPS forced, Python apps supported (ADR-001/002); GitHub Pages for previews (public repo); local run defined (dev + mock); test/lint/CI/CD named. **OK.** Open for the deliverable (not blocking kickoff): FTP account + `CPANEL_*` secrets (owner, Mon). GoDaddy's injected script kept and disclosed (owner decision 2026-10-11, ADR-001). |
 | 7. Parallelization | 3 agents assigned; ownership map, scaffold-first order, integration PR owner (Agent 2), conflict rule below. **OK.** |
 | 7.1 Merge control | Every prompt in `SPRINT_001_AGENT_PROMPTS.md` states "never merge/approve"; review-only agent runs in its own session with the independence rule. **OK.** `main` protection: owner. |
@@ -114,7 +114,7 @@ An agent edits only files it owns. Changes needed in another owner's file are re
 - [x] Approve the visual identity — proposal A v3, Palette 1, ball logo and tagline (2026-10-10).
 - [x] Google Workspace with `manager@digitalstrike-solutions.com` configured; SPF, DKIM and DMARC published (2026-10-10).
 - [ ] Signed in as `manager@digitalstrike-solutions.com`: create the leads sheet + Apps Script project, deploy, set Script Properties, put the `/exec` URL in repository variable `PUBLIC_LEAD_ENDPOINT_URL` (runbook from DS-010/DS-016).
-- [x] Provisional photo supplied (200 px). A ≥ 800×800 px version later.
+- [x] Photo supplied (200 px), accepted as final for v0.1.0 on 2026-10-12. A ≥ 800×800 px version later.
 - [x] Buy the GoDaddy Deluxe plan and `digitalstrike-solutions.com`; SSL active, HTTPS forced, holding page live (2026-10-10).
 - [ ] Create a dedicated cPanel FTP account limited to `public_html`; set repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (runbook from DS-017) — by Mon.
 - [x] GoDaddy's injected monitoring script: keep and disclose it (decision 2026-10-11); visitor statistics in cPanel Metrics → Awstats.

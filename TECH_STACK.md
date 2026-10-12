@@ -39,7 +39,7 @@ Least-complex stack that meets the requirements, reusing what the pilot proved.
 Google Sheets, worksheet `leads`, columns exactly as contract §6. No database.
 
 ## 7. Integrations
-- Google Sheets + Gmail via Apps Script services (`SpreadsheetApp`, `MailApp`, `LockService`, `PropertiesService` for configuration; `CacheService` only as an optional optimisation — throttles and idempotency read the sheet, contract §5.3–5.4).
+- Google Sheets + Gmail via Apps Script services (`SpreadsheetApp`, `GmailApp` to send with the `gmail.send` scope and `MailApp` only for the quota check (ADR-005), `LockService`, `PropertiesService` for configuration; `CacheService` only as an optional optimisation — throttles and idempotency read the sheet, contract §5.3–5.4).
 - Calendly inline embed (official `widget.js`), URL `https://calendly.com/rcasanas/1hr`.
 - LinkedIn: plain link.
 

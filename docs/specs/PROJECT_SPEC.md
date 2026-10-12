@@ -66,7 +66,7 @@ The page must:
 | FR-005 | The services section shows the tiers A–D plus "customisations" as cards, without prices, each with who it is for and what it typically includes. |
 | FR-006 | The "how we work" section shows the process and states the 6-month bug-fix warranty as a feature of every project. Refunds are not mentioned. |
 | FR-007 | The showroom shows the projects listed in CONTENT.md with title, short description, stack tags and, when public, a link to the repository. |
-| FR-008 | The about section presents Raul Casañas as CEO, with photo (provisional until the real one arrives), career brief based on his CV, and a link to his LinkedIn profile. |
+| FR-008 | The about section presents Raul Casañas as CEO, with photo (the current 200 px photo is final for v0.1.0, owner decision 2026-10-12; a ≥ 800×800 px version may replace it later), career brief based on his CV, and a link to his LinkedIn profile. |
 | FR-009 | The clients section shows the logos of companies Raul worked with before DigitalStrike (CONTENT §9), with wording that does not present them as DigitalStrike clients. A logo is shown only with the owner's permission (given 2026-10-12 for the four listed). It can be hidden with one configuration flag. |
 | FR-010 | The lead form collects the fields in the contract (name, email, optional phone, optional company, project type, budget range, timeline, message, consent) with client-side validation and localized errors. |
 | FR-011 | A lead is stored as one row in the Google Sheet with `submitted_at` (America/Costa_Rica), `status = new` and every submitted field. Allowed statuses: `new`, `contacting`, `accepted`, `rejected`. |
@@ -141,6 +141,6 @@ Resolved 2026-10-10: GoDaddy Deluxe cPanel hosting and `digitalstrike-solutions.
 
 Still open (non-blocking for Sprint 001):
 1. Convert the logo lockups' wordmark text to outlines before printing or the trademark filing (owner).
-2. A ≥ 800×800 px photo to replace the provisional 200 px one.
+2. A ≥ 800×800 px photo to replace the current 200 px one (final for v0.1.0; an upgrade, not a blocker).
 3. A sanitized screenshot of the Poliart platform for the showroom card (no real data).
 4. Cami's sign-off on the approved identity (Origo governance; does not block the build).

@@ -103,7 +103,7 @@ Corner radius: 12 px cards, 999 px buttons. No shadows on dark surfaces except t
 
 **Showroom.** Navy background. 3 cards: image area (screenshot or initials placeholder, 16:10), title, description, tags as Plex Mono chips, link "Ver código en GitHub" (opens in new tab, `rel="noopener"`) or the "private" label.
 
-**About the CEO.** Steel band. Photo (square, rounded 12 px; provisional 200 px photo, monogram fallback) left, text right (stacked on mobile). Facts as chips. LinkedIn button (outline, new tab).
+**About the CEO.** Steel band. Photo (square, rounded 12 px; the 200 px photo, final for v0.1.0 and shown at most 200 CSS px wide, monogram fallback) left, text right (stacked on mobile). Facts as chips. LinkedIn button (outline, new tab).
 
 **Clients.** Navy. Title, a one-line note in `--color-text-2`, then the 4 logos, 2×2 mobile / 4 in a row desktop, vertically centred, each at most about 48 px tall and 160 px wide, keeping its aspect ratio.
 

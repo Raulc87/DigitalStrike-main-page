@@ -51,7 +51,7 @@
 
 ## Open questions
 - Logo lockups: convert the wordmark text to outlines before printing / trademark filing (owner)
-- Raul's photo ≥ 800×800 px (provisional 200 px in use)
+- Raul's photo ≥ 800×800 px (the 200 px photo in use is final for v0.1.0; a larger one is an upgrade)
 - Sanitized screenshot of the Poliart platform for the showroom
 - Cami's sign-off on the approved identity (Origo governance; does not block the build)
 - Legal review of privacy notice v1 (Cinthia)

@@ -26,7 +26,7 @@ export const enForm: Record<FormKey, string> = {
   'form.submitting': 'Sending…',
   'form.success.title': 'Got it, {first_name}!',
   'form.success.body':
-    "We have your idea. We'll write to you within 2 business days. If you'd like to move faster, book your session 0 below.",
+    "We have your idea. If you don't see our confirmation email, check your spam folder. We'll write to you within 2 business days. If you'd like to move faster, book your session 0 below.",
   'form.success.cta': 'Book my session 0',
 
   'form.project_type.website': 'Website',

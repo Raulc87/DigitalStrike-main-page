@@ -25,7 +25,7 @@ export const esForm = {
   'form.submitting': 'Enviando…',
   'form.success.title': '¡Recibido, {first_name}!',
   'form.success.body':
-    'Ya tenemos tu idea. Te escribiremos en un máximo de 2 días hábiles. Si quieres adelantar, agenda tu sesión 0 aquí abajo.',
+    'Ya tenemos tu idea. Si no ves nuestro correo de confirmación, revisa la carpeta de spam. Te escribiremos en un máximo de 2 días hábiles. Si quieres adelantar, agenda tu sesión 0 aquí abajo.',
   'form.success.cta': 'Agendar mi sesión 0',
 
   'form.project_type.website': 'Página web',

@@ -124,7 +124,7 @@ As the owner, every lead lands in my Google Sheet.
   - Lighthouse (PageSpeed Insights, mobile) on `https://digitalstrike-solutions.com/es/`: record the Performance and Accessibility scores; below 90 / 95 → owner decision per NFR-003.
 
 ## US-017 — Release deployment to GoDaddy cPanel (production)
-- AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR`.
+- AC1: A workflow triggered by `release: published` builds with `PUBLIC_BASE_PATH=/` and `PUBLIC_SITE_URL` = production URL, and uploads `dist/` to the cPanel document root over FTPS (or SSH/rsync if available), using repository *secrets* `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD` (or key), `CPANEL_TARGET_DIR` (a repository variable, default `/`, from US-025 in Sprint 002; a secret until then).
 - AC2: If the secrets are missing, the job is skipped with a clear notice instead of failing. (For `v0.1.0` the owner sets them by Mon 2026-10-12, so the release does deploy.)
 - AC3: `.htaccess` (in `public/`) redirects HTTP→HTTPS (as the live holding page already does), disables directory listing, sets a 404 page, and does not break `/es/` and `/en/`.
 - AC4: `docs/runbooks/DEPLOYMENT.md` lists the one-time GoDaddy steps and how to roll back (re-run the workflow on the previous release). Steps:
@@ -138,6 +138,30 @@ As the owner, every lead lands in my Google Sheet.
 - AC1: Dialog from the form and pages `/es/privacidad/`, `/en/privacy/` with CONTENT §13 text, including its version line (no other status text).
 - AC2: The version shown is `PUBLIC_PRIVACY_NOTICE_VERSION`; the runbook states that it must be listed in the Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` before a frontend with a new version is deployed.
 - AC-UI.
+
+## US-021 — Poliart screenshot in the showroom (Sprint 002)
+- AC1: `public/images/work/poliart.jpg` exists, 1200×750 px, JPG, ≤ 200 KB; the Poliart card shows it instead of the "PI" initials, with the same alt text pattern as the other cards, and the preview's provisional badge on that card disappears (Work.astro already switches on the file's presence).
+- AC2: The image is sanitized: it shows no real customer, employee or financial data (demo data or blurred), confirmed by the owner in the PR.
+- AC3: The work e2e spec asserts the Poliart image loads from our domain and no card shows initials.
+- AC4: In the same release, a `DS-DOCS-*` PR removes the **[PROVISIONAL]** marker from CONTENT §7 "Images" (all three cards then have screenshots).
+
+## US-022 — CEO photo delivery (Sprint 002)
+- AC1: The About photo is lazy-loaded (`loading="lazy"`, `decoding="async"`) with explicit width and height (no layout shift).
+- AC2: It is served in a modern format (AVIF or WebP, JPG fallback) at the displayed size and 2× (`srcset`), still capped at 200 CSS px while the 200 px source is in use; a larger source (≥ 800×800, owner) can replace it without code changes.
+- AC3: In the CI `lhci` report, the CEO photo is not listed among offscreen or oversized images (audits `offscreen-images` and `image-delivery-insight`, or their successors in the Lighthouse version in use).
+
+## US-023 — Mobile performance (Sprint 002)
+- AC1: The PR contains a profile write-up for `/es/` on the Lighthouse mobile preset: what drives the main-thread style/layout time and the Speed Index, and which of those causes the PR fixes, within the approved visual identity (e.g. costly effects or animations on mobile, `content-visibility` for below-the-fold sections, critical CSS inlined so no stylesheet blocks the first render).
+- AC2: In the CI `lhci` run of our own build (the NFR-003 gate), mobile Performance ≥ 95 on `/es/` and `/en/`; `lighthouserc.json` is raised to assert `minScore: 0.95` for performance. Accessibility, Best practices and SEO stay at 100. No visual change other than ones the owner approves in the PR. The production PageSpeed score is recorded after release (RELEASE.md §4.6) but is not an acceptance criterion: it also measures GoDaddy's injected script (NFR-003, ADR-001).
+- AC3: Findings caused by GoDaddy's injected script are listed as not actionable (ADR-001), not worked around.
+
+## US-024 — Reliable lead-flow e2e (Sprint 002)
+- AC1: The lead-flow spec no longer depends on wall-clock timing under load (the `elapsed_ms >= 3000` assertion that failed once on a busy machine): time is controlled in the test (e.g. Playwright clock) or the assertion checks the contract rule without racing.
+- AC2: The spec passes 20 consecutive runs locally and in CI (`--repeat-each`), evidence in the PR. No test is skipped, disabled or loosened beyond the contract's rule.
+
+## US-025 — Readable deploy logs (Sprint 002)
+- AC1: The release workflow reads the target folder from the repository **variable** `CPANEL_TARGET_DIR` (default `/`), not a secret, so GitHub no longer masks every `/` in the logs; host, user and password stay secrets. This revises US-017 AC1 and ADR-001 (Implementation Impact). The skip-with-notice check (US-017 AC2) now covers only the three secrets `CPANEL_HOST`, `CPANEL_USERNAME` and `CPANEL_PASSWORD`; an unset variable means `/`.
+- AC2: DEPLOYMENT.md §2 and the "masked logs" note are updated; a dry run shows readable file lists.
 
 ## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10
 - AC1: 2–3 HTML proposals with the brand palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*

@@ -63,7 +63,7 @@ Static `dist/` only. `PUBLIC_SITE_URL` and `PUBLIC_BASE_PATH` drive canonical UR
 
 ## Implementation Impact
 - Workflows `pages.yml` and `release-cpanel.yml` (Agent 3).
-- Repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (US-017 AC1; owner, by Mon 2026-10-12).
+- Repository secrets `CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR` (US-017 AC1; owner, by Mon 2026-10-12). From US-025 (Sprint 002), `CPANEL_TARGET_DIR` is a repository variable (default `/`), because the folder is not sensitive and as a secret it masks every `/` in the deploy logs.
 - Runbook `docs/runbooks/DEPLOYMENT.md` (US-017 AC4).
 - Preview builds add `noindex`.
 

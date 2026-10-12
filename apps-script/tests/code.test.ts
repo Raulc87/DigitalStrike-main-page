@@ -15,6 +15,12 @@ function googleServices(props: Record<string, string> = SCRIPT_PROPERTIES) {
   const lock = new FakeLock();
   const logs: string[] = [];
   const openedIds: string[] = [];
+  const gmailSent: Array<{
+    to: string;
+    subject: string;
+    body: string;
+    options: AppsScriptContext;
+  }> = [];
   const globals: AppsScriptContext = {
     ContentService: {
       MimeType: { JSON: 'application/json' },
@@ -32,14 +38,25 @@ function googleServices(props: Record<string, string> = SCRIPT_PROPERTIES) {
       newDataValidation,
     },
     LockService: { getScriptLock: () => lock },
-    MailApp: mailer,
+    // MailApp only answers the quota; sending must go through GmailApp (lib/gmail.js).
+    MailApp: {
+      getRemainingDailyQuota: () => mailer.getRemainingDailyQuota(),
+      sendEmail: () => {
+        throw new Error('MailApp.sendEmail must not be used');
+      },
+    },
+    GmailApp: {
+      sendEmail: (to: string, subject: string, body: string, options: AppsScriptContext) => {
+        gmailSent.push({ to, subject, body, options });
+      },
+    },
     Utilities: {
       formatDate: (d: Date) => d.toISOString(),
     },
     console: { log: (line: string) => logs.push(line) },
   };
   const gs = loadAppsScript({ withCode: true, globals });
-  return { gs, spreadsheet, mailer, lock, logs, openedIds };
+  return { gs, spreadsheet, mailer, lock, logs, openedIds, gmailSent };
 }
 
 describe('doGet (US-010 AC1)', () => {
@@ -105,10 +122,21 @@ describe('doPost wiring', () => {
     expect(sheet.rows).toHaveLength(2);
     expect(sheet.row(2)[2]).toBe(body.lead_id);
     expect(sheet.row(2).slice(14, 16)).toEqual(['sent', 'sent']);
-    expect(services.mailer.sent.map((m) => m.to)).toEqual([
+    expect(services.gmailSent.map((m) => m.to)).toEqual([
       'owner@example.com',
       'ana.perez@example.com',
     ]);
+    // Owner email: Reply-To = visitor; confirmation: Reply-To = REPLY_TO_EMAIL (ADR-005).
+    const [owner, confirmation] = services.gmailSent;
+    expect(owner?.subject).toMatch(/^Nuevo prospecto DS-/);
+    expect(owner?.options).toMatchObject({
+      replyTo: 'ana.perez@example.com',
+      name: 'DigitalStrike Solutions',
+    });
+    expect(owner?.options.htmlBody).toContain('<!DOCTYPE html>');
+    expect(confirmation?.subject).toBe('Tu idea ya está en juego · DigitalStrike Solutions');
+    expect(confirmation?.options).toMatchObject({ replyTo: 'reply@example.com' });
+    expect(confirmation?.body).toContain('Hola, Ana:');
     expect(services.lock.held).toBe(false);
     for (const line of services.logs) expect(line).not.toMatch(/ana|Ana|8888/);
   });

@@ -65,8 +65,10 @@ function doPost(e) {
         getRemainingDailyQuota: function () {
           return MailApp.getRemainingDailyQuota();
         },
+        // Quota from MailApp (shared with GmailApp); sending through GmailApp (lib/gmail.js).
         sendEmail: function (message) {
-          MailApp.sendEmail(message);
+          var args = toGmailSendArgs(message);
+          GmailApp.sendEmail(args.recipient, args.subject, args.body, args.options);
         },
       },
       composeEmail: function (kind, lead, context) {

@@ -8,7 +8,7 @@ Google Apps Script web app that implements `docs/specs/LEAD_ENDPOINT_CONTRACT.md
 
 | File | Role |
 |---|---|
-| `appsscript.json` | Manifest: V8, `America/Costa_Rica`, web app executed as the deploying user, access "Anyone"; scopes limited to Sheets and sending mail |
+| `appsscript.json` | Manifest: V8, `America/Costa_Rica`, web app executed as the deploying user, access "Anyone"; scopes limited to Sheets, `script.send_mail` (the `MailApp` quota check) and `gmail.send` (sending) |
 | `Code.js` | Entry points only: `doPost`, `doGet` (health), `setupSheet()`. Wires the Google services into the pure logic |
 | `lib/constants.js` | Contract constants: limits, sheet columns A–S, statuses, enumerations with ES/EN labels (§4) |
 | `lib/config.js` | Script Properties → typed configuration with the defaults of §8 |
@@ -16,6 +16,7 @@ Google Apps Script web app that implements `docs/specs/LEAD_ENDPOINT_CONTRACT.md
 | `lib/lead.js` | Costa Rica time, `lead_id`, row building with the formula-injection guard, reading a row back (§6) |
 | `lib/throttle.js` | Per-email, hourly and daily throttles counted from the stored rows (§5.3) |
 | `lib/sheet.js` | The `leads` sheet behind a small store interface; `setupLeadsSheet` |
+| `lib/gmail.js` | Maps a composed email to `GmailApp.sendEmail(recipient, subject, body, options)` (`replyTo` only when set) |
 | `lib/emails.js` | Owner "cover letter" and visitor confirmation of CONTENT §14 (HTML + plain text, ES/EN, every visitor value HTML-escaped, Reply-To per ADR-005) |
 | `lib/handler.js` | The pipeline of §5 (order, one script lock around steps 7–10, idempotency with recovery of `pending` emails, email statuses) and the response bodies of §7 |
 
@@ -27,8 +28,13 @@ Google Apps Script web app that implements `docs/specs/LEAD_ENDPOINT_CONTRACT.md
   reads another file's values. Helper names ending in `_` are file-private by convention.
 - **Pure logic, injected services.** `handleLeadRequest(rawBody, deps)` receives the lock,
   the sheet store, the mailer, the clock and the logger, so the full flow runs in Node tests
-  with fakes. Only `Code.js` touches `SpreadsheetApp`, `LockService`, `MailApp`,
+  with fakes. Only `Code.js` touches `SpreadsheetApp`, `LockService`, `MailApp`, `GmailApp`,
   `PropertiesService` and `ContentService`.
+- **Sending through GmailApp.** On the Workspace account, Gmail rejected `MailApp.sendEmail`
+  messages to external addresses ("Message rejected"), while `GmailApp.sendEmail` messages
+  were delivered (owner test, 2026-10-11). So emails are sent with `GmailApp`
+  (scope `gmail.send`, never the broader `mail.google.com`). `MailApp.getRemainingDailyQuota()`
+  still guards the shared recipients quota (scope `script.send_mail`).
 - **Durable throttles and idempotency.** Both are read from the sheet under the script lock
   (column R for `submission_id`, columns A and E of the last `max(MAX_LEADS_PER_DAY,
   MAX_LEADS_PER_HOUR) + 1` rows for throttles). CacheService is not used: at this volume the

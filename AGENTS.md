@@ -102,7 +102,7 @@ Every project defines a short uppercase **project key** (its initials, 2–5 let
 - `<TYPE>` for non-story work: `DOCS`, `CHORE`, `CI`, `FIX`, `SPIKE`.
 - `<short-slug>`: lowercase, kebab-case, a few words, total branch name at most 60 characters.
 - One branch per story and agent. If a branch serves several stories, name it after the primary story and list the others in the PR.
-- Never commit directly to `main`. `main` is the only long-lived branch unless the project's branching ADR says otherwise (DigitalStrike: ADR-006); release branches are protected like `main` and receive changes only through reviewed PRs.
+- Never commit directly to `main`. `main` is the only long-lived branch unless the project's branching ADR says otherwise; release branches are protected like `main` and receive changes only through reviewed PRs.
 
 ### Pull request titles
 

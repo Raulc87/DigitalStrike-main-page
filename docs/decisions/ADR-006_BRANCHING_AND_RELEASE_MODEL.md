@@ -46,6 +46,8 @@ Option A.
    3. Publish the next patch release (e.g. `v0.1.1`) with **Target = `release/vMAJOR.MINOR.x`**; the workflow deploys that tag only.
    4. Bring the fix to `main` in a normal PR (merge or cherry-pick of the fix commit) so the next release from `main` keeps it.
    When `main` has nothing unreleased, the fix simply goes to `main` and is released from there.
+
+   **Gate for a release-branch patch** (it replaces RELEASE.md §3's "CI green on the `main` commit" and "preview looks right", which a release branch cannot meet: `ci.yml` runs `push` only on `main` and `pages.yml` only previews `main`): the fix PR's six required checks are green on its head, the release-branch ruleset blocks the merge otherwise, and the fix PR is up to date with the release branch, so the merged commit is the one CI tested. There is no preview step; the production smoke test (RELEASE.md §4) right after the deploy is the real check, with rollback to the previous tag if it fails. Agent 3 may also add `release/**` to `ci.yml`'s `push` branches (US-027).
 5. **The lead endpoint gets a staging copy (US-026).** A second Apps Script project and sheet, owned by `manager@`, serve the Pages preview through the repository variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW`; production keeps `PUBLIC_LEAD_ENDPOINT_URL`. Apps Script changes are deployed to staging first, tested from the preview, and deployed to production (new version of the same deployment, URL unchanged) only as part of a release, with the smoke test after it.
 
 ## Rationale

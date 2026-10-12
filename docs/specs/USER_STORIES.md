@@ -164,15 +164,15 @@ As the owner, every lead lands in my Google Sheet.
 - AC2: DEPLOYMENT.md §2 and the "masked logs" note are updated; a dry run shows readable file lists.
 
 ## US-026 — Staging lead endpoint for the preview (Sprint 002, ADR-006)
-- AC1: A second Apps Script project, created and deployed as `manager@digitalstrike-solutions.com` from the same `apps-script/` code, with its own sheet (`leads` tab, same header) and Script Properties (`OWNER_NOTIFICATION_EMAIL` may stay `manager@`; email subjects or the sheet name make clear it is staging). Owner does the console steps; Agent 3 writes them in APPS_SCRIPT_SETUP.md.
+- AC1: A second Apps Script project, created and deployed as `manager@digitalstrike-solutions.com` from the same `apps-script/` code, with its own sheet named `DigitalStrike leads (staging)` (`leads` tab, same header) and its own Script Properties, including `SHEET_ID` of the staging sheet and `ACCEPTED_PRIVACY_NOTICE_VERSIONS` (US-018 AC2's order now applies to both projects: list a new notice version in staging and production before a build showing it is deployed). Owner does the console steps; Agent 3 writes them in APPS_SCRIPT_SETUP.md.
 - AC2: `pages.yml` builds the preview with `PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL_PREVIEW }}`; `release-cpanel.yml` keeps `PUBLIC_LEAD_ENDPOINT_URL`. When the preview variable is unset, the preview build warns and the form shows its error with the email fallback (never falls back to production).
 - AC3: A lead sent from the Pages preview lands in the staging sheet and not in the production sheet (owner check, recorded in the PR).
-- AC4: RELEASE.md and APPS_SCRIPT_SETUP.md say: Apps Script changes go to staging first and are tested from the preview; the production deployment gets the new version only as part of a release, followed by the smoke test.
+- AC4: RELEASE.md and APPS_SCRIPT_SETUP.md say: Apps Script changes go to staging first and are tested from the preview; the production deployment gets the new version only as part of a release, followed by the smoke test. In particular, RELEASE.md §1.2 ("`PUBLIC_LEAD_ENDPOINT_URL` … used by both the preview and the production build") and the APPS_SCRIPT_SETUP §7 "no-terminal alternative" (testing production through the preview) are corrected.
 
 ## US-027 — Urgent-fix procedure in the release runbook (Sprint 002, ADR-006)
-- AC1: RELEASE.md has an "Urgent fix" section with ADR-006 Decision 4: create `release/vX.Y.x` from the last tag, fix PR against it, publish the patch release with that branch as Target, then bring the fix to `main`.
+- AC1: RELEASE.md has an "Urgent fix" section with ADR-006 Decision 4: create `release/vX.Y.x` from the last tag, fix PR against it, publish the patch release with that branch as Target, then bring the fix to `main`. It states the gate that replaces §3's preconditions for such a release: the fix PR's six checks green on its head and the PR up to date with the release branch, no preview step, and the production smoke test right after deploy (rollback to the previous tag if it fails). Optionally `ci.yml` also runs on `push` to `release/**`.
 - AC2: It states when not to use it (nothing unreleased on `main` → fix on `main` as usual) and that the owner adds `release/*` to the branch ruleset.
-- AC3: `release-cpanel.yml` is confirmed (no change expected) to deploy the release's tag regardless of the target branch; the PR shows the line that does it.
+- AC3: `release-cpanel.yml` is confirmed (no change expected) to deploy the release's tag regardless of the target branch; the PR cites the checkout line (`ref: ${{ github.event_name == 'release' && github.event.release.tag_name || … }}`).
 
 ## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10
 - AC1: 2–3 HTML proposals with the brand palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*

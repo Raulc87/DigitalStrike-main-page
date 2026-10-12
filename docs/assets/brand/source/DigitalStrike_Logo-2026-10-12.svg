@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 675.69 165.19">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #148b9c;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        isolation: isolate;
+      }
+
+      .cls-1, .cls-4 {
+        font-family: Helvetica-Bold, Helvetica;
+        font-size: 55.63px;
+        font-weight: 700;
+        letter-spacing: -.02em;
+      }
+
+      .cls-5 {
+        stroke: #8dcbd4;
+      }
+
+      .cls-5, .cls-6 {
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .cls-7 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-7, .cls-2 {
+        stroke-width: 2px;
+      }
+
+      .cls-7, .cls-2, .cls-6 {
+        stroke: #0f2044;
+      }
+
+      .cls-8 {
+        letter-spacing: .21em;
+      }
+
+      .cls-9 {
+        letter-spacing: .22em;
+      }
+
+      .cls-2 {
+        fill: #010101;
+        opacity: .35;
+      }
+
+      .cls-10 {
+        letter-spacing: .18em;
+      }
+
+      .cls-11 {
+        letter-spacing: .19em;
+      }
+
+      .cls-12 {
+        letter-spacing: .21em;
+      }
+
+      .cls-13 {
+        letter-spacing: .21em;
+      }
+
+      .cls-14 {
+        letter-spacing: .22em;
+      }
+
+      .cls-15 {
+        letter-spacing: .22em;
+      }
+
+      .cls-16 {
+        letter-spacing: .21em;
+      }
+
+      .cls-3 {
+        font-family: Montserrat-Regular, Montserrat;
+        font-size: 16.69px;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #0f2044;
+      }
+
+      .cls-6 {
+        stroke-linejoin: round;
+        stroke-width: 5px;
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="82.59" cy="82.59" fx="82.59" fy="82.59" r="81.59" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".72" stop-color="#f4f6fa"/>
+      <stop offset="1" stop-color="#dde3ea"/>
+    </radialGradient>
+  </defs>
+  <g>
+    <circle class="cls-7" cx="82.59" cy="82.59" r="81.59"/>
+    <path class="cls-5" d="M22.03,135.33c40.42-21.16,80.84-21.16,121.25,0"/>
+    <path class="cls-5" d="M36.65,137.08l-8.44-4.73,1.58-9.46"/>
+    <path class="cls-5" d="M53.8,131.05l-7.6-5.84,2.87-9.18"/>
+    <path class="cls-5" d="M70.86,127.8l-6.77-6.95,4.27-8.62"/>
+    <path class="cls-5" d="M87.65,127.34l-5.56-7.88,5.56-7.88"/>
+    <path class="cls-5" d="M104.24,129.57l-4.17-8.72,6.68-6.86"/>
+    <path class="cls-5" d="M120.84,134.39l-2.87-9.18,7.7-5.84"/>
+    <path class="cls-5" d="M136.6,140.97l-1.58-9.55,8.34-4.64"/>
+    <path class="cls-5" d="M22.21,29.62c40.22,21.66,80.44,21.66,120.67,0"/>
+    <path class="cls-5" d="M30.72,42.43l-1.58-9.46,8.44-4.73"/>
+    <path class="cls-5" d="M49.08,49.29l-2.87-9.18,7.6-5.84"/>
+    <path class="cls-5" d="M68.36,53.1l-4.27-8.62,6.77-6.95"/>
+    <path class="cls-5" d="M87.65,53.75l-5.56-7.88,5.56-7.88"/>
+    <path class="cls-5" d="M106.75,51.33l-6.68-6.86,4.17-8.72"/>
+    <path class="cls-5" d="M125.66,45.96l-7.7-5.84,2.87-9.18"/>
+    <path class="cls-5" d="M143.37,38.54l-8.34-4.64,1.58-9.55"/>
+    <path class="cls-6" d="M55.78,61.95l22.1,19.78-22.1,19.78"/>
+    <path class="cls-6" d="M88.36,103.83h25.59"/>
+  </g>
+  <path class="cls-2" d="M179.51,24.35v111.26"/>
+  <text class="cls-4" transform="translate(201.76 72.57)"><tspan x="0" y="0">DigitalStrike</tspan></text>
+  <text class="cls-1" transform="translate(201.76 127.27)"><tspan x="0" y="0">Solutions</tspan></text>
+  <text class="cls-3" transform="translate(203.61 158.8)"><tspan class="cls-12" x="0" y="0">W</tspan><tspan class="cls-15" x="21.96" y="0">E </tspan><tspan class="cls-13" x="44.84" y="0">S</tspan><tspan class="cls-15" x="58.61" y="0">TRIKE O</tspan><tspan class="cls-16" x="152.41" y="0">U</tspan><tspan class="cls-14" x="169.06" y="0">T </tspan><tspan class="cls-11" x="190.36" y="0">Y</tspan><tspan class="cls-15" x="204.13" y="0">OUR SO</tspan><tspan class="cls-9" x="294.08" y="0">F</tspan><tspan class="cls-8" x="308.4" y="0">T</tspan><tspan class="cls-10" x="321.57" y="0">W</tspan><tspan class="cls-14" x="343.19" y="0">ARE NEEDS</tspan></text>
+</svg>

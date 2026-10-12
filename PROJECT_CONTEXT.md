@@ -18,7 +18,7 @@
 - Content (ES source → EN): `docs/ux/CONTENT.md`
 - Brand assets: `docs/assets/brand/`
 - Tech stack: `TECH_STACK.md`
-- ADRs: `docs/decisions/` (ADR-001 … ADR-005)
+- ADRs: `docs/decisions/` (ADR-001 … ADR-006)
 - Implementation plan: `docs/plans/IMPLEMENTATION_PLAN.md`
 - Active sprint plan: `docs/sprints/SPRINT_002.md` (previous: `docs/sprints/SPRINT_001.md`, done; prompts: `docs/sprints/SPRINT_001_AGENT_PROMPTS.md`)
 - Readiness checklist: `docs/checklists/SPRINT_READINESS_CHECKLIST.md`
@@ -42,6 +42,7 @@
 - Conflict resolution: human owner with the agent owning the conflicting file
 
 ## Important constraints
+- Branching and releases: trunk-based on `main` (always releasable), production = release tags, `release/vX.Y.x` only for urgent fixes; lead endpoint has a staging copy for the preview (ADR-006)
 - Hosting: GoDaddy cPanel (Deluxe, `digitalstrike-solutions.com`, bought 2026-10-10) for production, deployed on GitHub Release; GitHub Pages for previews of `main` (ADR-001)
 - Backend: Google Apps Script + Google Sheets + Gmail (ADR-002, ADR-005); Python/Java roadmap in ADR-002
 - Languages / locales: Spanish (source) and English; `/es/`, `/en/`; browser detection + saved toggle (ADR-003)

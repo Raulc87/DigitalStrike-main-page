@@ -96,12 +96,13 @@ Every project defines a short uppercase **project key** (its initials, 2–5 let
 | User story | `<KEY>-<NNN>-<short-slug>` | `GK-004-lead-form` |
 | Fix or follow-up for a story | `<KEY>-<NNN>-fix-<short-slug>` | `GK-004-fix-phone-validation` |
 | Work outside the stories | `<KEY>-<TYPE>-<short-slug>` | `GK-DOCS-sprint-001-readiness` |
+| Release branch for an urgent fix (only if the project's branching ADR allows it) | `release/v<MAJOR>.<MINOR>.x` | `release/v0.1.x` |
 
 - `<NNN>` is the story number with three digits (`US-004` → `004`). When Jira is adopted, use the Jira issue number instead.
 - `<TYPE>` for non-story work: `DOCS`, `CHORE`, `CI`, `FIX`, `SPIKE`.
 - `<short-slug>`: lowercase, kebab-case, a few words, total branch name at most 60 characters.
 - One branch per story and agent. If a branch serves several stories, name it after the primary story and list the others in the PR.
-- Never commit directly to `main`.
+- Never commit directly to `main`. `main` is the only long-lived branch unless the project's branching ADR says otherwise (DigitalStrike: ADR-006); release branches are protected like `main` and receive changes only through reviewed PRs.
 
 ### Pull request titles
 

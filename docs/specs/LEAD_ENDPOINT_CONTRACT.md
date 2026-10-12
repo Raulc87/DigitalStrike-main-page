@@ -218,7 +218,8 @@ Network failure, timeout, non-JSON response or a body without boolean `ok` → t
 ### Frontend — build-time variables (`.env`, GitHub repository *variables*, not secrets)
 | Variable | Example |
 |---|---|
-| `PUBLIC_LEAD_ENDPOINT_URL` | Apps Script `/exec` URL; locally `http://127.0.0.1:8787/exec` (mock, §9) |
+| `PUBLIC_LEAD_ENDPOINT_URL` | Apps Script `/exec` URL of the **production** deployment, used by the release build; locally `http://127.0.0.1:8787/exec` (mock, §9) |
+| `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` | `/exec` URL of the **staging** Apps Script project (its own sheet and Script Properties), used by the Pages preview build (ADR-006, US-026). Unset → the preview form shows its error with the email fallback; the preview never posts to production |
 | `PUBLIC_CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` |
 | `PUBLIC_CONTACT_EMAIL` | `manager@digitalstrike-solutions.com` |
 | `PUBLIC_LINKEDIN_URL` | `https://www.linkedin.com/in/raul-casanas/` |

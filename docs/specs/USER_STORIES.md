@@ -163,6 +163,17 @@ As the owner, every lead lands in my Google Sheet.
 - AC1: The release workflow reads the target folder from the repository **variable** `CPANEL_TARGET_DIR` (default `/`), not a secret, so GitHub no longer masks every `/` in the logs; host, user and password stay secrets. This revises US-017 AC1 and ADR-001 (Implementation Impact). The skip-with-notice check (US-017 AC2) now covers only the three secrets `CPANEL_HOST`, `CPANEL_USERNAME` and `CPANEL_PASSWORD`; an unset variable means `/`.
 - AC2: DEPLOYMENT.md §2 and the "masked logs" note are updated; a dry run shows readable file lists.
 
+## US-026 — Staging lead endpoint for the preview (Sprint 002, ADR-006)
+- AC1: A second Apps Script project, created and deployed as `manager@digitalstrike-solutions.com` from the same `apps-script/` code, with its own sheet (`leads` tab, same header) and Script Properties (`OWNER_NOTIFICATION_EMAIL` may stay `manager@`; email subjects or the sheet name make clear it is staging). Owner does the console steps; Agent 3 writes them in APPS_SCRIPT_SETUP.md.
+- AC2: `pages.yml` builds the preview with `PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL_PREVIEW }}`; `release-cpanel.yml` keeps `PUBLIC_LEAD_ENDPOINT_URL`. When the preview variable is unset, the preview build warns and the form shows its error with the email fallback (never falls back to production).
+- AC3: A lead sent from the Pages preview lands in the staging sheet and not in the production sheet (owner check, recorded in the PR).
+- AC4: RELEASE.md and APPS_SCRIPT_SETUP.md say: Apps Script changes go to staging first and are tested from the preview; the production deployment gets the new version only as part of a release, followed by the smoke test.
+
+## US-027 — Urgent-fix procedure in the release runbook (Sprint 002, ADR-006)
+- AC1: RELEASE.md has an "Urgent fix" section with ADR-006 Decision 4: create `release/vX.Y.x` from the last tag, fix PR against it, publish the patch release with that branch as Target, then bring the fix to `main`.
+- AC2: It states when not to use it (nothing unreleased on `main` → fix on `main` as usual) and that the owner adds `release/*` to the branch ruleset.
+- AC3: `release-cpanel.yml` is confirmed (no change expected) to deploy the release's tag regardless of the target branch; the PR shows the line that does it.
+
 ## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10
 - AC1: 2–3 HTML proposals with the brand palette, logo and fonts, built with the `ux-proposals` skill and the approved copy, published for the owner. *(PR #2)*
 - AC2: The owner's choice and date are recorded in UX §2.2. *(Proposal A v3 — Dugout with Palette 1 and the ball logo, approved by Raul on 2026-10-10.)*

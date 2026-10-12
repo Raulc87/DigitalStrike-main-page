@@ -97,14 +97,25 @@ Notes:
 
 ## 5. Prepare the sheet: run `setupSheet()`
 
-1. In the **Editor**, select `Code.gs`, choose **`setupSheet`** in the function list, click **Run**.
-2. The first run asks for permissions: **Review permissions** → choose
+1. In the **Editor**, open `Code.gs`. In the toolbar's **function dropdown** (next to **Run** and
+   **Debug**), select **`setupSheet`** before clicking **Run**. The editor runs the function
+   selected in that dropdown, not the one under the cursor. If it still shows `doGet`, clicking
+   Run only runs the health check, and the sheet does not change.
+2. Click **Run**. The first run asks for permissions: **Review permissions** → choose
    `manager@digitalstrike-solutions.com` → allow "See, edit, create and delete your
    spreadsheets" and "Send email as you". (If Google shows "app isn't verified", it is your
-   own script: **Advanced → Go to DigitalStrike Lead Endpoint**.)
-3. The execution log shows `setup_sheet_done`. In the sheet, the `leads` tab now has the
-   19-column header (A `submitted_at` … S `last_contact_at`), row 1 frozen, and a dropdown in
-   column B (`new`, `contacting`, `accepted`, `rejected`).
+   own script: **Advanced → Go to DigitalStrike Lead Endpoint**.) After you allow access, check
+   that the dropdown still shows `setupSheet` and click **Run** again if the run was interrupted.
+3. **Success looks like this:**
+   - the **Execution log** at the bottom shows a line containing `setup_sheet_done`, then
+     "Execution completed";
+   - in the sheet, the `leads` tab has the 19-column header in row 1, from A `submitted_at` to
+     S `last_contact_at`, in bold and frozen;
+   - column B has a dropdown with `new`, `contacting`, `accepted`, `rejected`.
+
+   If the log shows a different function name, or no `setup_sheet_done`, go back to item 1.
+   "Set the SHEET_ID Script Property first" means step 4 is missing `SHEET_ID`. "Row 1 … has a
+   different header" means row 1 already had other text; clear it and run again.
 
 `setupSheet()` is safe to run again: it never deletes rows, and it refuses to overwrite a
 different header. Run it again if the sheet ever grows beyond its current rows, so new rows

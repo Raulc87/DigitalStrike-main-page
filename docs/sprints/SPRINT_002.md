@@ -46,7 +46,7 @@ Stories and acceptance criteria: `docs/specs/USER_STORIES.md` (US-021 … US-025
 | 5 | Larger CEO photo (≥ 800×800 px); when supplied, Agent 1 swaps it within US-022's pipeline | Optional |
 | 6 | Email reputation: keep normal sending from `manager@` (replies help); optionally register the domain in Google Postmaster Tools; recheck whether Outlook/Hotmail still sends the confirmation to spam | **Done** (2026-10-12): set up; keep normal sending and recheck Outlook/Hotmail placement at sprint end |
 | 7 | Legal review of privacy notice v1 by Cinthia; any change goes through CONTENT §13 with a new notice version (US-018 AC2 order: Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` first) | When available |
-| 8 | `holding-page/`: **kept as the emergency fallback** (owner decision 2026-10-12). If a release breaks production and no earlier tag fixes it, re-upload it through cPanel File Manager (DEPLOYMENT.md) | **Done** (2026-10-12) |
+| 8 | `holding-page/`: **kept as the emergency fallback** (owner decision 2026-10-12). If a release breaks production and no earlier tag fixes it, re-upload `holding-page/holding-page.zip` through cPanel File Manager (DEPLOYMENT.md §6 and `holding-page/README.md`) | **Done** (2026-10-12) |
 
 ## File Ownership Map
 Unchanged from Sprint 001 (`SPRINT_001.md`, "File Ownership Map"). In short: Agent 1 owns `src/layouts/**`, `src/pages/**`, `src/components/sections/**`, `src/styles/**`, `public/**` except `public/.htaccess`, and its section e2e specs; Agent 2 owns the lead/schedule/privacy components and the other e2e specs; Agent 3 owns `apps-script/**`, `scripts/**`, `.github/workflows/**`, `public/.htaccess` and `docs/runbooks/**`; docs and `holding-page/**` belong to the owner (via `DS-DOCS-*` PRs).

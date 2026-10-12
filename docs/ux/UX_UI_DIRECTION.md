@@ -18,7 +18,7 @@ One long page per language. Anchors use the Spanish IDs on both pages so links a
 | 4 | How we work | `#como-trabajamos` | 4 steps + warranty highlight |
 | 5 | Showroom | `#proyectos` | 3 project cards |
 | 6 | About the CEO | `#nosotros` | Photo, bio, facts, LinkedIn |
-| 7 | Clients | `#clientes` | 4 placeholder slots (hidden when `PUBLIC_SHOW_CLIENT_LOGOS=false`) |
+| 7 | Clients | `#clientes` | 4 logos of companies Raul worked with (hidden when `PUBLIC_SHOW_CLIENT_LOGOS=false`) |
 | 8 | Lead form | `#contacto` | Screening form → thank-you state |
 | 9 | Scheduling | `#agenda` | Calendly inline |
 | 10 | Footer | — | Slogan, contact, LinkedIn, privacy, © |
@@ -86,7 +86,7 @@ Corner radius: 12 px cards, 999 px buttons. No shadows on dark surfaces except t
 - Process: steel band; steps with a 2 px `--color-border-strong` top rule; warranty card on navy with a 1 px cyan border and the cyan shield icon.
 - Showroom: navy; 3 cards; image area on steel with cyan initials until screenshots exist; chips `--color-grid` bg / `--color-text-2` text.
 - About: steel band; photo square, 12 px radius, `--color-border-strong` border.
-- Clients: navy; dashed `--color-border-strong` slots with `--color-text-2` text.
+- Clients: navy; logos in one light/monochrome treatment (e.g. a CSS filter to off-white at reduced opacity), equal visual height.
 - Form: navy section; form card on steel with a `--color-border-strong` border; inputs navy with off-white text and `--color-border-strong` border.
 - Scheduling: steel band; Calendly preview card (dashed `--color-border-strong`) with the cyan "Ver horarios disponibles" button until opened.
 - Footer: charcoal with a 1 px `--color-border` top border; logo mark + wordmark, sand slogan.
@@ -105,7 +105,7 @@ Corner radius: 12 px cards, 999 px buttons. No shadows on dark surfaces except t
 
 **About the CEO.** Steel band. Photo (square, rounded 12 px; provisional 200 px photo, monogram fallback) left, text right (stacked on mobile). Facts as chips. LinkedIn button (outline, new tab).
 
-**Clients.** Navy. Title + 4 dashed slots (`--color-border-strong`) with the slot text, 2×2 mobile / 4 in a row desktop.
+**Clients.** Navy. Title, a one-line note in `--color-text-2`, then the 4 logos, 2×2 mobile / 4 in a row desktop, vertically centred, each at most about 48 px tall and 160 px wide, keeping its aspect ratio.
 
 **Lead form.** Navy background, form on a steel card, max width 720 px. Field order: name, email, phone, company, project type (select), budget range (select), timeline (select), message (textarea), consent checkbox with privacy link, submit; the honeypot sits outside the lead form (see "Autofill and honeypot" below). Validation on blur and on submit; on submit errors, focus the error summary and link each error to its field (`aria-describedby`). Submit disabled + "Enviando…" while pending. On success: replace the form with the thank-you block (focus its heading), set the Calendly prefill (name, email) and offer the "Agendar mi sesión 0" button → `#agenda`. On error: keep data, show the localized message (`role="alert"`), re-enable submit.
 

@@ -3,7 +3,6 @@ import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
 import { linkedinUrl } from '../../lib/i18n/site';
 import { withBase } from '../../lib/i18n/url';
-import PendingBadge from './PendingBadge.astro';
 
 interface Props {
   lang: Locale;
@@ -51,7 +50,6 @@ const facts = t(lang, 'about.facts').split(' · ');
             />
           )}
         </div>
-        <PendingBadge lang={lang} />
       </div>
 
       <div class="max-w-3xl">

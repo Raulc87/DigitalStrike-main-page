@@ -122,7 +122,8 @@ export const en: Record<ContentKey, string> = {
     '17+ years of experience · Led teams of up to 8 engineers · Java · Python · React · TypeScript · AWS · Applied AI · Certified Scrum Master (PSM I) · Spanish and English',
   'about.linkedin': 'View LinkedIn profile',
   'about.photo_alt': 'Raul Casañas, CEO of DigitalStrike Solutions',
-  'clients.title': 'Companies that trust us',
-  'clients.slot': 'This space is reserved for your brand',
+  'clients.title': "Companies I've worked with",
+  'clients.note': 'My experience as a developer and consultant, before founding DigitalStrike.',
+  'clients.logo_alt': '{company} logo',
   'pending.badge': 'Provisional content',
 };

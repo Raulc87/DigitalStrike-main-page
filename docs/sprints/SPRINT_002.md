@@ -58,12 +58,12 @@ Unchanged from Sprint 001 (`SPRINT_001.md`, "File Ownership Map"). In short: Age
 4. Release, smoke test (RELEASE.md §4), record the production PageSpeed scores.
 
 ## Review Model
-As in Sprint 001: focused PRs; the review-only agent posts a COMMENT review with full-file coverage on every PR (the owner asks it to start); the human owner approves and merges.
+As in Sprint 001: focused PRs; the review-only agent posts a COMMENT review with full-file coverage on every PR (the owner, or the coordinator session on the owner's behalf, asks it to start); the human owner approves and merges.
 
 ## Sprint Definition of Done
 - Must stories meet their ACs; CI green on `main` with the required checks.
 - Production smoke test passed and recorded for every release in the sprint.
-- Production mobile PageSpeed Performance ≥ 90 on `/es/` and `/en/` (NFR-003), Accessibility stays 100.
+- CI `lhci` gate green (mobile Performance ≥ 95 once US-023 merges, ≥ 90 before); production PageSpeed recorded for every release per NFR-003: if GoDaddy's injected script pulls it below 90, the owner decides.
 - No known critical regression; owner approves.
 
 Agent kickoff prompts: written at go-ahead, following `SPRINT_001_AGENT_PROMPTS.md` (same agents and models).

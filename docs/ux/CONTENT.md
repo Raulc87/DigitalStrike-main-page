@@ -130,7 +130,7 @@ Photo: `docs/assets/photos/raul-casanas-200.jpg` (200×200 px, supplied by Raul 
 | Key | ES | EN |
 |---|---|---|
 | `clients.title` | Empresas con las que he trabajado | Companies I've worked with |
-| `clients.note` | Experiencia de Raul como desarrollador y consultor, antes de fundar DigitalStrike. | Raul's experience as a developer and consultant, before founding DigitalStrike. |
+| `clients.note` | Mi experiencia como desarrollador y consultor, antes de fundar DigitalStrike. | My experience as a developer and consultant, before founding DigitalStrike. |
 | `clients.logo_alt` | Logo de {company} | {company} logo |
 
 Four logos, in this order (owner decision 2026-10-12; the owner confirmed permission to show them):

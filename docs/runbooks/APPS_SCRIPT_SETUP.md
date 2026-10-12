@@ -134,42 +134,82 @@ keep the dropdown and the plain-text format.
 
 ## 7. Smoke test with curl
 
-The request uses `Content-Type: text/plain` like the site (contract §2). `-L` follows Google's
-302 redirect to the JSON response.
+These commands are for the **macOS or Linux Terminal** (zsh or bash). Each grey block is one
+copy-paste: paste it, press Enter, and read the result before the next one. The blocks contain
+no `#` comments, because zsh, the default macOS shell, rejects pasted comment lines with
+"command not found: #". On **Windows**, use Git Bash (installed with Git for Windows), or use
+the no-terminal check at the end of this step.
+
+The requests use `Content-Type: text/plain`, like the site (contract §2). `-L` follows Google's
+redirect to the JSON answer.
+
+**7.1 Set the two values.** Replace both placeholders before pressing Enter: `<deployment_id>`
+with the part of your `/exec` URL from step 6 (or paste the whole URL between the quotes), and
+`<your-test-inbox>` with an email address you can read. Keep the single quotes.
 
 ```bash
 URL='https://script.google.com/macros/s/<deployment_id>/exec'
+EMAIL='<your-test-inbox>'
+```
 
-# Health check → {"ok":true,"service":"ds-lead-endpoint"}
+**7.2 Health check.** Expected answer: `{"ok":true,"service":"ds-lead-endpoint"}`.
+
+```bash
 curl -sSL "$URL"; echo
+```
 
-# A test lead (use an inbox you can read; a fresh submission_id each time)
-SID=$(uuidgen | tr 'A-Z' 'a-z')   # Windows PowerShell: [guid]::NewGuid().ToString()
-curl -sSL -H 'Content-Type: text/plain;charset=utf-8' --data "{
-  \"name\": \"Prueba Humo\", \"email\": \"<your-test-inbox>\", \"phone\": \"\",
-  \"company\": \"\", \"project_type\": \"website\", \"budget_range\": \"not_sure\",
-  \"timeline\": \"flexible\", \"message\": \"Prueba de humo del endpoint de prospectos.\",
-  \"language\": \"es\", \"consent\": true, \"privacy_notice_version\": \"2026-10-14-v1\",
-  \"submission_id\": \"$SID\", \"website\": \"\", \"elapsed_ms\": 15000 }" "$URL"; echo
+**7.3 New test id.** Each test lead needs a new `submission_id`. This prints it.
+
+```bash
+SID=$( (uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid) | tr 'A-Z' 'a-z'); echo "$SID"
+```
+
+**7.4 Send a test lead.**
+
+```bash
+curl -sSL -H 'Content-Type: text/plain;charset=utf-8' --data '{"name":"Prueba Humo","email":"'"$EMAIL"'","phone":"","company":"","project_type":"website","budget_range":"not_sure","timeline":"flexible","message":"Prueba de humo del endpoint de prospectos.","language":"es","consent":true,"privacy_notice_version":"2026-10-14-v1","submission_id":"'"$SID"'","website":"","elapsed_ms":15000}' "$URL"; echo
 ```
 
 Expected:
-1. The response is `{"ok":true,"lead_id":"DS-yyyyMMdd-XXXXXX"}`.
-2. A new row with `status` `new`, that `lead_id`, and `owner_email_status` and
-   `confirmation_email_status` both `sent`.
-3. The owner notification in `manager@` and the confirmation in the test inbox (ADR-005
-   checks: sender, `Reply-To`, and in "Show original" `dkim=pass` and `spf=pass`).
-4. Sending **the same command again with the same `$SID`** returns the same `lead_id` and adds
-   no row and no email (idempotency).
-5. Changing `"website": ""` to `"website": "x"` (with a new `SID`) returns `ok: true` but adds
-   no row (honeypot decoy).
-6. Changing `"email"` to `"bad"` returns `validation_failed` with `field_errors.email`.
+1. The answer is `{"ok":true,"lead_id":"DS-yyyyMMdd-XXXXXX"}`.
+2. A new row in the sheet, with `status` `new`, that `lead_id`, and both `owner_email_status`
+   and `confirmation_email_status` set to `sent`.
+3. The owner notification in `manager@` and the confirmation in the test inbox. Check the
+   sender, `Reply-To`, and in **Show original** `dkim=pass` and `spf=pass` (ADR-005).
+
+**7.5 Idempotency.** Paste block 7.4 again **without** running 7.3. Expected: the same
+`lead_id`, no new row and no new email.
+
+**7.6 Honeypot decoy.** Run 7.3 first (new id), then the block below. Expected: `"ok":true`,
+but no new row and no email.
+
+```bash
+curl -sSL -H 'Content-Type: text/plain;charset=utf-8' --data '{"name":"Prueba Humo","email":"'"$EMAIL"'","phone":"","company":"","project_type":"website","budget_range":"not_sure","timeline":"flexible","message":"Prueba de humo del endpoint de prospectos.","language":"es","consent":true,"privacy_notice_version":"2026-10-14-v1","submission_id":"'"$SID"'","website":"x","elapsed_ms":15000}' "$URL"; echo
+```
+
+**7.7 Validation.** Expected: `"error_code":"validation_failed"` with
+`"field_errors":{"email":"invalid_format"}`.
+
+```bash
+curl -sSL -H 'Content-Type: text/plain;charset=utf-8' --data '{"name":"Prueba Humo","email":"bad","phone":"","company":"","project_type":"website","budget_range":"not_sure","timeline":"flexible","message":"Prueba de humo del endpoint de prospectos.","language":"es","consent":true,"privacy_notice_version":"2026-10-14-v1","submission_id":"'"$SID"'","website":"","elapsed_ms":15000}' "$URL"; echo
+```
 
 Then set the test row's `status` to `rejected` (US-016 AC3), or delete the row.
 
-If the response is an HTML page instead of JSON: the deployment is not "Anyone" or the URL
-is not the `/exec` one. `storage_unavailable`: check `SHEET_ID` and that the tab is named
-`leads`. Errors appear in **Executions** (left menu); they contain only `lead_id` and codes.
+If something looks wrong:
+- **An HTML page instead of JSON:** the deployment is not "Anyone", or the URL is not the
+  `/exec` one.
+- **`storage_unavailable`:** check `SHEET_ID`, and that the tab is named `leads`.
+- **`zsh: no matches found` or `parse error`:** a placeholder from 7.1 still has its `<` `>`, or
+  a quote is missing; paste 7.1 again.
+- **Error details:** they appear in **Executions** (left menu) and contain only `lead_id` and
+  codes.
+
+**No-terminal alternative.** You can skip curl and test from the site instead:
+1. Set the repository variable `PUBLIC_LEAD_ENDPOINT_URL` to the `/exec` URL (RELEASE.md §1.2).
+2. Run **Actions → Pages → Run workflow**.
+3. Submit the form on the preview <https://raulc87.github.io/DigitalStrike-main-page/es/>, and
+   check items 1–3 of 7.4 in the sheet and in both inboxes.
 
 ## 8. Redeploy after a code change (the URL stays the same)
 

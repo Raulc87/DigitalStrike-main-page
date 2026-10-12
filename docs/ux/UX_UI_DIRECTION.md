@@ -55,7 +55,7 @@ Typography (self-hosted via `@fontsource`, no Google Fonts requests):
 - **IBM Plex Mono** — eyebrows/kickers (uppercase, letter-spaced), tier labels, chips, step numbers.
 - Scale (mobile → desktop): h1 2.25 → 3.6 rem; h2 1.75 → 2.5 rem; body 1 → 1.125 rem; line-height 1.6.
 
-**Logo** (approved 2026-10-10; vector files in `docs/assets/brand/`): a white baseball with a navy outline, teal herringbone stitches and a navy `>_` cursor in the centre.
+**Logo** (approved 2026-10-10, revised by the owner 2026-10-12; vector files in `docs/assets/brand/`): a white baseball with a thin navy outline, two light-teal seams with stitches across the top and the bottom, and a navy `>_` cursor in the centre.
 
 | File | Use |
 |---|---|

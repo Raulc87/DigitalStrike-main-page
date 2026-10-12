@@ -171,7 +171,7 @@ As the owner, every lead lands in my Google Sheet.
 
 ## US-027 — Urgent-fix procedure in the release runbook (Sprint 002, ADR-006)
 - AC1: RELEASE.md has an "Urgent fix" section with ADR-006 Decision 4: create `release/vX.Y.x` from the last tag, fix PR against it, publish the patch release with that branch as Target, then bring the fix to `main`. It states the gate that replaces §3's preconditions for such a release: the fix PR's six checks green on its head and the PR up to date with the release branch, no preview step, and the production smoke test right after deploy (rollback to the previous tag if it fails). Optionally `ci.yml` also runs on `push` to `release/**`.
-- AC2: It states when not to use it (nothing unreleased on `main` → fix on `main` as usual) and that the owner adds `release/*` to the branch ruleset.
+- AC2: It states when not to use it (nothing unreleased on `main` → fix on `main` as usual) and that the owner adds `release/*` to the branch ruleset with the six required checks and **"Require branches to be up to date before merging"** enabled, so the gate in AC1 is enforced by GitHub.
 - AC3: `release-cpanel.yml` is confirmed (no change expected) to deploy the release's tag regardless of the target branch; the PR cites the checkout line (`ref: ${{ github.event_name == 'release' && github.event.release.tag_name || … }}`).
 
 ## US-019 — Look-and-feel proposals (owner decision) — DONE 2026-10-10

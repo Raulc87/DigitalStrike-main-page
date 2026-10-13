@@ -34,20 +34,30 @@ for (const lang of ['es', 'en'] as const) {
         lang === 'es' ? 'Caso de estudio · código privado' : 'Case study · private code',
       );
       await expect(cards.nth(2)).toContainText('Poliart Impresores');
-      // real screenshots for the two public projects, the initials placeholder for the private one
+      // a real screenshot on every card (Gaby, Cami, Poliart), served from our own domain
       const shots = page.locator('[data-project-card] img');
-      await expect(shots).toHaveCount(2);
-      await expect(shots.nth(0)).toHaveAttribute('src', /images\/work\/gaby\.jpg$/);
-      await expect(shots.nth(1)).toHaveAttribute('src', /images\/work\/cami\.jpg$/);
-      for (const i of [0, 1]) {
-        await shots.nth(i).scrollIntoViewIfNeeded();
+      await expect(shots).toHaveCount(3);
+      const files = ['gaby', 'cami', 'poliart'];
+      for (let i = 0; i < 3; i++) {
+        const shot = shots.nth(i);
+        await expect(shot).toHaveAttribute('src', new RegExp(`images/work/${files[i]}\\.jpg$`));
+        await shot.scrollIntoViewIfNeeded();
         await expect
-          .poll(() => shots.nth(i).evaluate((img: HTMLImageElement) => img.naturalWidth))
+          .poll(() => shot.evaluate((img: HTMLImageElement) => img.naturalWidth))
           .toBe(1200);
-        const box = await shots.nth(i).boundingBox();
+        const box = await shot.boundingBox();
         expect(box!.width / box!.height).toBeCloseTo(1.6, 1);
+        // loaded from this site, not from another origin
+        expect(
+          await shot.evaluate(
+            (img: HTMLImageElement) => new URL(img.currentSrc).origin === location.origin,
+          ),
+        ).toBe(true);
+        // same alt pattern on every card (decorative: the title sits right below)
+        await expect(shot).toHaveAttribute('alt', '');
       }
-      await expect(page.locator('[data-initials]')).toHaveText(['PI']);
+      // no card falls back to initials any more
+      await expect(page.locator('[data-initials]')).toHaveCount(0);
     });
 
     test('about: facts chips, LinkedIn button, photo at most 200 px (US-007)', async ({ page }) => {

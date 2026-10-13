@@ -107,7 +107,7 @@ Cards (the `card_cta` scrolls to `#contacto` and preselects `project_type`):
 | 2 | `https://github.com/Raulc87/cami-main-page` | Sitio de marca personal para una conferencista y coach / Personal-brand site for a speaker and coach | Sitio de una página, bilingüe, con secciones animadas y cambio de idioma al instante. / A bilingual one-page site with animated sections and instant language switching. | React · Vite · JavaScript · CSS |
 | 3 | private — no link (Poliart agreed to be named, 2026-10-10) | Plataforma de reportes con IA para Poliart Impresores / AI reporting platform for Poliart Impresores | La gerencia pide reportes en lenguaje natural y los recibe en segundos, en lugar de esperar de 5 a 10 días. Unifica 3 bases de datos y limita la IA a un catálogo de reportes aprobados y auditables. / Management asks for reports in plain language and gets them in seconds instead of waiting 5 to 10 days. It unifies 3 databases and limits the AI to a catalogue of approved, auditable reports. | Python · React · Claude · Docker |
 
-Images: a screenshot per project if available (Agent 1 may build the public repos locally and capture a 1200×750 screenshot); otherwise a neutral card header with the project's initials. **[PROVISIONAL]**
+Images: a 1200×750 screenshot per project (`public/images/work/<id>.jpg`); without the file the card header shows the project's initials. All three are in place since 2026-10-13: Gaby and Cami from their public sites, Poliart supplied by the owner and sanitized (user name blurred, report list cropped out; US-021).
 
 ## 8. About the CEO (`#nosotros`)
 

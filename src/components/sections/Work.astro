@@ -11,7 +11,8 @@ interface Props {
 const { lang } = Astro.props;
 
 // Screenshots: drop a 1200×750 `public/images/work/<id>.jpg` (gaby, cami, poliart) and the card shows
-// it; without the file the card header shows the project initials (CONTENT §7, provisional).
+// it; without the file the card header shows the project initials and, in preview builds, the pending
+// badge (CONTENT §7, §15).
 // `repo`: null = private case study, no link.
 const available = new Set(Object.keys(import.meta.glob('/public/images/work/*.jpg')));
 const shot = (id: string) =>

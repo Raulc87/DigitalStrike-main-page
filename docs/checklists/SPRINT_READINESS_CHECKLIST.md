@@ -36,7 +36,11 @@ Run this checklist before starting any sprint. Record the result in the sprint p
 ## 6. Stack and environment
 - [ ] Hosting runtime capabilities are confirmed, or an ADR records the assumption and a fallback.
 - [ ] Local development/demo environment is defined (how to run the full flow locally).
-- [ ] Test tools, lint tools, and CI checks are named.
+- [ ] Test tools, lint tools, and CI checks are named; once CI exists, its checks are required on `main`.
+- [ ] **(blocking for a sprint that deploys anything, a preview included)** The branching and release model is recorded (ADR), and the deployment runbook exists or is a story in this sprint ordered before its first deploy story (`AGENTS.md` → Document map, Runbooks).
+- [ ] **(blocking for a go-live sprint)** The release runbook (preview check, how a change reaches production, smoke test, rollback) exists or is a story in this sprint ordered before the release story.
+- [ ] Previews and tests use their own data store (staging sheet, database or endpoint), never production data.
+- [ ] If the project sends transactional email, a real-delivery test to an external Gmail and Outlook inbox is planned before release.
 
 ## 7. Parallelization
 - [ ] **(blocking)** Workstreams are assigned (max 3 implementation agents).
@@ -49,6 +53,8 @@ Run this checklist before starting any sprint. Record the result in the sprint p
 - [ ] **(blocking)** Every agent prompt states that agents never merge or approve PRs; only the human owner merges after approval (`AGENTS.md`).
 - [ ] **(blocking)** If a review-only agent is used, it runs in its own session, and its prompt states the reviewer-independence rule: it never changes code, commits, or posts patches (`AGENTS.md`).
 - [ ] `main` is protected in GitHub (pull request required, no force pushes or deletions).
+- [ ] If the project uses `release/*` branches, they have the same protection rule as `main`, and CI runs on pull requests targeting them.
+- [ ] If a coordinator session is used, its instructions follow `AGENTS.md` → Coordinator session (relays verbatim, records decisions in docs PRs, never writes code, merges or approves).
 
 ## 8. Go-ahead
 - [ ] **(blocking)** The human owner has given explicit go-ahead.

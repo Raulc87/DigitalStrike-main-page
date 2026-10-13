@@ -39,7 +39,7 @@ If code conflicts with an approved spec, the spec wins unless the spec is explic
 | Architecture spec | `docs/specs/ARCHITECTURE_SPEC.md` | Standard/complex projects, or when listed |
 | Integration contracts | `docs/specs/<NAME>_CONTRACT.md` | Whenever two workstreams share an interface |
 | UX/UI direction | `docs/ux/UX_UI_DIRECTION.md` | Projects with a user interface |
-| Content (copy) | `docs/ux/CONTENT.md` | Projects with visitor-facing copy |
+| Content (copy) | `docs/ux/CONTENT.md`, or the copy source `PROJECT_CONTEXT.md` names instead (projects that predate `CONTENT.md`) | Projects with visitor-facing copy |
 | Tech stack | `TECH_STACK.md` | Always |
 | ADRs | `docs/decisions/ADR-<NNN>_<TITLE>.md` | When a decision needs recording |
 | Implementation plan | `docs/plans/IMPLEMENTATION_PLAN.md` | Always |
@@ -60,7 +60,7 @@ Read, in this order:
 2. `docs/specs/PROJECT_SPEC.md`
 3. relevant feature specs and integration contracts listed in `PROJECT_CONTEXT.md`
 4. `docs/specs/USER_STORIES.md`
-5. `docs/ux/UX_UI_DIRECTION.md` (if the project has a UI) and `docs/ux/CONTENT.md` (if the project has visitor-facing copy: the only source of that copy)
+5. `docs/ux/UX_UI_DIRECTION.md` (if the project has a UI) and `docs/ux/CONTENT.md`, or the copy source `PROJECT_CONTEXT.md` names instead (if the project has visitor-facing copy: the only source of that copy)
 6. `TECH_STACK.md`
 7. relevant ADRs in `docs/decisions/`
 8. `docs/plans/IMPLEMENTATION_PLAN.md`

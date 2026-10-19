@@ -2,6 +2,16 @@
 
 For: Raul Casañas (owner). Covers US-010 AC6–AC7, ADR-002, ADR-005 and contract §8.
 Source code: `apps-script/` in this repository (the source of truth).
+Updated 2026-10-19 (US-026, ADR-006): a **staging copy** serves the Pages preview (§11); code
+changes go to staging first and reach production only as part of a release (§8).
+
+There are two Apps Script projects, both owned by `manager@digitalstrike-solutions.com` and both
+running the same `apps-script/` code:
+
+| Project | Sheet | Web app URL goes into | Used by |
+|---|---|---|---|
+| "DigitalStrike Lead Endpoint" (production, §1–§8) | "DigitalStrike Leads" | repository variable `PUBLIC_LEAD_ENDPOINT_URL` | the production site (release build) |
+| "DigitalStrike Lead Endpoint (staging)" (§11) | "DigitalStrike leads (staging)" | repository variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` | the Pages preview only |
 
 **Starting point (done on 2026-10-11):** the Workspace account `manager@digitalstrike-solutions.com`
 exists; an empty Google Sheet **"DigitalStrike Leads"** with a tab **`leads`** was created under
@@ -91,8 +101,9 @@ Notes:
 - If `ACCEPTED_PRIVACY_NOTICE_VERSIONS` is missing, **every** lead is rejected with
   `invalid_option` on `privacy_notice_version`.
 - A new privacy-notice version is **added** to this list (comma-separated, e.g.
-  `2026-10-14-v1,2027-01-15-v2`) **before** deploying a frontend that shows it (US-018 AC2).
-  Remove the old version only after the new frontend is live.
+  `2026-10-14-v1,2027-01-15-v2`) **before** deploying a frontend that shows it (US-018 AC2),
+  in **both** projects: in staging before the preview shows it, and in production before the
+  release that shows it. Remove the old version only after the new frontend is live.
 - Changing a Script Property takes effect immediately; no redeploy is needed.
 
 ## 5. Prepare the sheet: run `setupSheet()`
@@ -135,6 +146,9 @@ keep the dropdown and the plain-text format.
 
 ## 7. Smoke test with curl
 
+Run it against **staging** (§11) for every code change, and against **production** only as
+part of a release (§8). The commands are the same; only the URL in 7.1 changes.
+
 These commands are for the **macOS or Linux Terminal** (zsh or bash). Each grey block is one
 copy-paste: paste it, press Enter, and read the result before the next one. The blocks contain
 no `#` comments, because zsh, the default macOS shell, rejects pasted comment lines with
@@ -145,8 +159,9 @@ The requests use `Content-Type: text/plain`, like the site (contract §2). `-L` 
 redirect to the JSON answer.
 
 **7.1 Set the two values.** Replace both placeholders before pressing Enter: `<deployment_id>`
-with the part of your `/exec` URL from step 6 (or paste the whole URL between the quotes), and
-`<your-test-inbox>` with an email address you can read. Keep the single quotes.
+with the part of the `/exec` URL of the project you are testing (staging: §11.5; production:
+step 6), or paste the whole URL between the quotes, and `<your-test-inbox>` with an email address
+you can read. Keep the single quotes.
 
 ```bash
 URL='https://script.google.com/macros/s/<deployment_id>/exec'
@@ -173,7 +188,7 @@ curl -sSL -H 'Content-Type: text/plain;charset=utf-8' --data '{"name":"Prueba Hu
 
 Expected:
 1. The answer is `{"ok":true,"lead_id":"DS-yyyyMMdd-XXXXXX"}`.
-2. A new row in the sheet, with `status` `new`, that `lead_id`, and both `owner_email_status`
+2. A new row in that project's sheet, with `status` `new`, that `lead_id`, and both `owner_email_status`
    and `confirmation_email_status` set to `sent`.
 3. The owner notification in `manager@` and the confirmation in the test inbox. Check the
    sender, `Reply-To`, and in **Show original** `dkim=pass` and `spf=pass` (ADR-005).
@@ -210,13 +225,30 @@ If something looks wrong:
 - **Error details:** they appear in **Executions** (left menu) and contain only `lead_id` and
   codes.
 
-**No-terminal alternative.** You can skip curl and test from the site instead:
-1. Set the repository variable `PUBLIC_LEAD_ENDPOINT_URL` to the `/exec` URL (RELEASE.md §1.2).
-2. Run **Actions → Pages → Run workflow**.
-3. Submit the form on the preview <https://raulc87.github.io/DigitalStrike-main-page/es/>, and
-   check items 1–3 of 7.4 in the sheet and in both inboxes.
+**No-terminal alternative (staging only).** The Pages preview posts to the **staging** project
+(repository variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW`, §11), never to production. So you can
+test staging from the preview instead of curl:
+1. Check that `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` is set (§11.6) and that the latest
+   **Actions → Pages** run is green.
+2. Submit the form on the preview <https://raulc87.github.io/DigitalStrike-main-page/es/>.
+3. The page shows "¡Recibido, …!". Check items 2–3 of 7.4 in the **staging** sheet
+   "DigitalStrike leads (staging)" and in both inboxes. Nothing appears in "DigitalStrike Leads".
+
+Production has no no-terminal test before a release: the preview cannot reach it. Its form test
+is the production smoke test right after the release (RELEASE.md §4.2).
 
 ## 8. Redeploy after a code change (the URL stays the same)
+
+**Staging first, production only as part of a release (ADR-006).** Every change to
+`apps-script/` goes through items 1–4 twice:
+- **When the change is merged to `main`:** in the **staging** project
+  ("DigitalStrike Lead Endpoint (staging)", §11), then test it from the preview (§7, no-terminal
+  alternative) or with curl against the staging URL.
+- **When a release includes the change** (RELEASE.md §3): in the **production** project
+  ("DigitalStrike Lead Endpoint") just before publishing the release, then the production smoke
+  test (RELEASE.md §4) right after the deploy. Never redeploy production outside a release.
+
+With clasp (Option B), push with the binding of the project you are updating (§11.3).
 
 1. Update the project code (Option A: paste the changed files; Option B: `clasp push --force`).
    Paste `appsscript.json` too when it changed (Project Settings must show the manifest, step 3).
@@ -227,12 +259,17 @@ If something looks wrong:
    email, and both email statuses become `failed`.
 3. **Deploy → Manage deployments** → select the existing web-app deployment → **Edit** (pencil)
    → **Version: New version** → description (e.g. `v2 — <change>`) → **Deploy**.
-4. Run the smoke test of step 7 again. After the Gmail sending change, also check that the
-   visitor confirmation reaches an **external** inbox (for example a personal Gmail), not
-   only `manager@`.
+4. Run the smoke test of step 7 again, against the project you just deployed. After the Gmail
+   sending change, also check that the visitor confirmation reaches an **external** inbox (for
+   example a personal Gmail), not only `manager@`.
+
+To undo a deployment (for example when the production smoke test fails after a release),
+**Deploy → Manage deployments** → the web-app deployment → **Edit** (pencil) → **Version:** the
+previous version number → **Deploy**. The URL stays the same.
 
 Never use **New deployment** for an update: it creates a different URL, and the site keeps
-calling the old one until `PUBLIC_LEAD_ENDPOINT_URL` is changed and the site rebuilt.
+calling the old one until the repository variable (`PUBLIC_LEAD_ENDPOINT_URL` for production,
+`PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` for staging) is changed and the site rebuilt.
 
 ---
 
@@ -290,3 +327,151 @@ Sheets keeps an automatic version history (File → Version history) that can st
 deleted row in older versions; individual versions cannot be deleted. Only people with edit
 access to the sheet (you) can see it. Deleting the row as above is the deletion procedure; the
 sheet is not copied to a new file.
+
+---
+
+## 11. Staging copy for the Pages preview (one time; US-026, ADR-006)
+
+The Pages preview posts its leads to this copy, never to production. Tests from the preview do
+not touch the real sheet, and every code change is tried here before it reaches production
+(§8). It runs the same code as production, with its own sheet, its own Script Properties and
+its own `/exec` URL.
+
+Do every step **signed in only as `manager@digitalstrike-solutions.com`**, as for production.
+
+### 11.1 Values to have ready
+
+The names are fixed; you collect three values on the way and keep them until step 11.6.
+
+| Item | Value |
+|---|---|
+| Sheet name | `DigitalStrike leads (staging)` (tab `leads`) |
+| Project name | `DigitalStrike Lead Endpoint (staging)` |
+| Staging sheet ID | copied in 11.2 |
+| Staging Script ID | copied in 11.3 (clasp only) |
+| Staging `/exec` URL | copied in 11.5 |
+
+### 11.2 Create the staging sheet
+
+1. Open <https://sheets.google.com> → **Blank spreadsheet**.
+2. Click the title "Untitled spreadsheet" (top left) and type exactly
+   `DigitalStrike leads (staging)`, then press Enter.
+3. At the bottom, right-click the tab **Sheet1** → **Rename** → type `leads` → Enter.
+4. Copy the sheet ID from the address bar, the part between `/d/` and `/edit`, as in §2.
+
+**Success:** Google Drive shows two sheets, "DigitalStrike Leads" and
+"DigitalStrike leads (staging)"; the staging one has a single empty tab `leads`. Do not write
+anything in it yet.
+
+### 11.3 Create the staging project
+
+Same as §3, with the name `DigitalStrike Lead Endpoint (staging)`.
+
+**Option A — copy by hand:** §3 Option A, items 1–6, with that name in item 1.
+
+**Option B — clasp:** create the empty project at <https://script.google.com> (**New project**,
+same name) and copy its **Script ID** from **Project Settings**. clasp pushes to the project named
+in `apps-script/.clasp.json`, so keep one binding file per project next to it. Both are
+git-ignored; never commit them:
+- `apps-script/.clasp.staging.json`, with the staging Script ID:
+  ```json
+  { "scriptId": "<staging Script ID>", "rootDir": "." }
+  ```
+- `apps-script/.clasp.production.json`: a copy of your current `apps-script/.clasp.json` (the
+  production project from §3).
+
+To push to staging, from the repository folder, on **macOS or Linux**:
+
+```bash
+cd apps-script && cp .clasp.staging.json .clasp.json && clasp push --force
+```
+
+On **Windows (PowerShell)**:
+
+```powershell
+cd apps-script; Copy-Item .clasp.staging.json .clasp.json -Force; clasp push --force
+```
+
+Pushing to production is the same command with `.clasp.production.json`, and only as part of
+a release (§8).
+
+**Success:** the staging project's editor shows `appsscript.json`, `Code.gs` and the nine `lib/…`
+files (clasp prints "Pushed 11 files.").
+
+### 11.4 Script Properties and the sheet header
+
+1. In the staging project, **Project Settings → Script Properties**: add every property of the
+   §4 table with the **same values as production**, except one:
+   - `SHEET_ID` = the **staging** sheet ID from 11.2. Never the production ID.
+
+   `ACCEPTED_PRIVACY_NOTICE_VERSIONS` is `2026-10-14-v1`, as in production. From now on a new
+   notice version is added to **both** projects (§4 notes).
+2. Run `setupSheet` in the staging project exactly as in §5 (select **`setupSheet`** in the
+   function dropdown, then **Run**, and allow the permissions).
+
+**Success:** as in §5 item 3, in the staging sheet: `setup_sheet_done` in the log, the 19-column
+header in row 1 of `leads`, the `status` dropdown in column B.
+
+With `SEND_EMAILS` `true`, a staging lead sends the same two emails as a production lead (the
+owner notification to `manager@` and the visitor confirmation). Only the sheet the row lands in
+tells them apart. When you do not need to test the emails, set `SEND_EMAILS` to `false` in the
+staging project: rows then show `skipped` for both email statuses.
+
+### 11.5 Deploy the staging web app
+
+1. In the staging project, do §6 items 1–3 (**New deployment** → **Web app**, description `v1`,
+   **Execute as: Me**, **Who has access: Anyone**) and copy the **Web app URL** ending in `/exec`.
+2. Compare it with the production URL: GitHub → **Settings → Secrets and variables → Actions →
+   Variables tab** → `PUBLIC_LEAD_ENDPOINT_URL`.
+
+**Success:** the two URLs are different. If they are the same, you copied the production
+deployment: open the staging project ("… (staging)" in the editor's title) and copy its URL.
+
+Later code changes use **Manage deployments → Edit → New version** (§8), so this URL never
+changes.
+
+### 11.6 Put the staging URL in GitHub and rebuild the preview
+
+1. GitHub → **Settings → Secrets and variables → Actions → Variables tab → New repository
+   variable**.
+2. **Name:** `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW`. **Value:** the staging `/exec` URL from 11.5.
+   **Add variable.** It is public by design (contract §2), so it is a variable, not a secret.
+3. **Actions → Pages → Run workflow** → Branch `main` → **Run workflow**.
+
+**Success:** the run is green, and its summary has no annotation "No staging endpoint". If the
+run fails with "Production endpoint on the preview", the variable holds the production URL: go
+back to 11.5.
+
+### 11.7 Check that a preview lead lands in staging only (US-026 AC3)
+
+1. Open <https://raulc87.github.io/DigitalStrike-main-page/es/> and send the form with an inbox
+   you can read (message, for example, "Prueba del endpoint de staging.").
+2. The page shows "¡Recibido, …!".
+3. **Staging sheet** "DigitalStrike leads (staging)": a new row with `status` `new`. Note its
+   `lead_id`.
+4. **Production sheet** "DigitalStrike Leads": **no** new row.
+5. Write the result in the US-026 pull request, for example
+   `AC3 2026-10-20: preview lead DS-20261020-XXXXXX in the staging sheet, none in production: ok`.
+6. Set the staging row's `status` to `rejected`, or delete the row.
+
+If the row appears in the production sheet instead, stop: see the troubleshooting table below.
+
+### 11.8 Working with the staging sheet
+
+- It holds test leads only. The §9 rules apply to it too (do not sort in place, edit only B, Q
+  and S).
+- Delete test rows when you no longer need them.
+- The preview is never linked publicly, but its address is not secret. If a real person's data
+  ever lands in the staging sheet, §10 applies to it as well: a deletion request covers every
+  copy, this sheet included.
+
+### 11.9 Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| The preview form shows its error with the email fallback | `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` is not set, or the preview was not rebuilt after setting it | 11.6 |
+| **Actions → Pages** fails with "Production endpoint on the preview" | `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` holds the production URL | Set it to the staging URL (11.5) and run the workflow again |
+| A preview lead lands in "DigitalStrike Leads" (production) | The staging project's `SHEET_ID` is the production sheet's ID | Fix `SHEET_ID` in the staging Script Properties (takes effect at once, no redeploy); delete the test row from the production sheet |
+| Every preview lead fails; **Executions** shows `invalid_option` on `privacy_notice_version` | The staging `ACCEPTED_PRIVACY_NOTICE_VERSIONS` is missing or lacks the version the preview shows | Add it (11.4) |
+| `storage_unavailable` | Wrong staging `SHEET_ID`, or the tab is not named `leads` | 11.2 and 11.4 |
+| An HTML page instead of JSON (curl, §7) | The staging deployment is not "Anyone", or the URL is not the `/exec` one | 11.5 |

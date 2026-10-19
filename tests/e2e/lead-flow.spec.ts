@@ -10,6 +10,7 @@ import { enForm } from '../../src/i18n/en/form';
 import {
   expect,
   fillLeadForm,
+  MINIMUM_FILL_MS,
   passMinimumFillTime,
   submit,
   test,
@@ -54,7 +55,10 @@ test.beforeAll(async ({ browser }) => {
   }
 });
 
+// The page clock is controlled so the minimum fill time never races the wall clock (US-024):
+// installed before any navigation, it flows normally until passMinimumFillTime() jumps it ahead.
 test.beforeEach(async ({ page }) => {
+  await page.clock.install();
   await fakeCalendly(page);
 });
 
@@ -89,7 +93,7 @@ for (const lang of ['es', 'en'] as const) {
       privacy_notice_version: '2026-10-14-v1',
       website: '',
     });
-    expect(body.elapsed_ms).toBeGreaterThanOrEqual(3000);
+    expect(body.elapsed_ms).toBeGreaterThanOrEqual(MINIMUM_FILL_MS);
 
     const leads = await mocks.ok.leads();
     expect(leads).toHaveLength(1);
@@ -231,6 +235,27 @@ test('network failure with nothing stored: the retry stores exactly one row', as
   await submit(page);
   await expect(page.locator('[data-lead-success-title]')).toBeVisible();
   expect(traffic.bodies[1]!.submission_id).toBe(traffic.bodies[0]!.submission_id);
+  expect(await mocks.ok.leads()).toHaveLength(1);
+});
+
+test('a form script that starts late still passes the minimum fill time (US-024)', async ({
+  page,
+  mocks,
+  traffic,
+  useMock,
+}) => {
+  // A busy machine runs the form's script well after navigation; its elapsed_ms counts from then.
+  await page.route(/\/LeadForm\.[^/]*\.js$/, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+    await route.continue();
+  });
+  await useMock('ok');
+  await page.goto('es/#contacto');
+  await fillLeadForm(page);
+  await passMinimumFillTime(page);
+  await submit(page);
+  await expect(page.locator('[data-lead-success-title]')).toBeVisible();
+  expect(traffic.bodies[0]!.elapsed_ms).toBeGreaterThanOrEqual(MINIMUM_FILL_MS);
   expect(await mocks.ok.leads()).toHaveLength(1);
 });
 

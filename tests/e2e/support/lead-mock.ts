@@ -135,10 +135,18 @@ export async function fillLeadForm(page: Page, data = visitor): Promise<void> {
   await form.locator('input[name="consent"]').check();
 }
 
-/** Waits past the 3 s minimum fill time measured from the page's first render. */
+/** The contract's minimum fill time (§5.2): a valid `elapsed_ms` below it is a decoy. */
+export const MINIMUM_FILL_MS = 3_000;
+
+/**
+ * Moves the page clock past the minimum fill time. The form measures `elapsed_ms` with
+ * `performance.now()` from the moment its own script runs, which on a busy machine can be well
+ * after navigation, so a wall-clock wait races it (US-024). Call `page.clock.install()` before
+ * `page.goto()`: the fake clock still flows normally, and this jumps it ahead by exactly the
+ * minimum, so the form always measures at least 3000 ms whatever the load.
+ */
 export async function passMinimumFillTime(page: Page): Promise<void> {
-  const elapsed = await page.evaluate(() => performance.now());
-  if (elapsed < 3_300) await page.waitForTimeout(3_300 - elapsed);
+  await page.clock.fastForward(MINIMUM_FILL_MS);
 }
 
 export async function submit(page: Page): Promise<void> {

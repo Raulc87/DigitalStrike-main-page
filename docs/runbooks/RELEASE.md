@@ -62,7 +62,7 @@ Preconditions:
   the preview (section 2, APPS_SCRIPT_SETUP.md §8). Production gets them only in step 1 below.
 - `ACCEPTED_PRIVACY_NOTICE_VERSIONS` includes the version the site shows, in **both** Apps
   Script projects.
-- The four `CPANEL_*` secrets are set (DEPLOYMENT.md).
+- The three `CPANEL_*` secrets are set (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`; DEPLOYMENT.md §2).
 
 Steps (first release: `v0.1.0`):
 1. **Only if the release includes Apps Script changes:** deploy them to the **production**

@@ -19,6 +19,8 @@ All four at once: the stories touch disjoint files. US-023 starts after US-022 i
 
 ---
 
+Each agent prompt below highlights its stories; the acceptance criteria in `docs/specs/USER_STORIES.md` are the full list.
+
 ## Common rules (paste at the top of every implementation prompt)
 
 ```
@@ -61,13 +63,13 @@ Rules:
 Your stories, in order:
 1. US-022 CEO photo delivery — branch DS-022-photo-delivery. The only source is the 200×200 photo
    (owner decision 2026-10-19: no larger photo for now). Lazy-load it with explicit size, serve a
-   modern format (AVIF/WebP + JPG fallback) at the displayed size; if a 2× variant cannot be made
-   from a 200 px source without upscaling, do not upscale: say so in the PR and keep the pipeline
-   ready for a larger source (AC2). Show the lhci report evidence for AC3.
+   modern format (AVIF/WebP + JPG fallback) at the displayed size. Per AC2, a 2× variant only when
+   the source is at least twice the displayed size: with the 200 px source, 1× only, never upscale;
+   a larger source later must get 2× without code changes. Show the lhci report evidence for AC3.
 2. US-023 Mobile performance — branch DS-023-mobile-performance, from main after DS-022 is merged.
    AC1 is a profile write-up in the PR; AC2 is the CI lhci gate at mobile Performance ≥ 0.95 on
-   /es/ and /en/ (raise lighthouserc.json); production PageSpeed is recorded after release, not an
-   AC. Any visible change needs the owner's approval in the PR (screenshots at 390 and 1440 px).
+   /es/ and /en/ (raise lighthouserc.json), with Accessibility, Best practices and SEO staying at
+   100; production PageSpeed is recorded after release, not an AC. Any visible change needs the owner's approval in the PR (screenshots at 390 and 1440 px).
    GoDaddy's injected script findings are not actionable (ADR-001).
 ```
 
@@ -95,14 +97,17 @@ Your stories (any order; suggested US-026 first because it needs the owner's con
    "DigitalStrike leads (staging)", its own SHEET_ID and ACCEPTED_PRIVACY_NOTICE_VERSIONS); fix
    RELEASE.md §1.2 and the APPS_SCRIPT_SETUP §7 "no-terminal alternative". Follow RUNBOOK_STYLE.md.
    Tell me as soon as the runbook steps are ready so the owner can create the staging project; AC3
-   (a preview lead lands in the staging sheet) is the owner's check after that.
+   (a preview lead lands in the staging sheet) is the owner's check after that. AC4: the runbooks
+   say Apps Script changes go to staging first and reach production only as part of a release.
 2. US-025 Readable deploy logs — branch DS-025-deploy-log-masking. CPANEL_TARGET_DIR becomes a
    repository variable (default "/"); the skip-with-notice check covers only CPANEL_HOST,
    CPANEL_USERNAME, CPANEL_PASSWORD. Update DEPLOYMENT.md §2. Tell me when it is merged so the owner
    moves the value from the secret to the variable and runs a dry run.
 3. US-027 Urgent-fix runbook — branch DS-027-urgent-fix-runbook. RELEASE.md "Urgent fix" section
    per ADR-006 Decision 4, including the gate that replaces §3's preconditions; cite the
-   release-cpanel.yml checkout line (AC3). Optionally add release/** to ci.yml push branches.
+   release-cpanel.yml checkout line (AC3). AC2: say when not to use it (nothing unreleased on main
+   → fix on main) and that the owner adds release/* to the ruleset with "Require branches to be up
+   to date before merging". Optionally add release/** to ci.yml push branches.
 ```
 
 ## Review-only agent (Opus 5.5)

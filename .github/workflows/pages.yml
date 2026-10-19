@@ -46,10 +46,19 @@ jobs:
         env:
           PRODUCTION_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL }}
         run: |
-          if [ -z "$PUBLIC_LEAD_ENDPOINT_URL" ]; then
+          # Compare the values as the build uses them (src/lib/lead/config.ts trims), without a
+          # trailing "/", and by Apps Script deployment id (the part after /s/), so the
+          # /a/macros/<domain>/ form of the production URL is caught too.
+          trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's|/*$||'; }
+          deployment_id() { printf '%s' "$1" | sed -n 's|^.*/s/\([^/?]*\).*$|\1|p'; }
+          preview=$(trim "$PUBLIC_LEAD_ENDPOINT_URL")
+          production=$(trim "$PRODUCTION_LEAD_ENDPOINT_URL")
+          preview_id=$(deployment_id "$preview")
+          production_id=$(deployment_id "$production")
+          if [ -z "$preview" ]; then
             echo "::warning title=No staging endpoint::Repository variable PUBLIC_LEAD_ENDPOINT_URL_PREVIEW is not set: the preview form will show its error with the email fallback (docs/runbooks/APPS_SCRIPT_SETUP.md §11)."
-          elif [ "$PUBLIC_LEAD_ENDPOINT_URL" = "$PRODUCTION_LEAD_ENDPOINT_URL" ]; then
-            echo "::error title=Production endpoint on the preview::PUBLIC_LEAD_ENDPOINT_URL_PREVIEW equals PUBLIC_LEAD_ENDPOINT_URL. The preview must post to the staging Apps Script project, never to production (ADR-006)."
+          elif [ "$preview" = "$production" ] || { [ -n "$preview_id" ] && [ "$preview_id" = "$production_id" ]; }; then
+            echo "::error title=Production endpoint on the preview::PUBLIC_LEAD_ENDPOINT_URL_PREVIEW points to the same deployment as PUBLIC_LEAD_ENDPOINT_URL. The preview must post to the staging Apps Script project, never to production (ADR-006)."
             exit 1
           fi
       - run: npm ci

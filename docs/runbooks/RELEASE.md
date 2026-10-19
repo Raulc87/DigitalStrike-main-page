@@ -69,6 +69,22 @@ Steps (first release: `v0.1.0`):
    project now, as a **new version of the same deployment** (APPS_SCRIPT_SETUP.md §8), so the
    `/exec` URL does not change. This is the only time production Apps Script is redeployed.
    No Apps Script change since the last release: skip this step.
+
+   Deploy the code of the `main` commit you are releasing (the one CI is green on), not a local
+   work in progress. **Option A (by hand):** copy the files from GitHub with the branch selector
+   on `main`. **Option B (clasp):** first update your checkout and check that the last commit
+   shown is that commit, then push with the **production** block of APPS_SCRIPT_SETUP.md §8
+   item 1. On macOS or Linux:
+
+   ```bash
+   git checkout main && git pull --ff-only origin main && git log -1 --oneline
+   ```
+
+   On Windows (PowerShell):
+
+   ```powershell
+   git checkout main; git pull --ff-only origin main; git log -1 --oneline
+   ```
 2. **Releases → Draft a new release**.
 3. **Choose a tag** → type `v0.1.0` → **Create new tag: v0.1.0 on publish**. Target: `main`.
 4. Title `v0.1.0`; description: the PRs included (**Generate release notes** fills it).
@@ -78,7 +94,8 @@ Steps (first release: `v0.1.0`):
    tests the production Apps Script (section 4.2).
 
 Later releases follow [semantic versioning](https://semver.org/): `v0.1.1` for fixes, `v0.2.0` for
-new features. To roll back, see DEPLOYMENT.md.
+new features. To roll back, see DEPLOYMENT.md; if step 1 redeployed the production Apps Script,
+also set it back to its previous version (APPS_SCRIPT_SETUP.md §8, "To undo a deployment").
 
 ## 4. Production smoke test (US-016 AC3; Sprint 001 Definition of Done)
 
@@ -171,6 +188,8 @@ Smoke test vX.Y.Z — yyyy-MM-dd hh:mm (CR), by <name>
 - **Release workflow red or skipped:** DEPLOYMENT.md (secrets, FTP account, rollback). The holding
   page stays live until the first successful upload.
 - **Lead flow fails:** APPS_SCRIPT_SETUP.md §7 (curl smoke test) and the Apps Script
-  **Executions** log, which shows only `lead_id` and error codes.
+  **Executions** log, which shows only `lead_id` and error codes. If the release redeployed the
+  production Apps Script (section 3, step 1), set it back to its previous version
+  (APPS_SCRIPT_SETUP.md §8, "To undo a deployment") together with the site rollback.
 - **A visible defect:** fix it on a branch, merge, check the preview, then publish a new patch
   release (`v0.1.1`). Or roll back to the previous release (DEPLOYMENT.md).

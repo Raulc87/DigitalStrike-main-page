@@ -248,10 +248,45 @@ is the production smoke test right after the release (RELEASE.md §4.2).
   ("DigitalStrike Lead Endpoint") just before publishing the release, then the production smoke
   test (RELEASE.md §4) right after the deploy. Never redeploy production outside a release.
 
-With clasp (Option B), push with the binding of the project you are updating (§11.3).
+1. Update the project code.
 
-1. Update the project code (Option A: paste the changed files; Option B: `clasp push --force`).
-   Paste `appsscript.json` too when it changed (Project Settings must show the manifest, step 3).
+   **Option A (by hand):** paste the changed files into the project you are updating. Paste
+   `appsscript.json` too when it changed (Project Settings must show the manifest, step 3).
+
+   **Option B (clasp):** never run a bare `clasp push`: it goes to whichever project
+   `.clasp.json` was last bound to. Use the block for the project you are updating; each one
+   binds that project first (§11.3 sets up the two binding files). Run it from the repository
+   folder; it leaves you there, so it can be run again.
+
+   **Staging**, macOS or Linux:
+
+   ```bash
+   (cd apps-script && cp .clasp.staging.json .clasp.json && clasp push --force)
+   ```
+
+   **Staging**, Windows (PowerShell):
+
+   ```powershell
+   Push-Location apps-script; Copy-Item .clasp.staging.json .clasp.json -Force; clasp push --force; Pop-Location
+   ```
+
+   **Production** (only as part of a release, RELEASE.md §3 step 1), macOS or Linux:
+
+   ```bash
+   (cd apps-script && cp .clasp.production.json .clasp.json && clasp push --force)
+   ```
+
+   **Production**, Windows (PowerShell):
+
+   ```powershell
+   Push-Location apps-script; Copy-Item .clasp.production.json .clasp.json -Force; clasp push --force; Pop-Location
+   ```
+
+   **Success:** clasp prints "Pushed 11 files." and the editor of the project named in the block
+   ("… (staging)" or not) shows the change. A push changes only the project's code in the
+   editor, not the live web app: only item 3 deploys. If a block pushed to the wrong project, do
+   not deploy there; run the block for the right project. Production's editor code is replaced
+   again by the next release's push (RELEASE.md §3 step 1).
 2. **If the update adds a permission** (for example the Gmail sending change, which adds the
    `gmail.send` scope), authorize it before deploying. In the function dropdown select
    `setupSheet`, then click **Run** and allow the new permission ("Send email on your behalf").
@@ -380,20 +415,21 @@ git-ignored; never commit them:
 - `apps-script/.clasp.production.json`: a copy of your current `apps-script/.clasp.json` (the
   production project from §3).
 
-To push to staging, from the repository folder, on **macOS or Linux**:
+Then push to staging, from the repository folder (the block leaves you there, so it can be run
+again). On **macOS or Linux**:
 
 ```bash
-cd apps-script && cp .clasp.staging.json .clasp.json && clasp push --force
+(cd apps-script && cp .clasp.staging.json .clasp.json && clasp push --force)
 ```
 
 On **Windows (PowerShell)**:
 
 ```powershell
-cd apps-script; Copy-Item .clasp.staging.json .clasp.json -Force; clasp push --force
+Push-Location apps-script; Copy-Item .clasp.staging.json .clasp.json -Force; clasp push --force; Pop-Location
 ```
 
-Pushing to production is the same command with `.clasp.production.json`, and only as part of
-a release (§8).
+From now on, every clasp push uses one of the four blocks in §8 item 1, which name their
+project; never a bare `clasp push`. Production gets pushed only as part of a release.
 
 **Success:** the staging project's editor shows `appsscript.json`, `Code.gs` and the nine `lib/…`
 files (clasp prints "Pushed 11 files.").

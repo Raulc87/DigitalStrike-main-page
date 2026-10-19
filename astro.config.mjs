@@ -24,7 +24,8 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'always',
-  build: { format: 'directory' },
+  // US-023: the site's single stylesheet is ~7 KB, so inline it and nothing blocks the first render.
+  build: { format: 'directory', inlineStylesheets: 'always' },
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

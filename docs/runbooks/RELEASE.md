@@ -322,7 +322,24 @@ run for the `push` to the release branch.
 ### 6.6 Publish the patch release from the release branch
 
 1. **Only if the fix changes `apps-script/`:** deploy it to the **production** project now, as
-   a new version of the same deployment (APPS_SCRIPT_SETUP.md §8).
+   a new version of the same deployment (APPS_SCRIPT_SETUP.md §8). Deploy the code of the
+   release branch's latest commit, not `main`. **Option A (by hand):** copy the files from GitHub
+   with the branch selector on the release branch. **Option B (clasp):** set the values of 6.4
+   (terminal alternative) first, check out the release branch as below, then push with the
+   **production** block of APPS_SCRIPT_SETUP.md §8 item 1. On macOS or Linux:
+
+   ```bash
+   git fetch origin && git checkout "$RELEASE_BRANCH" && git pull --ff-only origin "$RELEASE_BRANCH" && git log -1 --oneline
+   ```
+
+   On Windows (PowerShell):
+
+   ```powershell
+   git fetch origin; git checkout "$RELEASE_BRANCH"; git pull --ff-only origin "$RELEASE_BRANCH"; git log -1 --oneline
+   ```
+
+   The last line shown must be the fix's merge commit. Afterwards, go back to `main`
+   (`git checkout main`).
 2. **Releases → Draft a new release**.
 3. **Choose a tag** → type the new tag, e.g. `v0.1.3` → **Create new tag: v0.1.3 on publish**.
 4. **Target: the release branch**, e.g. `release/v0.1.x`. This is the control that decides what
@@ -344,7 +361,7 @@ Do the full production smoke test (section 4) at once and record it in the relea
 
 **If it fails:** roll back to the last tag (DEPLOYMENT.md §6: **Run workflow** with the last tag,
 **Dry run** unticked); if the fix included Apps Script, also set the production deployment back
-to its previous version (APPS_SCRIPT_SETUP.md §8). Note the rollback in the release, then fix
+to its previous version (APPS_SCRIPT_SETUP.md §8, "To undo a deployment"). Note the rollback in the release, then fix
 again from 6.5.
 
 ### 6.8 Bring the fix to `main`

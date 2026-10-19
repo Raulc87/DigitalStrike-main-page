@@ -243,9 +243,23 @@ $LAST_TAG = 'v0.1.2'; $RELEASE_BRANCH = 'release/v0.1.x'
 git fetch origin --tags; git push origin "refs/tags/$LAST_TAG^{commit}:refs/heads/$RELEASE_BRANCH"
 ```
 
-**Check (also when the branch already existed):** in the browser, open
-`https://github.com/Raulc87/DigitalStrike-main-page/compare/<release branch>...<last tag>` with
-the two values from 6.3 (e.g. `…/compare/release/v0.1.x...v0.1.2`). Expected: "There isn't
+**Check (also when the branch already existed):** open the comparison of the release branch
+with the last tag. In the browser, the address is
+`https://github.com/Raulc87/DigitalStrike-main-page/compare/` followed by the two values from
+6.3, e.g. `…/compare/release/v0.1.x...v0.1.2`. If you set the values in the terminal above, this
+prints the address to open, on macOS or Linux:
+
+```bash
+echo "https://github.com/Raulc87/DigitalStrike-main-page/compare/$RELEASE_BRANCH...$LAST_TAG"
+```
+
+On Windows (PowerShell):
+
+```powershell
+"https://github.com/Raulc87/DigitalStrike-main-page/compare/$RELEASE_BRANCH...$LAST_TAG"
+```
+
+Expected: "There isn't
 anything to compare" (the tag is already in the branch). If it lists commits, the last release
 was published from `main` after the branch was created. First bring that tag in: a branch made
 from the tag (name `DS-FIX-sync-<last tag>`, e.g. `DS-FIX-sync-v0.1.2`) and a PR from it into the
@@ -314,6 +328,10 @@ The next release from `main` must keep the fix.
    opens the PR to `main`.
 
 **Success:** the PR is merged, CI is green on `main`, and the Pages preview shows the fix.
+
+If the fix changed `apps-script/`, staging now runs the release branch's code (6.5 item 2), which
+lacks any unreleased Apps Script change on `main`. Once the fix is on `main`, redeploy staging
+from `main` (APPS_SCRIPT_SETUP.md §8, staging), so the preview tests the next release's code.
 
 Leave the release branch in place: the next urgent fix on the same `vMAJOR.MINOR` line reuses
 it (after the check in 6.4). A release of a new MINOR version gets its own branch only if it

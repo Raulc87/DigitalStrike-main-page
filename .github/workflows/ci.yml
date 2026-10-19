@@ -118,8 +118,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Its own job: `npm run lhci` rebuilds dist/ with base "/" (US-015 AC4: mobile preset, 3 runs
-    # on /es/ and /en/, Performance ≥ 0.90, Accessibility ≥ 0.95; lighthouserc.json). Nothing is
-    # uploaded to a third party; the reports stay as a workflow artifact.
+    # on /es/ and /en/; the score thresholds are the assertions in lighthouserc.json, NFR-003 and
+    # US-023 AC2). Nothing is uploaded to a third party; the reports stay as a workflow artifact.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -134,5 +134,7 @@ jobs:
         with:
           name: lighthouse-reports
           path: .lighthouseci/
+          # The folder name starts with a dot; upload-artifact@v4 skips hidden files unless told.
+          include-hidden-files: true
           retention-days: 7
           if-no-files-found: ignore

@@ -67,13 +67,20 @@ for (const lang of ['es', 'en'] as const) {
       await expect(linkedin).toHaveAttribute('href', /linkedin\.com/);
       await expect(linkedin).toHaveAttribute('rel', 'noopener');
       const photo = page.locator('#nosotros img');
-      await expect(photo).toHaveAttribute('src', /images\/raul-casanas\.jpg$/);
+      await expect(photo).toHaveAttribute('src', /_astro\/raul-casanas\..+\.jpg$/);
+      // US-022 AC1: lazy, async-decoded, explicit size (no layout shift)
+      await expect(photo).toHaveAttribute('loading', 'lazy');
+      await expect(photo).toHaveAttribute('decoding', 'async');
+      await expect(photo).toHaveAttribute('width', '200');
+      await expect(photo).toHaveAttribute('height', '200');
       await expect(photo).toHaveAttribute(
         'alt',
         lang === 'es'
           ? 'Raul Casañas, CEO de DigitalStrike Solutions'
           : 'Raul Casañas, CEO of DigitalStrike Solutions',
       );
+      // lazy-loaded: it only loads once the section is near the viewport
+      await photo.scrollIntoViewIfNeeded();
       await expect
         .poll(async () => photo.evaluate((img: HTMLImageElement) => img.naturalWidth))
         .toBe(200);
@@ -83,11 +90,30 @@ for (const lang of ['es', 'en'] as const) {
       }
     });
 
+    test('about: photo served as AVIF/WebP with JPG fallback, 1x only, never upscaled (US-022 AC2)', async ({
+      page,
+    }) => {
+      await page.goto(`/${lang}/`);
+      const picture = page.locator('#nosotros picture');
+      const sources = picture.locator('source');
+      await expect(sources).toHaveCount(2);
+      await expect(sources.nth(0)).toHaveAttribute('type', 'image/avif');
+      await expect(sources.nth(1)).toHaveAttribute('type', 'image/webp');
+      // The source is 200 px: every srcset has a single 200w candidate, no 2x/400w variant.
+      for (const element of [...(await sources.all()), picture.locator('img')]) {
+        const srcset = (await element.getAttribute('srcset')) ?? '';
+        expect(srcset.split(',')).toHaveLength(1);
+        expect(srcset).toMatch(/ 200w$/);
+      }
+    });
+
     test('about: the RC monogram shows when the photo file is missing (US-007 AC2)', async ({
       page,
     }) => {
-      await page.route('**/images/raul-casanas.jpg', (route) => route.fulfill({ status: 404 }));
+      await page.route('**/_astro/raul-casanas.*', (route) => route.fulfill({ status: 404 }));
       await page.goto(`/${lang}/`);
+      // lazy-loaded: the request (and the 404) only happens once the section is near the viewport
+      await page.locator('#nosotros').scrollIntoViewIfNeeded();
       await expect(page.locator('#nosotros img')).toHaveCount(0);
       await expect(page.locator('[data-monogram]')).toBeVisible();
       await expect(page.locator('[data-monogram]')).toHaveText('RC');

@@ -5,13 +5,13 @@
 - Project key: **DS** (branches `DS-<NNN>-<slug>` / `DS-<TYPE>-<slug>`, PR titles `[DS-NNN]`, commits `DS-NNN:`; see `AGENTS.md`)
 - Repository: https://github.com/Raulc87/DigitalStrike-main-page
 - Starter Kit: https://github.com/Raulc87/sdd_starter_kit
-- Status: **`v0.1.1` live on https://digitalstrike-solutions.com (2026-10-13); Sprint 002 active (go-ahead 2026-10-19)**
+- Status: **`v0.1.2` live on https://digitalstrike-solutions.com (2026-10-19); Sprint 002 done; no sprint active**
 - Product owner / final reviewer: Raul Casañas (CEO, manager@digitalstrike-solutions.com)
 
 ## Active documentation
 - Project spec: `docs/specs/PROJECT_SPEC.md`
 - User stories: `docs/specs/USER_STORIES.md`
-- Integration contracts: `docs/specs/LEAD_ENDPOINT_CONTRACT.md` (v1.0)
+- Integration contracts: `docs/specs/LEAD_ENDPOINT_CONTRACT.md` (1.0.1)
 - Feature specs: Not required (simple project)
 - Architecture spec: Not required (simple project; architecture in TECH_STACK + ADRs)
 - UX/UI direction: `docs/ux/UX_UI_DIRECTION.md`
@@ -20,19 +20,15 @@
 - Tech stack: `TECH_STACK.md`
 - ADRs: `docs/decisions/` (ADR-001 … ADR-006)
 - Implementation plan: `docs/plans/IMPLEMENTATION_PLAN.md`
-- Active sprint plan: `docs/sprints/SPRINT_002.md` (prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md`; previous: `docs/sprints/SPRINT_001.md`, done)
+- Sprint plans: `docs/sprints/SPRINT_002.md` (done; outcome and backlog at the end; prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md`) and `docs/sprints/SPRINT_001.md` (done). No sprint is active
 - Readiness checklist: `docs/checklists/SPRINT_READINESS_CHECKLIST.md`
 - Runbooks: `docs/runbooks/` (created by Agent 3 during Sprint 001)
 - Visual identity process: `docs/process/VISUAL_IDENTITY_PROCESS.md`
 
 ## Current sprint
-- Sprint: 002 — Post-release follow-ups
-- Goal: Poliart screenshot (first), mobile performance, reliable e2e, operational loose ends, meet-up feedback
-- Start: 2026-10-19 (go-ahead); planned end 2026-10-27; US-021 already shipped in `v0.1.1` (2026-10-13)
-- Duration: 7 business days
-- Deliverable: patch release(s) on `https://digitalstrike-solutions.com`, smoke test recorded
-- Status: **Active**
-- Previous: Sprint 001 — done; `v0.1.0` released and smoke-tested 2026-10-12
+- None active. Next sprint: to be planned with the owner, from the backlog in `SPRINT_002.md` → "Sprint outcome".
+- Last: Sprint 002 — Post-release follow-ups — **done** 2026-10-19; `v0.1.1` (2026-10-13) and `v0.1.2` (2026-10-19) released and smoke-tested
+- Before: Sprint 001 — done; `v0.1.0` released and smoke-tested 2026-10-12
 
 ## Agent allocation
 - Implementation Agent 1: Site shell, sections, i18n, SEO — Sonnet 5.5

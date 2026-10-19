@@ -2,8 +2,10 @@
 # Review only, never linked publicly, built with noindex. Production is release-cpanel.yml.
 # Settings → Pages → Source must be "GitHub Actions". PUBLIC_* values come from repository
 # *variables* (Settings → Secrets and variables → Actions → Variables); unset ones fall back to the
-# code defaults of contract §8, except PUBLIC_LEAD_ENDPOINT_URL (unset → the form shows the error
-# with the mailto fallback).
+# code defaults of contract §8, except the lead endpoint.
+# Lead endpoint (US-026, ADR-006): the preview posts to the *staging* Apps Script project, from
+# PUBLIC_LEAD_ENDPOINT_URL_PREVIEW. Never PUBLIC_LEAD_ENDPOINT_URL, which is production only
+# (release-cpanel.yml). Unset → the preview form shows its error with the mailto fallback.
 name: Pages
 
 on:
@@ -28,7 +30,7 @@ jobs:
       PUBLIC_BASE_PATH: /DigitalStrike-main-page
       PUBLIC_NOINDEX: 'true'
       PUBLIC_SHOW_PENDING_BADGES: 'true'
-      PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL }}
+      PUBLIC_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL_PREVIEW }}
       PUBLIC_CALENDLY_URL: ${{ vars.PUBLIC_CALENDLY_URL }}
       PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
       PUBLIC_LINKEDIN_URL: ${{ vars.PUBLIC_LINKEDIN_URL }}
@@ -40,6 +42,25 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Check the staging lead endpoint
+        env:
+          PRODUCTION_LEAD_ENDPOINT_URL: ${{ vars.PUBLIC_LEAD_ENDPOINT_URL }}
+        run: |
+          # Compare the values as the build uses them (src/lib/lead/config.ts trims), without a
+          # trailing "/", and by Apps Script deployment id (the part after /s/), so the
+          # /a/macros/<domain>/ form of the production URL is caught too.
+          trim() { printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's|/*$||'; }
+          deployment_id() { printf '%s' "$1" | sed -n 's|^.*/s/\([^/?]*\).*$|\1|p'; }
+          preview=$(trim "$PUBLIC_LEAD_ENDPOINT_URL")
+          production=$(trim "$PRODUCTION_LEAD_ENDPOINT_URL")
+          preview_id=$(deployment_id "$preview")
+          production_id=$(deployment_id "$production")
+          if [ -z "$preview" ]; then
+            echo "::warning title=No staging endpoint::Repository variable PUBLIC_LEAD_ENDPOINT_URL_PREVIEW is not set: the preview form will show its error with the email fallback (docs/runbooks/APPS_SCRIPT_SETUP.md §11)."
+          elif [ "$preview" = "$production" ] || { [ -n "$preview_id" ] && [ "$preview_id" = "$production_id" ]; }; then
+            echo "::error title=Production endpoint on the preview::PUBLIC_LEAD_ENDPOINT_URL_PREVIEW points to the same deployment as PUBLIC_LEAD_ENDPOINT_URL. The preview must post to the staging Apps Script project, never to production (ADR-006)."
+            exit 1
+          fi
       - run: npm ci
       - run: npm run build
       - name: Check the base path and noindex in the output

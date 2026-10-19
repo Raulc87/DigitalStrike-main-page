@@ -112,6 +112,8 @@ Agent kickoff prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md` (fresh session
 
 ### Backlog (candidates for a later sprint; not committed)
 
+The owner confirmed (2026-10-19) that the "some follow ups needed for next release" note in the `v0.1.2` release description refers to the items below.
+
 | Item | Source | Notes |
 |---|---|---|
 | Metric-adjusted fallback font (`size-adjust` / `ascent-override`) so text does not shift when web fonts arrive late | US-023 review (#46) | Keeps the same fonts; changes only the brief pre-swap rendering, so it needs the owner's approval. Gain is small on phones whose fallback is close to Archivo |

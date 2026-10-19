@@ -55,7 +55,7 @@ As a visitor, I see the page in my language and can switch it.
 
 ## US-007 — About the CEO
 - AC1: Name, role, three paragraphs and facts chips per CONTENT §8; figures only from the CV (BR-002).
-- AC2: Photo slot shows `public/images/raul-casanas.jpg` (copied from `docs/assets/photos/raul-casanas-200.jpg`, rendered at most 200 CSS px wide while it is the 200 px version) and falls back to the "RC" monogram if the file is missing; replacing it with a high-resolution photo needs only the new file and one size constant.
+- AC2: Photo slot shows `src/assets/raul-casanas.jpg` (moved from `public/images/` by US-022 so the build can optimise it; copied from `docs/assets/photos/raul-casanas-200.jpg`, rendered at most 200 CSS px wide while it is the 200 px version) and falls back to the "RC" monogram if the file is missing; replacing it with a high-resolution photo needs only the new file and one size constant.
 - AC3: LinkedIn button opens `PUBLIC_LINKEDIN_URL` in a new tab.
 - AC-UI.
 

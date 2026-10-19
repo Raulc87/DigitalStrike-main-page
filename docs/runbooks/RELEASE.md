@@ -56,7 +56,7 @@ Preconditions:
   includes the version the site shows. "Current code" includes the Gmail sending change
   (`lib/gmail` and the `gmail.send` scope, authorized once). Redeploy it as a **new version of
   the same deployment** (APPS_SCRIPT_SETUP.md §8), so the `/exec` URL does not change.
-- The four `CPANEL_*` secrets are set (DEPLOYMENT.md).
+- The three `CPANEL_*` secrets are set (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`; DEPLOYMENT.md §2).
 
 Steps (first release: `v0.1.0`):
 1. **Releases → Draft a new release**.

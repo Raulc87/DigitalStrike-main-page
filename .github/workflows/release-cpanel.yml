@@ -3,7 +3,8 @@
 # - Run by hand (Actions → Release to cPanel → Run workflow) for the dry run (default: changes
 #   nothing on the server) or to redeploy any tag, e.g. a rollback to the previous release.
 # Upload over explicit FTPS with lftp, using the dedicated FTP account limited to public_html
-# (secrets CPANEL_HOST, CPANEL_USERNAME, CPANEL_PASSWORD, CPANEL_TARGET_DIR). Nothing outside
+# (secrets CPANEL_HOST, CPANEL_USERNAME, CPANEL_PASSWORD; repository variable CPANEL_TARGET_DIR,
+# default "/", not a secret so the logs keep their "/" readable: US-025). Nothing outside
 # CPANEL_TARGET_DIR is touched. Runbook: docs/runbooks/DEPLOYMENT.md.
 name: Release to cPanel
 
@@ -42,10 +43,9 @@ jobs:
           CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
           CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
           CPANEL_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
-          CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
         run: |
           missing=""
-          for name in CPANEL_HOST CPANEL_USERNAME CPANEL_PASSWORD CPANEL_TARGET_DIR; do
+          for name in CPANEL_HOST CPANEL_USERNAME CPANEL_PASSWORD; do
             [ -n "${!name}" ] || missing="$missing $name"
           done
           if [ -n "$missing" ]; then
@@ -102,7 +102,8 @@ jobs:
           CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
           CPANEL_USERNAME: ${{ secrets.CPANEL_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.CPANEL_PASSWORD }}
-          CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
+          # Repository variable (US-025); unset means "/", the FTP account's root (public_html).
+          CPANEL_TARGET_DIR: ${{ vars.CPANEL_TARGET_DIR || '/' }}
           # Repository variable; "false" only if the FTP server's certificate does not match the
           # host name (DEPLOYMENT.md §7). The connection is encrypted either way.
           TLS_VERIFY: ${{ vars.CPANEL_TLS_VERIFY || 'true' }}

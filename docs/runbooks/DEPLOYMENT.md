@@ -5,8 +5,9 @@ For: Raul Casañas (owner). Covers US-017 (AC1–AC5) and ADR-001. Workflow:
 the smoke test: `docs/runbooks/RELEASE.md`.
 
 **State on 2026-10-11 (done by the owner):** a dedicated FTP account limited to `public_html`
-exists, and the four `CPANEL_*` repository secrets are set (`CPANEL_TARGET_DIR` is `/`, because that
-account's root is `public_html`). AutoSSL is active and HTTPS is forced (2026-10-10). The **dry
+exists, and the `CPANEL_*` repository secrets are set. **Update 2026-10-19 (US-025):** the
+target folder is now the repository **variable** `CPANEL_TARGET_DIR` (default `/`, because that
+account's root is `public_html`), no longer a secret; move it once as in §2.1. AutoSSL is active and HTTPS is forced (2026-10-10). The **dry
 run** in §4 passed on 2026-10-12, with `CPANEL_HOST` set to the server's full host name (§2). Next
 step: the release (RELEASE.md §3).
 
@@ -32,7 +33,6 @@ variables, and are never written in any file.
 | `CPANEL_HOST` | The server's **full host name** (below), not the `ftp.digitalstrike-solutions.com` name cPanel suggests. Host name only (no `ftp://`, no trailing `/`), because the workflow adds the scheme |
 | `CPANEL_USERNAME` | The full FTP login, e.g. `deploy@digitalstrike-solutions.com` |
 | `CPANEL_PASSWORD` | That account's password |
-| `CPANEL_TARGET_DIR` | `/` (the account's root is already `public_html`) |
 
 **Finding the full host name for `CPANEL_HOST`.** cPanel's **FTP Accounts → Configure FTP Client →
 FTP Server** shows `ftp.digitalstrike-solutions.com`. That name has no DNS record (checked on
@@ -49,17 +49,39 @@ server's own name instead:
 
 That host name also matches the server's TLS certificate, so `CPANEL_TLS_VERIFY` stays unset.
 
-If any of them is missing, the workflow does not fail. It ends with the notice **"Deploy skipped —
-Repository secrets not set: …"** and deploys nothing (US-017 AC2).
-
-Optional repository **variable** (not a secret): `CPANEL_TLS_VERIFY`. It is unset by default,
-which means the certificate is checked. Only see §7 if the dry run reports a certificate problem.
+If any of these three is missing, the workflow does not fail. It ends with the notice
+**"Deploy skipped — Repository secrets not set: …"** and deploys nothing (US-017 AC2).
 
 **Masked values in the logs.** GitHub replaces every secret's value with `***` in the run's log.
-The host name therefore shows as `***` (for example `open: ***: …`), and, because
-`CPANEL_TARGET_DIR` is `/`, **every `/` in the log also shows as `***`** (a path such as
-`_astro/…` shows as `_astro***…`). This is expected and hides nothing that matters; the listings
-are still readable.
+The host name therefore shows as `***` (for example `open: ***: …`). That is expected. Paths are
+readable (`_astro/…`), because the target folder is a variable (§2.1), not a secret.
+
+### 2.1 Repository variables (public values, not secrets)
+
+**GitHub → Settings → Secrets and variables → Actions → Variables tab.** Both are optional.
+
+| Variable | Value |
+|---|---|
+| `CPANEL_TARGET_DIR` | `/` (the FTP account's root is already `public_html`). Unset means `/` |
+| `CPANEL_TLS_VERIFY` | Unset by default, which means the certificate is checked. Only see §7 if the dry run reports a certificate problem |
+
+**Moving `CPANEL_TARGET_DIR` from a secret to a variable (one time, after US-025 is merged).**
+Until 2026-10-19 the folder was a secret. Because its value is `/`, GitHub masked **every `/`**
+in the log as `***` (`_astro/…` showed as `_astro***…`). To move it:
+1. **Variables tab → New repository variable.** **Name:** `CPANEL_TARGET_DIR`. **Value:** `/`.
+   **Add variable.**
+2. Run the dry run (§4).
+
+**Success:** the Variables tab lists `CPANEL_TARGET_DIR` = `/`; in the dry run's step **Upload
+over FTPS**, the file lists show plain paths such as `_astro/…` and `es/index.html`, and only the
+host name shows as `***`.
+
+3. **After the first release that includes US-025 (`v0.1.2`) is deployed**, remove the old
+   secret: **Secrets tab** → the row `CPANEL_TARGET_DIR` → trash icon → **Yes, remove it**. Not
+   earlier: **Re-run all jobs** on the run of an older release (§6, alternative) runs that
+   release's own copy of the workflow, which still needs the secret.
+
+**Success:** the Secrets tab lists only `CPANEL_HOST`, `CPANEL_USERNAME` and `CPANEL_PASSWORD`.
 
 ## 3. AutoSSL (check once; active since 2026-10-10)
 
@@ -131,7 +153,8 @@ To put the previous release back:
    description.
 
 Alternative: open the previous release's own run under **Actions → Release to cPanel** →
-**Re-run all jobs**.
+**Re-run all jobs**. For releases older than `v0.1.2` this needs the old secret
+`CPANEL_TARGET_DIR` (§2.1); once it is removed, use steps 1–3 above.
 
 Pages that exist only in the newer release stay on the server, unlinked. That is harmless; delete
 them in cPanel **File Manager** if needed. To go back to the holding page itself, upload
@@ -145,7 +168,9 @@ them in cPanel **File Manager** if needed. To go back to the holding page itself
 | `open: ***: Name or service not known` | `CPANEL_HOST` is a name with no DNS record, usually `ftp.digitalstrike-solutions.com`. Set it to the server's full host name (§2) and run again |
 | `Login failed: 530` | Wrong `CPANEL_USERNAME` (use the full `deploy@digitalstrike-solutions.com`) or wrong `CPANEL_PASSWORD`. Reset the password in cPanel → FTP Accounts → **Change Password**, then update the secret |
 | `Certificate verification: … NOT trusted` or a host-name mismatch | `CPANEL_HOST` must be exactly the server's full host name from §2. If it still fails, set the repository **variable** `CPANEL_TLS_VERIFY` to `false` and run again. The connection stays encrypted but the server's identity is not checked. Ask GoDaddy support which host name matches the certificate, then delete the variable |
-| `cd: Access failed` | `CPANEL_TARGET_DIR` does not exist for that account; it should be `/` |
+| `cd: Access failed` | The folder in the repository variable `CPANEL_TARGET_DIR` does not exist for that account. It should be `/`, or the variable unset (§2.1) |
+| Every `/` in the log shows as `***` | The run used a workflow from before US-025 (a re-run of an older release's run), which reads the old secret. Use **Run workflow** from `main` instead (§6). If a run from `main` still shows it, remove the old secret (§2.1, step 3) |
+| Notice "Deploy skipped — Repository secrets not set: CPANEL_TARGET_DIR" | A re-run of a release older than `v0.1.2` after the old secret was removed. Use **Run workflow** from `main` with that tag (§6, steps 1–3) |
 | Timeouts / `Connection refused` | GoDaddy FTP briefly unavailable or blocking passive connections; run again. If it persists, ask GoDaddy support whether FTPS (port 21, passive mode) is allowed for the account |
 | Step "Check the live site" fails | The upload worked but the site does not answer as expected; open it, check `.htaccess` in File Manager, and roll back (§6) if needed |
 

@@ -1,7 +1,7 @@
 # RELEASE — preview, release and production smoke test (owner runbook)
 
-For: Raul Casañas (owner). Covers US-016 (AC1–AC3), ADR-001, NFR-003 and the Sprint 001 Definition
-of Done. One-time GoDaddy setup, the cPanel upload and rollback: `docs/runbooks/DEPLOYMENT.md`.
+For: Raul Casañas (owner). Covers US-016 (AC1–AC3), US-027 (urgent fix, section 6), ADR-001,
+ADR-006, NFR-003 and the Sprint 001 Definition of Done. One-time GoDaddy setup, the cPanel upload and rollback: `docs/runbooks/DEPLOYMENT.md`.
 Apps Script: `docs/runbooks/APPS_SCRIPT_SETUP.md`.
 
 | Where | URL | Deployed by |
@@ -162,4 +162,159 @@ Smoke test vX.Y.Z — yyyy-MM-dd hh:mm (CR), by <name>
 - **Lead flow fails:** APPS_SCRIPT_SETUP.md §7 (curl smoke test) and the Apps Script
   **Executions** log, which shows only `lead_id` and error codes.
 - **A visible defect:** fix it on a branch, merge, check the preview, then publish a new patch
-  release (`v0.1.1`). Or roll back to the previous release (DEPLOYMENT.md).
+  release (`v0.1.1`). Or roll back to the previous release (DEPLOYMENT.md). If `main` has merged
+  work that is not released yet, use the urgent-fix procedure (section 6) instead.
+
+## 6. Urgent fix (ADR-006 Decision 4; US-027)
+
+Added 2026-10-19. A production fix that must ship **without** the unreleased work on `main`. It
+is published from a short-lived branch `release/vMAJOR.MINOR.x` instead of `main`. Rare by
+design: release often, so `main` seldom holds unreleased work.
+
+### 6.1 When to use it, and when not
+
+Open **Code → Releases**. Under the latest release, GitHub shows **"N commits to main since this
+release"**; click it to list them (no such line means no commits).
+
+- **No commits, or only commits you are happy to ship now** (for example docs-only commits, as
+  on 2026-10-19 after `v0.1.1`): **do not use this section.** Fix on `main` as usual (story or `DS-FIX-…` branch → PR to `main`), then release from `main` (section 3).
+- **Merged work that must not reach production yet:** use this section.
+
+### 6.2 One-time prerequisite: protect `release/*` (owner)
+
+Do this **before the first release branch is ever created** (SPRINT_002 owner task 9). It makes
+GitHub enforce the gate in 6.5.
+
+1. GitHub → **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.
+2. **Ruleset name:** `release branches`. **Enforcement status:** **Active**.
+3. **Target branches → Add target → Include by pattern** → `release/*` → **Add inclusion
+   pattern**.
+4. Under **Branch rules**, tick:
+   - **Restrict deletions**;
+   - **Require a pull request before merging**;
+   - **Require status checks to pass**, then tick **Require branches to be up to date before
+     merging**, and with **Add checks** add the six checks `lint`, `typecheck`, `unit`, `build`,
+     `e2e`, `lighthouse` (source: GitHub Actions);
+   - **Block force pushes**.
+5. **Create**.
+
+**Success:** **Settings → Rules → Rulesets** lists `release branches` as **Active**, targeting
+`release/*`, next to the `main` ruleset.
+
+### 6.3 Values to have ready
+
+| Value | Example | Where it comes from |
+|---|---|---|
+| Last tag (what production runs) | `v0.1.2` | **Code → Releases**, the latest release |
+| Release branch | `release/v0.1.x` | `release/` + the last tag's `vMAJOR.MINOR` + `.x` |
+| New tag | `v0.1.3` | The last tag with PATCH + 1 |
+
+### 6.4 Create the release branch (if it does not exist yet)
+
+If **Code → Branches** already lists the release branch, skip to the check at the end of this
+step.
+
+**No-terminal (GitHub UI):**
+1. **Code** tab → branch dropdown (top left, shows `main`) → **Tags** tab → click the last tag.
+2. Open the same dropdown again → **Branches** tab → type the release branch name, e.g.
+   `release/v0.1.x` → click **Create branch release/v0.1.x from v0.1.2** (the line names the
+   tag you selected in item 1; if it says `from main`, go back to item 1).
+
+**Terminal alternative.** First set the two values (edit them in this block only):
+
+```bash
+LAST_TAG='v0.1.2'
+RELEASE_BRANCH='release/v0.1.x'
+```
+
+Then, on macOS or Linux:
+
+```bash
+git fetch origin --tags && git push origin "refs/tags/$LAST_TAG^{commit}:refs/heads/$RELEASE_BRANCH"
+```
+
+On Windows (PowerShell), set the values and push:
+
+```powershell
+$LAST_TAG = 'v0.1.2'; $RELEASE_BRANCH = 'release/v0.1.x'
+```
+
+```powershell
+git fetch origin --tags; git push origin "refs/tags/$LAST_TAG^{commit}:refs/heads/$RELEASE_BRANCH"
+```
+
+**Check (also when the branch already existed):** in the browser, open
+`https://github.com/Raulc87/DigitalStrike-main-page/compare/<release branch>...<last tag>` with
+the two values from 6.3 (e.g. `…/compare/release/v0.1.x...v0.1.2`). Expected: "There isn't
+anything to compare" (the tag is already in the branch). If it lists commits, the last release
+was published from `main` after the branch was created. First bring that tag in: a branch made
+from the tag (name `DS-FIX-sync-<last tag>`, e.g. `DS-FIX-sync-v0.1.2`) and a PR from it into the
+release branch, with the gate of 6.5. Then continue.
+
+### 6.5 The fix PR and the gate
+
+1. The fix is made on a branch `DS-FIX-<slug>` created **from the release branch**, and its PR
+   has **base: the release branch** (not `main`). CI runs on every PR; the review-only agent
+   reviews it as usual. Keep it to the fix only.
+2. If the fix changes `apps-script/`, it is deployed to the **staging** project and tested with
+   curl first (APPS_SCRIPT_SETUP.md §7 and §8); production gets it only in 6.6.
+3. **Gate.** This replaces section 3's preconditions "CI is green on the `main` commit" and "the
+   preview looks right", which a release branch cannot meet (`pages.yml` previews only `main`).
+   Merge the fix PR only when:
+   - the six required checks are green on the PR's **latest commit**;
+   - the PR is **up to date** with the release branch: the PR page does not show "This branch is
+     out-of-date with the base branch". If it does, click **Update branch** and wait for the six checks
+     again. The ruleset of 6.2 blocks the merge otherwise, so the merged commit is the one CI
+     tested;
+   - the review is done and you approve.
+
+   There is **no preview step**. The production smoke test right after the deploy (6.7) is the
+   real check.
+4. Merge the PR (you, the owner).
+
+**Success:** the release branch's latest commit is the fix, and **Actions → CI** shows a green
+run for the `push` to the release branch.
+
+### 6.6 Publish the patch release from the release branch
+
+1. **Only if the fix changes `apps-script/`:** deploy it to the **production** project now, as
+   a new version of the same deployment (APPS_SCRIPT_SETUP.md §8).
+2. **Releases → Draft a new release**.
+3. **Choose a tag** → type the new tag, e.g. `v0.1.3` → **Create new tag: v0.1.3 on publish**.
+4. **Target: the release branch**, e.g. `release/v0.1.x`. This is the control that decides what
+   ships: with `main` as Target, the unreleased work on `main` would ship too.
+5. Title: the new tag. **Generate release notes**, with **Previous tag:** the last tag.
+6. **Publish release.**
+
+**Actions → Release to cPanel** deploys **the release's tag**, whatever its Target branch. The
+checkout step in `.github/workflows/release-cpanel.yml` is
+`ref: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.ref || github.ref }}`,
+so a release event always builds `github.event.release.tag_name`.
+
+**Success:** the run for the new tag is green and ends with the notice **"Deployed — … is
+live"**; the short commit it names is the release branch's latest commit.
+
+### 6.7 Smoke test right after the deploy
+
+Do the full production smoke test (section 4) at once and record it in the release.
+
+**If it fails:** roll back to the last tag (DEPLOYMENT.md §6: **Run workflow** with the last tag,
+**Dry run** unticked); if the fix included Apps Script, also set the production deployment back
+to its previous version (APPS_SCRIPT_SETUP.md §8). Note the rollback in the release, then fix
+again from 6.5.
+
+### 6.8 Bring the fix to `main`
+
+The next release from `main` must keep the fix.
+1. **Pull requests → New pull request**, **base:** `main`, **compare:** the release branch.
+   **Create pull request** with the title `[DS-FIX] Bring <new tag> fix to main`. It goes
+   through the normal review and the `main` checks.
+2. If GitHub reports conflicts, close that PR. Instead, the fix's author creates
+   `DS-FIX-<slug>-main` from `main`, cherry-picks the fix commit(s), resolves the conflicts and
+   opens the PR to `main`.
+
+**Success:** the PR is merged, CI is green on `main`, and the Pages preview shows the fix.
+
+Leave the release branch in place: the next urgent fix on the same `vMAJOR.MINOR` line reuses
+it (after the check in 6.4). A release of a new MINOR version gets its own branch only if it
+ever needs an urgent fix.

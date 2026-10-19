@@ -1,4 +1,5 @@
-# CI for every pull request and every push to main (US-015 AC2–AC4, TECH_STACK §9).
+# CI for every pull request and every push to main or a release/** branch (US-015 AC2–AC4,
+# TECH_STACK §9; release branches only for urgent fixes: ADR-006, RELEASE.md §6, US-027).
 # Job names are stable: they are the check names the main ruleset requires.
 # CI never calls Google: every build points the lead form at the local mock URL
 # (contract §8), and the e2e suite starts its own in-process mock (scripts/mock-lead-endpoint.mjs).
@@ -7,15 +8,15 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, 'release/**']
 
 permissions:
   contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
-  # Only superseded PR runs are cancelled; every main commit keeps a complete CI result
-  # (RELEASE.md: CI green on the commit being released).
+  # Only superseded PR runs are cancelled; every main and release-branch commit keeps a complete
+  # CI result (RELEASE.md: CI green on the commit being released).
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:

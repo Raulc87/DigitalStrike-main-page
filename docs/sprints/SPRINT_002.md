@@ -72,7 +72,7 @@ Stories and acceptance criteria: `docs/specs/USER_STORIES.md` (US-021 … US-027
 | 6 | Email reputation: keep normal sending from `manager@` (replies help); optionally register the domain in Google Postmaster Tools; recheck whether Outlook/Hotmail still sends the confirmation to spam | **Done** (2026-10-12): set up; keep normal sending and recheck Outlook/Hotmail placement at sprint end |
 | 7 | Legal review of privacy notice v1 by Cinthia; any change goes through CONTENT §13 with a new notice version (US-018 AC2 order: Apps Script `ACCEPTED_PRIVACY_NOTICE_VERSIONS` first) | **Pending, accepted risk** (owner, 2026-10-19): her approval is still needed; until then notice v1 (`2026-10-14-v1`) stays as published |
 | 8 | `holding-page/`: **kept as the emergency fallback** (owner decision 2026-10-12). If a release breaks production and no earlier tag fixes it, re-upload `holding-page/holding-page.zip` through cPanel File Manager (DEPLOYMENT.md §6 and `holding-page/README.md`) | **Done** (2026-10-12) |
-| 9 | Add `release/*` to the branch ruleset (PR required, the six required checks with **"Require branches to be up to date before merging"** on, no force push or deletion), so an urgent-fix branch is protected like `main` (ADR-006) | **Before the first release branch is ever created** (owner, 2026-10-19). Not needed so far: `main` holds only docs commits since `v0.1.1` (#37), so it is releasable and an urgent fix would go to `main` (ADR-006 Decision 4) |
+| 9 | Add `release/*` to the branch ruleset (PR required, the six required checks with **"Require branches to be up to date before merging"** on, no force push or deletion), so an urgent-fix branch is protected like `main` (ADR-006) | **Before the first release branch is ever created** (owner, 2026-10-19). Not needed so far: nothing unreleased on `main` since `v0.1.2`, so it is releasable and an urgent fix would go to `main` (ADR-006 Decision 4) |
 | 10 | US-026 console steps: create the staging sheet and Apps Script project as `manager@`, deploy it, set repository variable `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` (runbook from DS-026) | **Done** (2026-10-19): staging copy live; AC3 passed |
 | 11 | US-025 switch: create repository variable `CPANEL_TARGET_DIR` = `/`, dry run, delete the old secret after the release (DEPLOYMENT.md §2.1) | **Done** (2026-10-19): variable set, dry run with readable paths, secret deleted after `v0.1.2` |
 
@@ -103,11 +103,11 @@ Agent kickoff prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md` (fresh session
 - CI `lhci` on our own build (from the #47 artifact): mobile Performance 0.99, Accessibility, Best practices and SEO 1, on `/es/` and `/en/`; CLS 0 after the font preloads (#46).
 
 ### Production PageSpeed (NFR-003)
-- `/es/`, mobile Performance **94** after `v0.1.2` (88 on `v0.1.0`). Above the NFR-003 production threshold of 90.
+- PageSpeed `/es/` mobile: Performance **94**, Accessibility 100 after `v0.1.2` (owner, release description). On `v0.1.0` PageSpeed gave 96 (input section above), so production is flat within PageSpeed's run-to-run noise, not a gain; the 88 recorded for `v0.1.0` came from a different tool (the coordinator's own Lighthouse run). Above the NFR-003 production threshold of 90.
 - The remaining gap to our build's 0.99 comes mainly from GoDaddy's injected monitoring script (ADR-001). **Owner decision (2026-10-19): accepted; GoDaddy will not be asked to remove the script.**
 
 ### Owner decisions on the deferred options (2026-10-19)
-- Fewer or variable font files: **declined**; the fonts stay as they are.
+- Fewer or variable font files: **declined**; the fonts stay as they are. Subsetting the existing files (same families) was not decided; it is listed in the backlog.
 - Asking GoDaddy to remove its script: **declined** (above).
 
 ### Backlog (candidates for a later sprint; not committed)
@@ -118,5 +118,6 @@ Agent kickoff prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md` (fresh session
 | `content-visibility` on below-the-fold sections | US-023 (#46) | No score change measured; anchor-jump risk; one e2e check would need rewriting |
 | `lhci` median-run aggregation | US-023 (#46) | A stricter, less noisy gate |
 | RELEASE.md §6.5: say to push to staging from the `DS-FIX` branch checkout, and put the inline `git checkout main` in a command block | Review of #43 | Wording only |
+| Font subsetting (same families, fewer bytes) | US-023 (#46) | Does not touch the layout-shift cause; characters outside the subset typed into the form would fall back to another font |
 | Larger CEO photo (≥ 800×800 px) | Task 5 | When the owner has one; US-022 serves 2× automatically |
 | Privacy notice legal review (Cinthia) | Task 7 | Pending, accepted risk |

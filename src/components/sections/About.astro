@@ -4,6 +4,7 @@ import type { ImageMetadata } from 'astro';
 import { t } from '../../i18n';
 import type { Locale } from '../../i18n';
 import { linkedinUrl } from '../../lib/i18n/site';
+import { photoWidths } from './photoWidths';
 
 interface Props {
   lang: Locale;
@@ -23,9 +24,7 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('/src/assets/raul-ca
 const photo = Object.values(photos)[0]?.default;
 // US-022 AC2: 1× at the displayed size; a 2× variant only when the source is at least twice that
 // size. Never upscaled, so the 200 px source yields a single width.
-const photoWidths = photo
-  ? [PHOTO_SIZE, PHOTO_SIZE * 2].filter((width) => width <= photo.width)
-  : [];
+const widths = photo ? photoWidths(PHOTO_SIZE, photo.width) : [];
 const facts = t(lang, 'about.facts').split(' · ');
 ---
 
@@ -54,7 +53,7 @@ const facts = t(lang, 'about.facts').split(' · ');
               alt={t(lang, 'about.photo_alt')}
               width={PHOTO_SIZE}
               height={PHOTO_SIZE}
-              widths={photoWidths}
+              widths={widths}
               sizes={`${PHOTO_SIZE}px`}
               formats={['avif', 'webp']}
               fallbackFormat="jpg"

@@ -67,7 +67,7 @@ See ADR-001 and `docs/runbooks/RELEASE.md`, `docs/runbooks/DEPLOYMENT.md`.
 
 ## 11. Security and Secrets
 - Repository *variables* (public): `PUBLIC_*` values, including the Apps Script URL (public by nature).
-- Repository *secrets*: cPanel FTP credentials only (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`, `CPANEL_TARGET_DIR`), for a dedicated FTP account limited to `public_html`.
+- Repository *secrets*: cPanel FTP credentials only (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`), for a dedicated FTP account limited to `public_html`. The target folder `CPANEL_TARGET_DIR` (default `/`) is a repository *variable*, not a secret, since US-025 (a secret `/` masked every `/` in the deploy log).
 - Apps Script Script Properties: sheet ID, emails, limits. Never committed.
 - Server-side validation, HTML escaping in emails, formula-injection guard in the sheet, no personal data in logs.
 

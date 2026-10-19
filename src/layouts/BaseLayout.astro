@@ -31,13 +31,15 @@ const ogImage = abs('og-image.png');
 const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
 const ogLocale = { es: 'es_CR', en: 'en_US' } as const;
 const otherLang = otherLocale(lang);
+// Fonts every page renders. Archivo 800 italic is only used by the home pages' hero, so the privacy
+// pages do not preload it (US-023).
 const preloadFonts = [
   archivo400,
   archivo400i,
   archivo600,
   archivo700,
   archivo800,
-  archivo800i,
+  ...(route === 'home' ? [archivo800i] : []),
   plex400,
   plex500,
 ];

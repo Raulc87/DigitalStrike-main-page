@@ -147,7 +147,7 @@ As the owner, every lead lands in my Google Sheet.
 
 ## US-022 — CEO photo delivery (Sprint 002)
 - AC1: The About photo is lazy-loaded (`loading="lazy"`, `decoding="async"`) with explicit width and height (no layout shift).
-- AC2: It is served in a modern format (AVIF or WebP, JPG fallback) at the displayed size and 2× (`srcset`), still capped at 200 CSS px while the 200 px source is in use; a larger source (≥ 800×800, owner) can replace it without code changes.
+- AC2: It is served in a modern format (AVIF or WebP, JPG fallback) at the displayed size. A 2× variant (`srcset`) is produced only when the source is at least twice the displayed size; with the current 200 px source (owner decision 2026-10-19), 1× only, never upscaled, still capped at 200 CSS px. A larger source (≥ 800×800, owner) can replace it later without code changes and then gets the 2× variant.
 - AC3: In the CI `lhci` report, the CEO photo is not listed among offscreen or oversized images (audits `offscreen-images` and `image-delivery-insight`, or their successors in the Lighthouse version in use).
 
 ## US-023 — Mobile performance (Sprint 002)

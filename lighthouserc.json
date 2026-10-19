@@ -2,10 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": [
-        "/es/index.html",
-        "/en/index.html"
-      ],
+      "url": ["/es/index.html", "/en/index.html"],
       "numberOfRuns": 3,
       "settings": {
         "chromeFlags": "--no-sandbox"

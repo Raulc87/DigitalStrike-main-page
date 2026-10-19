@@ -1,5 +1,13 @@
 ---
 import '../styles/global.css';
+import archivo400 from '@fontsource/archivo/files/archivo-latin-400-normal.woff2?url';
+import archivo400i from '@fontsource/archivo/files/archivo-latin-400-italic.woff2?url';
+import archivo600 from '@fontsource/archivo/files/archivo-latin-600-normal.woff2?url';
+import archivo700 from '@fontsource/archivo/files/archivo-latin-700-normal.woff2?url';
+import archivo800 from '@fontsource/archivo/files/archivo-latin-800-normal.woff2?url';
+import archivo800i from '@fontsource/archivo/files/archivo-latin-800-italic.woff2?url';
+import plex400 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
+import plex500 from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url';
 import { t } from '../i18n';
 import type { Locale } from '../i18n';
 import { otherLocale, routes } from '../lib/i18n/routes';
@@ -23,6 +31,16 @@ const ogImage = abs('og-image.png');
 const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
 const ogLocale = { es: 'es_CR', en: 'en_US' } as const;
 const otherLang = otherLocale(lang);
+const preloadFonts = [
+  archivo400,
+  archivo400i,
+  archivo600,
+  archivo700,
+  archivo800,
+  archivo800i,
+  plex400,
+  plex500,
+];
 ---
 
 <!doctype html>
@@ -52,6 +70,9 @@ const otherLang = otherLocale(lang);
     <meta property="og:image:alt" content={t(lang, 'meta.og_alt')} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    {preloadFonts.map((href) => (
+      <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />
+    ))}
   </head>
   <body>
     <a class="skip-link" href="#contenido">

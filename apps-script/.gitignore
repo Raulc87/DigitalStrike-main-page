@@ -1,3 +1,5 @@
 # Local only: clasp project binding (owner-specific) and the temporary test install link.
 .clasp.json
+# One binding per project, copied over .clasp.json before a push (APPS_SCRIPT_SETUP.md §11.3).
+.clasp.*.json
 node_modules

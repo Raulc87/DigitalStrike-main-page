@@ -3,11 +3,13 @@
 For: Raul Casañas (owner). Covers US-016 (AC1–AC3), US-027 (urgent fix, section 6), ADR-001,
 ADR-006, NFR-003 and the Sprint 001 Definition of Done. One-time GoDaddy setup, the cPanel upload and rollback: `docs/runbooks/DEPLOYMENT.md`.
 Apps Script: `docs/runbooks/APPS_SCRIPT_SETUP.md`.
+Updated 2026-10-19 (US-026, ADR-006): the preview posts leads to the **staging** Apps Script
+project; Apps Script changes reach production only as part of a release (§3).
 
-| Where | URL | Deployed by |
-|---|---|---|
-| Preview (review only, never linked publicly, `noindex`) | <https://raulc87.github.io/DigitalStrike-main-page/> | `.github/workflows/pages.yml`, on every push to `main` (and by hand) |
-| Production | <https://digitalstrike-solutions.com> | `.github/workflows/release-cpanel.yml`, when a GitHub Release is published (US-017) |
+| Where | URL | Deployed by | Leads go to |
+|---|---|---|---|
+| Preview (review only, never linked publicly, `noindex`) | <https://raulc87.github.io/DigitalStrike-main-page/> | `.github/workflows/pages.yml`, on every push to `main` (and by hand) | Staging Apps Script, sheet "DigitalStrike leads (staging)" |
+| Production | <https://digitalstrike-solutions.com> | `.github/workflows/release-cpanel.yml`, when a GitHub Release is published (US-017) | Production Apps Script, sheet "DigitalStrike Leads" |
 
 ---
 
@@ -18,17 +20,19 @@ Apps Script: `docs/runbooks/APPS_SCRIPT_SETUP.md`.
 Nothing else: the workflow builds with the base path `/DigitalStrike-main-page` and deploys.
 
 ### 1.2 Repository variables (public values, not secrets)
-**Settings → Secrets and variables → Actions → Variables tab → New repository variable.** They are
-used by both the preview and the production build. An unset variable falls back to the value in
-contract §8, except the endpoint.
+**Settings → Secrets and variables → Actions → Variables tab → New repository variable.** Each
+build uses its own lead endpoint variable; all the other variables are used by both the preview
+and the production build. An unset variable falls back to the value in contract §8, except the
+two endpoints.
 
 | Variable | Value |
 |---|---|
-| `PUBLIC_LEAD_ENDPOINT_URL` | The Apps Script `/exec` URL (APPS_SCRIPT_SETUP.md step 6). **Required**; without it the form shows the error with the email fallback |
+| `PUBLIC_LEAD_ENDPOINT_URL` | **Production build only.** The `/exec` URL of the production Apps Script project (APPS_SCRIPT_SETUP.md step 6). **Required**; without it the production form shows the error with the email fallback |
+| `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` | **Preview build only.** The `/exec` URL of the staging Apps Script project (APPS_SCRIPT_SETUP.md §11). Without it the preview form shows the error with the email fallback; the preview never falls back to the production URL, and its build fails if both variables hold the same URL |
 | `PUBLIC_CALENDLY_URL` | `https://calendly.com/rcasanas/1hr` (optional, same default) |
 | `PUBLIC_CONTACT_EMAIL` | `manager@digitalstrike-solutions.com` (optional, same default) |
 | `PUBLIC_LINKEDIN_URL` | `https://www.linkedin.com/in/raul-casanas/` (optional, same default) |
-| `PUBLIC_PRIVACY_NOTICE_VERSION` | `2026-10-14-v1` (optional, same default). It must be listed in the Apps Script property `ACCEPTED_PRIVACY_NOTICE_VERSIONS` **before** a build showing it is deployed (US-018 AC2) |
+| `PUBLIC_PRIVACY_NOTICE_VERSION` | `2026-10-14-v1` (optional, same default). It must be listed in the Apps Script property `ACCEPTED_PRIVACY_NOTICE_VERSIONS` of **both** projects, staging and production, **before** a build showing it is deployed (US-018 AC2) |
 | `PUBLIC_SHOW_CLIENT_LOGOS` | `true` (optional; `false` hides the clients section) |
 
 Set by the workflows themselves, not as variables: `PUBLIC_SITE_URL`, `PUBLIC_BASE_PATH`,
@@ -42,8 +46,10 @@ After adding or changing a variable, rebuild the preview: **Actions → Pages �
 1. **Actions → Pages**: the latest run on `main` is green.
 2. Open <https://raulc87.github.io/DigitalStrike-main-page/>: it sends you to `/es/` or `/en/`; both
    pages load with styles, fonts and images (US-016 AC2).
-3. Once `PUBLIC_LEAD_ENDPOINT_URL` is set: send a test lead from the preview, check the row in the
-   sheet, then set its `status` to `rejected`.
+3. Once `PUBLIC_LEAD_ENDPOINT_URL_PREVIEW` is set (APPS_SCRIPT_SETUP.md §11): send a test lead
+   from the preview. It lands in the **staging** sheet "DigitalStrike leads (staging)", never in
+   "DigitalStrike Leads". Check the row, then set its `status` to `rejected` (or delete it). If
+   `main` has Apps Script changes, deploy them to staging first (APPS_SCRIPT_SETUP.md §8).
 
 Pending-content badges ("Contenido provisional") are expected on the preview only.
 
@@ -52,22 +58,44 @@ Pending-content badges ("Contenido provisional") are expected on the preview onl
 Preconditions:
 - CI is green on the `main` commit you are releasing (**Actions → CI**).
 - The preview of that commit looks right (section 2).
-- The Apps Script is deployed with the current code, and its `ACCEPTED_PRIVACY_NOTICE_VERSIONS`
-  includes the version the site shows. "Current code" includes the Gmail sending change
-  (`lib/gmail` and the `gmail.send` scope, authorized once). Redeploy it as a **new version of
-  the same deployment** (APPS_SCRIPT_SETUP.md §8), so the `/exec` URL does not change.
+- Apps Script changes since the last release (if any) are deployed to **staging** and tested from
+  the preview (section 2, APPS_SCRIPT_SETUP.md §8). Production gets them only in step 1 below.
+- `ACCEPTED_PRIVACY_NOTICE_VERSIONS` includes the version the site shows, in **both** Apps
+  Script projects.
 - The four `CPANEL_*` secrets are set (DEPLOYMENT.md).
 
 Steps (first release: `v0.1.0`):
-1. **Releases → Draft a new release**.
-2. **Choose a tag** → type `v0.1.0` → **Create new tag: v0.1.0 on publish**. Target: `main`.
-3. Title `v0.1.0`; description: the PRs included (**Generate release notes** fills it).
-4. **Publish release.** This starts **Actions → Release to cPanel**, which builds for
+1. **Only if the release includes Apps Script changes:** deploy them to the **production**
+   project now, as a **new version of the same deployment** (APPS_SCRIPT_SETUP.md §8), so the
+   `/exec` URL does not change. This is the only time production Apps Script is redeployed.
+   No Apps Script change since the last release: skip this step.
+
+   Deploy the code of the `main` commit you are releasing (the one CI is green on), not a local
+   work in progress. **Option A (by hand):** copy the files from GitHub with the branch selector
+   on `main`. **Option B (clasp):** first update your checkout and check that the last commit
+   shown is that commit, then push with the **production** block of APPS_SCRIPT_SETUP.md §8
+   item 1. On macOS or Linux:
+
+   ```bash
+   git checkout main && git pull --ff-only origin main && git log -1 --oneline
+   ```
+
+   On Windows (PowerShell):
+
+   ```powershell
+   git checkout main; git pull --ff-only origin main; git log -1 --oneline
+   ```
+2. **Releases → Draft a new release**.
+3. **Choose a tag** → type `v0.1.0` → **Create new tag: v0.1.0 on publish**. Target: `main`.
+4. Title `v0.1.0`; description: the PRs included (**Generate release notes** fills it).
+5. **Publish release.** This starts **Actions → Release to cPanel**, which builds for
    `https://digitalstrike-solutions.com` and uploads it (replacing the holding page on the first release).
-5. When that run is green, do the smoke test (section 4) before announcing anything.
+6. When that run is green, do the smoke test (section 4) before announcing anything. It also
+   tests the production Apps Script (section 4.2).
 
 Later releases follow [semantic versioning](https://semver.org/): `v0.1.1` for fixes, `v0.2.0` for
-new features. To roll back, see DEPLOYMENT.md.
+new features. To roll back, see DEPLOYMENT.md; if step 1 redeployed the production Apps Script,
+also set it back to its previous version (APPS_SCRIPT_SETUP.md §8, "To undo a deployment").
 
 ## 4. Production smoke test (US-016 AC3; Sprint 001 Definition of Done)
 
@@ -160,7 +188,9 @@ Smoke test vX.Y.Z — yyyy-MM-dd hh:mm (CR), by <name>
 - **Release workflow red or skipped:** DEPLOYMENT.md (secrets, FTP account, rollback). The holding
   page stays live until the first successful upload.
 - **Lead flow fails:** APPS_SCRIPT_SETUP.md §7 (curl smoke test) and the Apps Script
-  **Executions** log, which shows only `lead_id` and error codes.
+  **Executions** log, which shows only `lead_id` and error codes. If the release redeployed the
+  production Apps Script (section 3, step 1), set it back to its previous version
+  (APPS_SCRIPT_SETUP.md §8, "To undo a deployment") together with the site rollback.
 - **A visible defect:** fix it on a branch, merge, check the preview, then publish a new patch
   release (`v0.1.1`). Or roll back to the previous release (DEPLOYMENT.md). If `main` has merged
   work that is not released yet, use the urgent-fix procedure (section 6) instead.

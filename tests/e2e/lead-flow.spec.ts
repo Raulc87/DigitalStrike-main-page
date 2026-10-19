@@ -10,6 +10,7 @@ import { enForm } from '../../src/i18n/en/form';
 import {
   expect,
   fillLeadForm,
+  installFillClock,
   MINIMUM_FILL_MS,
   passMinimumFillTime,
   submit,
@@ -58,7 +59,7 @@ test.beforeAll(async ({ browser }) => {
 // The page clock is controlled so the minimum fill time never races the wall clock (US-024):
 // installed before any navigation, it flows normally until passMinimumFillTime() jumps it ahead.
 test.beforeEach(async ({ page }) => {
-  await page.clock.install();
+  await installFillClock(page);
   await fakeCalendly(page);
 });
 

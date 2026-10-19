@@ -138,14 +138,33 @@ export async function fillLeadForm(page: Page, data = visitor): Promise<void> {
 /** The contract's minimum fill time (§5.2): a valid `elapsed_ms` below it is a decoy. */
 export const MINIMUM_FILL_MS = 3_000;
 
+/** Pages whose clock was installed before their first navigation (installFillClock). */
+const clockedPages = new WeakSet<Page>();
+
+/**
+ * Installs the Playwright clock on a page that has not navigated yet. The fake clock still flows
+ * normally; passMinimumFillTime() needs it in place before the form's script runs.
+ */
+export async function installFillClock(page: Page): Promise<void> {
+  if (page.url() !== 'about:blank') {
+    throw new Error('installFillClock() must run before page.goto(), or the form starts first.');
+  }
+  await page.clock.install();
+  clockedPages.add(page);
+}
+
 /**
  * Moves the page clock past the minimum fill time. The form measures `elapsed_ms` with
  * `performance.now()` from the moment its own script runs, which on a busy machine can be well
- * after navigation, so a wall-clock wait races it (US-024). Call `page.clock.install()` before
- * `page.goto()`: the fake clock still flows normally, and this jumps it ahead by exactly the
- * minimum, so the form always measures at least 3000 ms whatever the load.
+ * after navigation, so a wall-clock wait races it (US-024). With the clock installed before
+ * navigation (installFillClock), this jumps it ahead by exactly the minimum, so the form always
+ * measures at least 3000 ms whatever the load. Without it, the jump would install the clock late
+ * and the form would measure less, so it fails fast instead.
  */
 export async function passMinimumFillTime(page: Page): Promise<void> {
+  if (!clockedPages.has(page)) {
+    throw new Error('passMinimumFillTime() needs installFillClock(page) before page.goto().');
+  }
   await page.clock.fastForward(MINIMUM_FILL_MS);
 }
 

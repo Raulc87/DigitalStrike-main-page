@@ -1,0 +1,56 @@
+# Checks that every relative link and anchor in the repository's Markdown
+# files exists: [text](path), [text](path#section), [text](#section),
+# reference definitions and href/src in inline HTML. Links inside code
+# (fenced or indented), inline code and HTML comments are examples and are
+# skipped.
+# Runs on every pull request, whatever its base branch, so stacked PRs are
+# checked too (AGENTS.md -> Change management).
+#
+# External links (http/https) are off by default, so the result does not
+# depend on the network. To check them as well, set the repository variable
+# DOCS_LINK_CHECK_EXTERNAL to "true" (Settings > Secrets and variables >
+# Actions > Variables), or run this workflow by hand with "external" ticked.
+#
+# Works unchanged in projects created from the Starter Kit: it only reads the
+# repository's own files, needs no secrets and writes nothing, so unlike
+# new-project.yml it has no guard: running it in a project is what it is for.
+# Run it locally from the repository root with:
+#   python3 .github/scripts/check_doc_links.py
+name: Docs link check
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      external:
+        description: "Also check external (http/https) links"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-link-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  links:
+    name: Docs link check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Check Markdown links and anchors
+        env:
+          EXTERNAL: ${{ inputs.external == true || vars.DOCS_LINK_CHECK_EXTERNAL == 'true' }}
+        run: |
+          if [ "${EXTERNAL}" = "true" ]; then
+            python3 .github/scripts/check_doc_links.py --external
+          else
+            python3 .github/scripts/check_doc_links.py
+          fi

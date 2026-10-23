@@ -37,7 +37,7 @@ The first pilot used this sequence: functional prototype first, then 2 visual pr
 
 ### Recommended: the kit's `ux-proposals` skill
 
-`.claude/skills/ux-proposals/` ships with this kit and loads automatically in Claude Code for any account. It covers steps 2, 3, 5 and 6 of this process (it asks for step 1's inputs; step 4, the decision, stays with the owner):
+`.claude/skills/ux-proposals/` lives in the kit and **runs from the kit, not from a copy in the project**: projects do not carry the kit's skills (`AGENTS.md` → Document map, "Projects carry the kit's output, not the kit"). The kit is private, so the owner attaches it to the project's session, and the session uses the skill at the kit ref recorded in the project's `PROJECT_CONTEXT.md`. What it produces (proposal files, the spec section, the story) belongs to the project. It covers steps 2, 3, 5 and 6 of this process (it asks for step 1's inputs; step 4, the decision, stays with the owner):
 
 - reads the UX spec, business rules, and stack first, and uses the approved copy verbatim
 - samples exact brand colors from the client's material (`scripts/sample_colors.py`)
@@ -46,7 +46,7 @@ The first pilot used this sequence: functional prototype first, then 2 visual pr
 - checks contrast (`scripts/contrast.py`, including a text-safe variant for bright accents) and layout (`scripts/check_pages.mjs`: screenshots, horizontal overflow, 44×44 px touch targets) before presenting
 - after the owner decides, drafts the Visual Identity section and the "apply visual identity" story (`references/spec-templates.md`) as a PR for approval
 
-Invoke with `/ux-proposals`, or ask for "look and feel proposals" and it triggers from its description. Any other design tool works too, as long as the output passes `references/quality-bar.md`.
+With the kit attached, invoke it with `/ux-proposals` or ask for "look and feel proposals from the SDD Starter Kit". Any other design tool works too, as long as the output passes `references/quality-bar.md`.
 
 ### Pilot note
 

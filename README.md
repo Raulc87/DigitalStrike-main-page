@@ -81,7 +81,7 @@ The first pilot (`Raulc87/gaby-main-page`) showed that these are usually missing
 
 ## Kit skills and templates
 
-This project does not carry the kit's skills or templates (`AGENTS.md` → Document map, "Projects carry the kit's output, not the kit"). `/ux-proposals`, the `*_TEMPLATE.md` files and the kit's process guides are read from the kit at the ref recorded in `PROJECT_CONTEXT.md`; the kit is private, so the owner attaches it to the session. The template names in this guide refer to the kit. See `docs/process/VISUAL_IDENTITY_PROCESS.md`.
+This project does not carry the kit's skills or templates (`AGENTS.md` → Document map, "Projects carry the kit's output, not the kit"). `/ux-proposals`, the `*_TEMPLATE.md` files and the kit's process guides are read from the kit at the ref recorded in `PROJECT_CONTEXT.md` (two guides are also kept as unedited local copies; `PROJECT_CONTEXT.md` says which, and that the kit wins); the kit is private, so the owner attaches it to the session. The template names in this guide refer to the kit. See `docs/process/VISUAL_IDENTITY_PROCESS.md`.
 
 ## Agent bootstrap
 

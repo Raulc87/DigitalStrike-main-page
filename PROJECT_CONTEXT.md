@@ -26,6 +26,7 @@
 - Readiness checklist: `docs/checklists/SPRINT_READINESS_CHECKLIST.md`
 - Runbooks: `docs/runbooks/` (created by Agent 3 during Sprint 001)
 - Visual identity process: `docs/process/VISUAL_IDENTITY_PROCESS.md` (`/ux-proposals` runs from the kit)
+- Kit process guides kept as local copies: `docs/process/VISUAL_IDENTITY_PROCESS.md` and `docs/process/RUNBOOK_STYLE.md`, byte-identical to the kit at the recorded ref, kept because this repo's runbooks, sprint prompts and this file link to them. **The kit at the recorded ref wins**; each kit sync re-copies them unchanged, and they are never edited here
 - Security baseline: `docs/security/SECURITY_BASELINE.md`: not written yet; planned in the backlog (`SPRINT_002.md` → "Sprint outcome"), to be approved by the end of the next sprint (`AGENTS.md` → Document map)
 - Penetration-test plan: `docs/security/PENTEST_PLAN.md`: required (live site with a lead form, which is personal data); planned with the security baseline
 - Developer guide: `CONTRIBUTING.md`: not written yet; planned in the backlog for the next sprint

@@ -9,4 +9,4 @@
 | [ADR-005](ADR-005_TRANSACTIONAL_EMAIL.md) | Transactional email | Accepted |
 | [ADR-006](ADR-006_BRANCHING_AND_RELEASE_MODEL.md) | Branching and release model | Accepted |
 
-New ADRs: copy `ADR_TEMPLATE.md`.
+New ADRs: start from the kit's `docs/decisions/ADR_TEMPLATE.md` at the kit ref recorded in [`PROJECT_CONTEXT.md`](../../PROJECT_CONTEXT.md) (the project carries no copy), and name the file `ADR-<NNN>_<TITLE>.md` with the next free number.

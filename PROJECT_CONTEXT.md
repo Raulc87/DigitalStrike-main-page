@@ -2,31 +2,38 @@
 
 ## Project
 - Name: DigitalStrike Solutions — main page
-- Project key: **DS** (branches `DS-<NNN>-<slug>` / `DS-<TYPE>-<slug>`, PR titles `[DS-NNN]`, commits `DS-NNN:`; see `AGENTS.md`)
+- Project key: **DS** (branches `DS-<NNN>-<slug>` / `DS-<TYPE>-<slug>`, PR titles `[DS-NNN]`, commits `DS-NNN:`; see [`AGENTS.md`](AGENTS.md))
 - Repository: https://github.com/Raulc87/DigitalStrike-main-page
-- Starter Kit: https://github.com/Raulc87/sdd_starter_kit
+- Starter Kit: https://github.com/Raulc87/sdd_starter_kit (private: attach it to the sessions that read its templates, guides and skills) · Edition: Full · Synced to kit v1.2.0. This is the project's only record of its kit version: templates, process guides and kit skills such as `/ux-proposals` are read from the kit at this ref (the project carries no copies), and each kit sync PR updates it.
+- Repository visibility: public, as the owner's portfolio (owner decision, kit #16) · current setting public (only the owner changes it)
 - Status: **`v0.1.2` live on https://digitalstrike-solutions.com (2026-10-19); Sprint 002 done; no sprint active**
 - Product owner / final reviewer: Raul Casañas (CEO, manager@digitalstrike-solutions.com)
+- Documentation level: Simple (the kit's "Documentation depth")
 
 ## Active documentation
-- Project spec: `docs/specs/PROJECT_SPEC.md`
-- User stories: `docs/specs/USER_STORIES.md`
-- Integration contracts: `docs/specs/LEAD_ENDPOINT_CONTRACT.md` (1.0.1)
+See the document map in [`AGENTS.md`](AGENTS.md).
+
+- Project spec: [`docs/specs/PROJECT_SPEC.md`](docs/specs/PROJECT_SPEC.md)
+- User stories: [`docs/specs/USER_STORIES.md`](docs/specs/USER_STORIES.md)
+- Integration contracts: [`docs/specs/LEAD_ENDPOINT_CONTRACT.md`](docs/specs/LEAD_ENDPOINT_CONTRACT.md) (1.0.1)
 - Feature specs: Not required (simple project)
 - Architecture spec: Not required (simple project; architecture in TECH_STACK + ADRs)
-- UX/UI direction: `docs/ux/UX_UI_DIRECTION.md`
-- Content (ES source → EN): `docs/ux/CONTENT.md`
-- Brand assets: `docs/assets/brand/`
-- Tech stack: `TECH_STACK.md`
-- ADRs: `docs/decisions/` (ADR-001 … ADR-006)
-- Implementation plan: `docs/plans/IMPLEMENTATION_PLAN.md`
-- Sprint plans: `docs/sprints/SPRINT_002.md` (done; outcome and backlog at the end; prompts: `docs/sprints/SPRINT_002_AGENT_PROMPTS.md`) and `docs/sprints/SPRINT_001.md` (done). No sprint is active
-- Readiness checklist: `docs/checklists/SPRINT_READINESS_CHECKLIST.md`
-- Runbooks: `docs/runbooks/` (created by Agent 3 during Sprint 001)
-- Visual identity process: `docs/process/VISUAL_IDENTITY_PROCESS.md`
+- UX/UI direction: [`docs/ux/UX_UI_DIRECTION.md`](docs/ux/UX_UI_DIRECTION.md)
+- Content (ES source → EN): [`docs/ux/CONTENT.md`](docs/ux/CONTENT.md)
+- Brand assets: [`docs/assets/brand/`](docs/assets/brand/)
+- Tech stack: [`TECH_STACK.md`](TECH_STACK.md)
+- ADRs: [`docs/decisions/`](docs/decisions/) (ADR-001 … ADR-006); new ADRs start from the kit's `docs/decisions/ADR_TEMPLATE.md` at the recorded kit ref
+- Implementation plan: [`docs/plans/IMPLEMENTATION_PLAN.md`](docs/plans/IMPLEMENTATION_PLAN.md)
+- Sprint plans: [`docs/sprints/SPRINT_002.md`](docs/sprints/SPRINT_002.md) (done; outcome and backlog at the end; prompts: [`docs/sprints/SPRINT_002_AGENT_PROMPTS.md`](docs/sprints/SPRINT_002_AGENT_PROMPTS.md)) and [`docs/sprints/SPRINT_001.md`](docs/sprints/SPRINT_001.md) (done). No sprint is active
+- Readiness checklist: [`docs/checklists/SPRINT_READINESS_CHECKLIST.md`](docs/checklists/SPRINT_READINESS_CHECKLIST.md)
+- Runbooks: [`docs/runbooks/`](docs/runbooks/) (created by Agent 3 during Sprint 001; written per the kit's `docs/process/RUNBOOK_STYLE.md`)
+- Visual identity process: the kit's `docs/process/VISUAL_IDENTITY_PROCESS.md`; `/ux-proposals` runs from the kit
+- Security baseline: `docs/security/SECURITY_BASELINE.md`: not written yet; planned in the backlog ([`SPRINT_002.md`](docs/sprints/SPRINT_002.md) → "Sprint outcome"), to be approved by the end of the next sprint ([`AGENTS.md`](AGENTS.md) → Document map)
+- Penetration-test plan: `docs/security/PENTEST_PLAN.md`: required (live site with a lead form, which collects personal data); planned with the security baseline
+- Developer guide: `CONTRIBUTING.md`: not written yet; planned in the backlog for the next sprint
 
 ## Current sprint
-- None active. Next sprint: to be planned with the owner, from the backlog in `SPRINT_002.md` → "Sprint outcome".
+- None active. Next sprint: to be planned with the owner, from the backlog in [`SPRINT_002.md`](docs/sprints/SPRINT_002.md) → "Sprint outcome".
 - Last: Sprint 002 — Post-release follow-ups — **done** 2026-10-19; `v0.1.1` (2026-10-13) and `v0.1.2` (2026-10-19) released and smoke-tested
 - Before: Sprint 001 — done; `v0.1.0` released and smoke-tested 2026-10-12
 

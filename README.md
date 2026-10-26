@@ -2,8 +2,8 @@
 
 Bilingual (ES/EN) one-page site for DigitalStrike Solutions: services, showroom, the CEO, and a lead flow (Google Sheets + emails) with Calendly booking for "session 0".
 
-- **Status:** Planning — Sprint 001 (first release, target 2026-10-14) ready pending docs approval and go-ahead. See `PROJECT_CONTEXT.md`.
-- **Start here:** `AGENTS.md` (authoritative workflow) → `PROJECT_CONTEXT.md` (document map).
+- **Status:** `v0.1.2` live on https://digitalstrike-solutions.com. See [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md).
+- **Start here:** [`AGENTS.md`](AGENTS.md) (authoritative workflow) → [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) (document map).
 - **Project key:** `DS`.
 
 ---
@@ -22,7 +22,7 @@ A reusable starter kit for projects developed with Spec-Driven Development (SDD)
 4. USER_STORIES
 5. FEATURE_SPEC(s), when needed
 6. ARCHITECTURE_SPEC, when needed
-7. UX_UI_DIRECTION, when the project has a user interface (visual identity via `docs/process/VISUAL_IDENTITY_PROCESS.md`, usually after the first functional prototype)
+7. UX_UI_DIRECTION, when the project has a user interface (visual identity via the kit's `docs/process/VISUAL_IDENTITY_PROCESS.md`, usually after the first functional prototype)
 8. TECH_STACK
 9. ADRs, when a decision needs to be recorded
 10. IMPLEMENTATION_PLAN
@@ -79,9 +79,9 @@ The first pilot (`Raulc87/gaby-main-page`) showed that these are usually missing
 - where the sprint deliverable runs (local vs. hosted) and confirmation of the hosting runtime
 - a visual-identity step: build the first prototype on provisional theme tokens, then explore 2 proposals from the client's brand material, record the chosen one in the UX spec, and apply it as its own story
 
-## Bundled skill
+## Kit skills, templates and guides
 
-`.claude/skills/ux-proposals/` loads automatically in Claude Code for any account working in a repository created from this template. It creates look-and-feel proposals from the project's UX spec and the client's brand material, then drafts the spec section for the chosen direction. See `docs/process/VISUAL_IDENTITY_PROCESS.md`.
+This project does not carry the kit's skills, templates or process guides ([`AGENTS.md`](AGENTS.md) → Document map, "Projects carry the kit's output, not the kit"). `/ux-proposals`, the `*_TEMPLATE.md` files and the guides in `docs/process/` are read from the kit at the ref recorded in [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md); the kit is private, so the owner attaches it to the session. The template and guide names in this README refer to the kit.
 
 ## Agent bootstrap
 

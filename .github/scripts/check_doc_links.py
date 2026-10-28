@@ -12,12 +12,15 @@ What it checks, in every tracked .md or .markdown file, any case (git ls-files):
 - a relative target (file or directory) exists inside the repository (symlinks
   resolved), from the file's directory, or from the root when it starts with "/";
 - an anchor (#section, or other.md#section) matches a heading in the target
-  Markdown file, using GitHub's heading IDs, or an explicit id/name attribute;
-  fragments are case-sensitive, as in the browser.
+  Markdown file (also in block quotes and list items), using GitHub's heading
+  IDs, or an explicit id/name attribute outside code; fragments are
+  case-sensitive, as in the browser.
 
-Links inside fenced code blocks (also in block quotes and list items),
-indented code blocks, code spans (also across lines) and HTML comments are
-ignored: they are examples, not links. External links (http, https) are skipped
+Links inside fenced code blocks (also in block quotes and list items, and
+opened right after a list marker),
+indented code blocks (also in block quotes), code spans (also across lines)
+and HTML comments are ignored: they are examples, not links. Tests (kit only):
+editions/tests/test_check_doc_links.py. External links (http, https) are skipped
 unless --external is given, so the default check needs no network and gives
 the same result on every run. Standard library only (Python 3.8+).
 
@@ -55,8 +58,9 @@ REF_DEF_RE = re.compile(r"^ {0,3}\[(?!\^)((?:[^\]\\]|\\.)+)\]:[ \t]*\n?[ \t]*(<[
                         r"""(?:[ \t]+(?:"[^"\n]*"|'[^'\n]*'|\([^)\n]*\)))?[ \t]*$""", re.M)
 HTML_TAG_RE = re.compile(r"<[A-Za-z][A-Za-z0-9-]*\s[^<>]*>")
 ATTR_VALUE = r"""\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))"""
-HTML_LINK_ATTR_RE = re.compile(r"\b(?:href|src)" + ATTR_VALUE, re.I)
-HTML_ID_ATTR_RE = re.compile(r"\b(?:id|name)" + ATTR_VALUE, re.I)
+# An attribute name starts after whitespace: data-href= and data-id= are other attributes.
+HTML_LINK_ATTR_RE = re.compile(r"(?<=\s)(?:href|src)" + ATTR_VALUE, re.I)
+HTML_ID_ATTR_RE = re.compile(r"(?<=\s)(?:id|name)" + ATTR_VALUE, re.I)
 # A code span: a run of N backticks, closed by a run of exactly N, not across a blank line.
 INLINE_CODE_RE = re.compile(r"(?<!`)(`+)(?!`)((?:(?!\n[ \t>]*\n)[\s\S])+?)(?<!`)\1(?!`)")
 ESCAPE_RE = re.compile(r"\\([!-/:-@\[-`{-~])")
@@ -95,23 +99,38 @@ def indent_of(line):
 
 def mask_indented_code(lines):
     """Blank out indented code blocks: 4+ spaces beyond the enclosing list item's
-    content, after a blank line. List items nest; their continuation paragraphs stay text."""
+    content, after a blank line. List items nest; their continuation paragraphs stay text.
+    In a block quote the indent is measured after the quote prefix ("> "): a quote
+    that opens starts a new container, and the list items around it come back when it closes."""
     out = []
     contents = []    # content columns of the open list items, innermost last
+    outer = []       # the contents of each enclosing quote level, outermost first
     code_at = None   # indent that keeps the current code block going
     prev_blank = True
     for line in lines:
-        if not line.strip():
+        prefix = QUOTE_PREFIX_RE.match(line)
+        depth = prefix.group(0).count(">") if prefix else 0
+        if depth != len(outer):
+            if depth > len(outer):
+                prev_blank = True  # a new block quote starts like a new block
+            while depth > len(outer):
+                outer.append(contents)
+                contents = []
+            while depth < len(outer):
+                contents = outer.pop()
+            code_at = None
+        line_body = line[prefix.end():] if prefix else line
+        if not line_body.strip():
             out.append(line)
             prev_blank = True
             continue
-        indent = indent_of(line)
+        indent = indent_of(line_body)
         if code_at is not None and indent >= code_at:
             out.append(blank(line))
             prev_blank = False
             continue
         code_at = None
-        item = LIST_ITEM_RE.match(line)
+        item = LIST_ITEM_RE.match(line_body)
         if prev_blank or item:
             while contents and indent < contents[-1]:
                 contents.pop()  # dedented: those list items ended
@@ -136,6 +155,8 @@ def mask(text, inline_code=True):
     fence = None
     for line in text.split("\n"):
         body = QUOTE_PREFIX_RE.sub("", line)
+        if not fence:
+            body = container_body(line)  # a fence may open right after a list marker: "- ```markdown"
         match = FENCE_RE.match(body)
         if fence:
             if match and match.group(1)[0] == fence[0] and len(match.group(1)) >= len(fence) \
@@ -232,6 +253,22 @@ def github_slug(text):
     return "".join(kept).replace(" ", "-")
 
 
+def container_body(line):
+    """The line without its block-quote and list-item prefixes ("> ", "- ", "1. "),
+    so "> # Details" and "- # Details" are headings, as on GitHub."""
+    while True:
+        body = QUOTE_PREFIX_RE.sub("", line)
+        item = LIST_ITEM_RE.match(body)
+        if item:
+            # A marker followed by 5+ spaces: the content starts after one space,
+            # and the rest is indented code ("-     # x" is not a heading).
+            padded = body[item.end():item.end() + 1] == " "
+            body = body[item.start(3) + 1:] if padded else body[item.end():]
+        if body == line:
+            return body
+        line = body
+
+
 def anchors_of(text):
     """Every anchor a Markdown file defines: heading IDs and id/name attributes.
 
@@ -244,7 +281,7 @@ def anchors_of(text):
     previous = None
     for line in masked.split("\n"):
         heading = None
-        atx = ATX_HEADING_RE.match(line)
+        atx = ATX_HEADING_RE.match(container_body(line))
         if atx:
             heading = atx.group(2) or ""
         elif previous and previous.strip() and SETEXT_UNDERLINE_RE.match(line) \
@@ -258,7 +295,12 @@ def anchors_of(text):
             occurrences[result] = 0
             anchors.add(result)
         previous = line
-    anchors.update(value for _, value in html_attr_values(masked, HTML_ID_ATTR_RE))
+    # Code spans stay unmasked above (their text is part of a heading's ID), but an
+    # id or name attribute inside a code span is an example, not an anchor. Backticks
+    # inside a real tag's attribute value do not hide it: only the attribute's position counts.
+    spans = [m.span() for m in INLINE_CODE_RE.finditer(masked)]
+    anchors.update(value for offset, value in html_attr_values(masked, HTML_ID_ATTR_RE)
+                   if not any(start <= offset < end for start, end in spans))
     return anchors
 
 

@@ -4,7 +4,7 @@
 - Name: DigitalStrike Solutions — main page
 - Project key: **DS** (branches `DS-<NNN>-<slug>` / `DS-<TYPE>-<slug>`, PR titles `[DS-NNN]`, commits `DS-NNN:`; see [`AGENTS.md`](AGENTS.md))
 - Repository: https://github.com/Raulc87/DigitalStrike-main-page
-- Starter Kit: https://github.com/Raulc87/sdd_starter_kit (private: attach it to the sessions that read its templates, guides and skills) · Edition: Full · Synced to kit v1.2.0. This is the project's only record of its kit version: templates, process guides and kit skills such as `/ux-proposals` are read from the kit at this ref (the project carries no copies), and each kit sync PR updates it.
+- Starter Kit: https://github.com/Raulc87/sdd_starter_kit (private: attach it to the sessions that read its templates, guides and skills) · Edition: Full · Synced to kit v1.3.0. This is the project's only record of its kit version: templates, process guides and kit skills such as `/ux-proposals` are read from the kit at this ref (the project carries no copies), and each kit sync PR updates it.
 - Repository visibility: public, as the owner's portfolio (owner decision, kit #16) · current setting public (only the owner changes it)
 - Status: **`v0.1.2` live on https://digitalstrike-solutions.com (2026-10-19); Sprint 002 done; no sprint active**
 - Product owner / final reviewer: Raul Casañas (CEO, manager@digitalstrike-solutions.com)
@@ -29,7 +29,7 @@ See the document map in [`AGENTS.md`](AGENTS.md).
 - Runbooks: [`docs/runbooks/`](docs/runbooks/) (created by Agent 3 during Sprint 001; written per the kit's `docs/process/RUNBOOK_STYLE.md`)
 - Visual identity process: the kit's `docs/process/VISUAL_IDENTITY_PROCESS.md`; `/ux-proposals` runs from the kit
 - Security baseline: `docs/security/SECURITY_BASELINE.md`: not written yet; planned in the backlog ([`SPRINT_002.md`](docs/sprints/SPRINT_002.md) → "Sprint outcome"), to be approved by the end of the next sprint ([`AGENTS.md`](AGENTS.md) → Document map)
-- Penetration-test plan: `docs/security/PENTEST_PLAN.md`: required (live site with a lead form, which collects personal data); planned with the security baseline
+- Penetration-test plan: `docs/security/PENTEST_PLAN.md`: required (live site with a lead form, which collects personal data); drafted by the pre-release security agent ([`AGENTS.md`](AGENTS.md) → Pre-release security agent), planned with the security baseline
 - Developer guide: `CONTRIBUTING.md`: not written yet; planned in the backlog for the next sprint
 
 ## Current sprint

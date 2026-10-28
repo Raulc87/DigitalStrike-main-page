@@ -63,6 +63,8 @@ Preconditions:
 - `ACCEPTED_PRIVACY_NOTICE_VERSIONS` includes the version the site shows, in **both** Apps
   Script projects.
 - The three `CPANEL_*` secrets are set (`CPANEL_HOST`, `CPANEL_USERNAME`, `CPANEL_PASSWORD`; DEPLOYMENT.md §2).
+- **Security gate** (`docs/security/SECURITY_BASELINE.md` once it exists; the kit default, which DS may make stricter, never looser; kit v1.3.0): no open critical or high security finding on the commit you release (from the pre-release security agent's code review and staging scan, or from the last penetration test and production scan), every critical and high fix re-checked, and every medium or low finding has a fix story or an accepted risk signed by the owner. A security hotfix (section 6) may be released while other findings are open. **Overdue test:** DS was already in production when it adopted the baseline; if the deadline recorded in the baseline has passed and the required penetration test has not run, do not release (a security hotfix aside): the test runs first on the production already live ([`AGENTS.md`](../../AGENTS.md) → Security baseline). Expected: no deadline passed, or the test has run.
+- **Before the release that is followed by the post-release security step** (section 4.8: DS's next release, or the dated deadline recorded in the baseline): check that the pre-release security agent's code review covers the commit you release ([`AGENTS.md`](../../AGENTS.md) → Pre-release security agent), and that these are signed and in place: the owner's written approval and scope for the agent's production scan, with a time window that opens right after this release (`docs/security/PENTEST_PLAN.md` → Agent scans); the PTES tester's written authorization and scope with the same timing (`PENTEST_PLAN.md` §1); and the person who can stop each one, named. Expected: all signed; otherwise do not release yet.
 
 Steps (first release: `v0.1.0`):
 1. **Only if the release includes Apps Script changes:** deploy them to the **production**
@@ -182,6 +184,17 @@ Smoke test vX.Y.Z — yyyy-MM-dd hh:mm (CR), by <name>
 - Fresh profile: cookies = _tccl_visitor (≤1 year), _tccl_visit, _scc_session only: ok / issue
 - PageSpeed mobile /es/: Performance __, Accessibility __  (decision if below 90/95: …)
 ```
+
+### 4.8 Post-release security (right after the release; kit v1.3.0)
+
+Only for a release that the security gate in section 3 marks as followed by this step. It starts exactly after the release: its trigger is the smoke test above passing ([`AGENTS.md`](../../AGENTS.md) → Security baseline).
+1. Tell the coordinator that the smoke test passed: it starts the pre-release security agent's **production scan**, inside the time window of its signed approval. Expected: the scan starts within the window, passive or baseline unless the approval names more, and always passive baseline only on a host the baseline marks "passive baseline only" (`SECURITY_BASELINE.md` §5.1).
+2. Confirm to the tester that the release is live: the **human PTES test** on production starts inside its window (DS handles personal data through the lead form). Expected: the tester confirms the start.
+3. During both: the named person watches production and can stop either one. If production degrades, stop it and roll back (section 5, DEPLOYMENT.md). Expected: the smoke-test checks still pass while they run.
+4. Findings go to the coordinator, which creates the remediation stories. A critical finding is fixed as a hotfix (section 6), released, smoke-tested, and re-checked by the security agent. Expected: no critical finding left open.
+5. Record in the release description the dates of the scan and of the test report (not their content), and that the step ran. The tester runs the test and writes a report; never write that the release was "certified". Expected: dates recorded.
+
+The findings gate the **next** release (section 3).
 
 ## 5. If something fails
 
